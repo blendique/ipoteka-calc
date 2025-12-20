@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle } from 'lucide-react';
+import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { 
     opacity: 1,
     transition: { 
-      staggerChildren: 0.15,
-      delayChildren: 0.2
+      staggerChildren: 0.1,
+      delayChildren: 0.1
     }
   }
 };
@@ -22,18 +22,18 @@ const itemVariants = {
 const BrowserWindow: React.FC<{ children: React.ReactNode; title?: string }> = ({ children, title = "uremont.com" }) => (
   <div className="w-full h-full bg-[#1e293b] rounded-xl overflow-hidden shadow-2xl flex flex-col border border-gray-700">
     {/* Browser Header */}
-    <div className="bg-[#0f172a] px-4 py-3 flex items-center gap-3 border-b border-gray-800">
+    <div className="bg-[#0f172a] px-4 py-2 flex items-center gap-3 border-b border-gray-800 shrink-0">
       <div className="flex gap-2">
-        <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-        <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-        <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+        <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+        <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
       </div>
-      <div className="ml-4 flex-1 bg-[#1e293b] rounded-md h-7 flex items-center px-3 text-xs text-gray-400 font-mono border border-gray-700/50">
+      <div className="ml-4 flex-1 bg-[#1e293b] rounded-md h-6 flex items-center px-3 text-[10px] text-gray-400 font-mono border border-gray-700/50">
         <span className="text-gray-500 mr-2">🔒</span> https://{title}
       </div>
     </div>
     {/* Browser Content */}
-    <div className="flex-1 bg-[#020617] overflow-hidden relative p-4 md:p-8 flex flex-col">
+    <div className="flex-1 bg-[#020617] overflow-hidden relative p-4 flex flex-col">
        <div className="w-full h-full bg-white rounded-lg border border-gray-800 overflow-hidden relative text-black">
           {children}
        </div>
@@ -51,15 +51,15 @@ export const WelcomeSlide: React.FC = () => {
         variants={containerVariants}
         className="max-w-4xl"
       >
-        <motion.div variants={itemVariants} className="flex items-center gap-4 mb-6">
-           <span className="px-3 py-1 rounded-full border border-uremont-blue text-uremont-blue text-sm uppercase tracking-widest">
+        <motion.div variants={itemVariants} className="flex items-center gap-4 mb-4">
+           <span className="px-3 py-1 rounded-full border border-uremont-blue text-uremont-blue text-xs md:text-sm uppercase tracking-widest">
              Релиз 01'2026
            </span>
         </motion.div>
         
         <motion.h1 
           variants={itemVariants} 
-          className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 text-white leading-tight"
+          className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 text-white leading-tight"
         >
           UREMONT <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-uremont-blue to-cyan-400">
@@ -67,15 +67,15 @@ export const WelcomeSlide: React.FC = () => {
           </span>
         </motion.h1>
         
-        <motion.p variants={itemVariants} className="text-xl md:text-3xl text-gray-400 font-light max-w-4xl">
-          Глобальные изменения в продукте.
+        <motion.p variants={itemVariants} className="text-lg md:text-2xl text-gray-400 font-light max-w-4xl">
+          Улучшение пользовательского опыта.
           <br />
-          Улучшение пользовательского опыта. Новый взгляд на УТП.
+          Новый взгляд на УТП.
         </motion.p>
       </motion.div>
       
       {/* Decorative Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-uremont-blue/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-uremont-blue/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
     </div>
   );
 };
@@ -85,7 +85,7 @@ export const AgendaSlide: React.FC = () => {
   const points = [
     { id: 1, title: "Основа изменений", desc: "Проблемы старой версии" },
     { id: 2, title: "CustDev и цифры", desc: "Данные, на которых основаны решения" },
-    { id: 3, title: "Новые решения", desc: "Переработанное УТП, новая база данных автомобилей и услуг, улучшенные AI алгоритмы" },
+    { id: 3, title: "Новые решения", desc: "Переработанное УТП, новая база данных, AI алгоритмы" },
     { id: 4, title: "План доработок", desc: "Список запланированных работ на Q1 2026" },
     { id: 5, title: "Свободное обсуждение", desc: "Q&A сессия" },
   ];
@@ -93,17 +93,17 @@ export const AgendaSlide: React.FC = () => {
   return (
     <div className="h-full flex flex-col justify-center px-12 md:px-24">
       <motion.div 
-        className="mb-12"
+        className="mb-8"
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-4xl font-bold text-white mb-2">Содержание</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">Содержание</h2>
         <div className="h-1 w-20 bg-uremont-blue rounded-full"></div>
       </motion.div>
 
       <motion.div 
-        className="grid grid-cols-1 gap-6 max-w-6xl"
+        className="grid grid-cols-1 gap-4 lg:gap-5 max-w-6xl"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -113,16 +113,16 @@ export const AgendaSlide: React.FC = () => {
           <motion.div 
             key={point.id} 
             variants={itemVariants}
-            className="group flex items-start gap-6 p-6 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-uremont-blue/50 transition-all duration-300 cursor-default"
+            className="group flex items-center gap-4 lg:gap-6 p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-uremont-blue/50 transition-all duration-300 cursor-default"
           >
-            <span className="flex items-center justify-center w-12 h-12 shrink-0 rounded-full bg-uremont-blue/20 text-uremont-blue font-bold text-xl group-hover:bg-uremont-blue group-hover:text-white transition-colors">
+            <span className="flex items-center justify-center w-10 h-10 shrink-0 rounded-full bg-uremont-blue/20 text-uremont-blue font-bold text-lg group-hover:bg-uremont-blue group-hover:text-white transition-colors">
               {point.id}
             </span>
-            <div>
-              <h3 className="text-2xl font-semibold text-white mb-1 group-hover:text-uremont-blue transition-colors">
+            <div className="flex-1">
+              <h3 className="text-xl font-semibold text-white mb-0.5 group-hover:text-uremont-blue transition-colors">
                 {point.title}
               </h3>
-              <p className="text-gray-400 font-light text-base group-hover:text-gray-300">
+              <p className="text-gray-400 font-light text-sm group-hover:text-gray-300">
                 {point.desc}
               </p>
             </div>
@@ -139,80 +139,79 @@ export const ProblemSlide: React.FC = () => {
   const [activeProblem, setActiveProblem] = useState<number>(1);
 
   // Map hover index to image URL.
-  // NOTE: Replace these placeholder URLs with your actual screenshot paths.
   const problemImages: Record<number, string> = {
-    1: 'https://placehold.co/800x600/e2e8f0/1e293b?text=Old+Landing+(Screen+1)', // Screenshot 1
-    2: 'https://placehold.co/800x600/e2e8f0/1e293b?text=Old+Landing+(Screen+1)', // Screenshot 1 (Same as 1)
-    3: 'https://placehold.co/800x600/e2e8f0/1e293b?text=Map+Interface+(Screen+2)', // Screenshot 2
-    4: 'https://placehold.co/800x600/e2e8f0/1e293b?text=Car+Database+(Screen+3)'  // Screenshot 3
+    1: 'https://placehold.co/800x600/e2e8f0/1e293b?text=Old+Landing+(Screen+1)',
+    2: 'https://placehold.co/800x600/e2e8f0/1e293b?text=Old+Landing+(Screen+1)',
+    3: 'https://placehold.co/800x600/e2e8f0/1e293b?text=Map+Interface+(Screen+2)',
+    4: 'https://placehold.co/800x600/e2e8f0/1e293b?text=Car+Database+(Screen+3)'
   };
 
   return (
-    <div className="h-full flex flex-col justify-center px-12 md:px-24">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <div className="h-full flex flex-col justify-center px-8 md:px-24">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         <motion.div
            initial="hidden"
            whileInView="visible"
            viewport={{ once: true }}
            variants={containerVariants}
         >
-          <motion.div variants={itemVariants} className="mb-6">
+          <motion.div variants={itemVariants} className="mb-4 lg:mb-6">
              <span className="text-uremont-accent font-mono text-sm tracking-wider">01 / ПРОБЛЕМАТИКА</span>
-             <h2 className="text-5xl font-bold mt-2 leading-tight">
+             <h2 className="text-3xl lg:text-5xl font-bold mt-2 leading-tight">
                Точки роста <br />
                <span className="text-uremont-blue">предыдущей версии</span>
              </h2>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="space-y-4">
+          <motion.div variants={itemVariants} className="space-y-3">
              {/* Problem 1 */}
              <div 
-               className={`flex items-start gap-4 p-4 rounded-lg border-l-4 transition-all cursor-pointer ${activeProblem === 1 ? 'bg-white/10 border-red-500' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
+               className={`flex items-start gap-3 p-3 rounded-lg border-l-4 transition-all cursor-pointer ${activeProblem === 1 ? 'bg-white/10 border-red-500' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                onMouseEnter={() => setActiveProblem(1)}
              >
-                <div className="min-w-[24px] pt-1"><MousePointerClick className={`${activeProblem === 1 ? 'text-red-500' : 'text-gray-500'} w-6 h-6 transition-colors`} /></div>
+                <div className="min-w-[20px] pt-1"><MousePointerClick className={`${activeProblem === 1 ? 'text-red-500' : 'text-gray-500'} w-5 h-5 transition-colors`} /></div>
                 <div>
-                    <h4 className="font-bold text-white mb-1 text-lg">Нет действия в один клик</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed">
+                    <h4 className="font-bold text-white mb-0.5 text-base lg:text-lg">Нет действия в один клик</h4>
+                    <p className="text-xs lg:text-sm text-gray-400 leading-relaxed">
                         С главной страницы нельзя было сразу рассчитать стоимость или записаться.
                     </p>
                 </div>
              </div>
              {/* Problem 2 */}
              <div 
-               className={`flex items-start gap-4 p-4 rounded-lg border-l-4 transition-all cursor-pointer ${activeProblem === 2 ? 'bg-white/10 border-orange-500' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
+               className={`flex items-start gap-3 p-3 rounded-lg border-l-4 transition-all cursor-pointer ${activeProblem === 2 ? 'bg-white/10 border-orange-500' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                onMouseEnter={() => setActiveProblem(2)}
              >
-                <div className="min-w-[24px] pt-1"><Zap className={`${activeProblem === 2 ? 'text-orange-500' : 'text-gray-500'} w-6 h-6 transition-colors`} /></div>
+                <div className="min-w-[20px] pt-1"><Zap className={`${activeProblem === 2 ? 'text-orange-500' : 'text-gray-500'} w-5 h-5 transition-colors`} /></div>
                 <div>
-                    <h4 className="font-bold text-white mb-1 text-lg">Размытое УТП</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed">
+                    <h4 className="font-bold text-white mb-0.5 text-base lg:text-lg">Размытое УТП</h4>
+                    <p className="text-xs lg:text-sm text-gray-400 leading-relaxed">
                         Ключевое предложение не цепляло глаз и не закрывало боль клиента.
                     </p>
                 </div>
              </div>
              {/* Problem 3 */}
              <div 
-               className={`flex items-start gap-4 p-4 rounded-lg border-l-4 transition-all cursor-pointer ${activeProblem === 3 ? 'bg-white/10 border-yellow-500' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
+               className={`flex items-start gap-3 p-3 rounded-lg border-l-4 transition-all cursor-pointer ${activeProblem === 3 ? 'bg-white/10 border-yellow-500' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                onMouseEnter={() => setActiveProblem(3)}
              >
-                <div className="min-w-[24px] pt-1"><Search className={`${activeProblem === 3 ? 'text-yellow-500' : 'text-gray-500'} w-6 h-6 transition-colors`} /></div>
+                <div className="min-w-[20px] pt-1"><Search className={`${activeProblem === 3 ? 'text-yellow-500' : 'text-gray-500'} w-5 h-5 transition-colors`} /></div>
                 <div>
-                    <h4 className="font-bold text-white mb-1 text-lg">Сложный поиск услуг</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed">
+                    <h4 className="font-bold text-white mb-0.5 text-base lg:text-lg">Сложный поиск услуг</h4>
+                    <p className="text-xs lg:text-sm text-gray-400 leading-relaxed">
                         Из 78 услуг в списке пользователи часто не находили нужную.
                     </p>
                 </div>
              </div>
              {/* Problem 4 */}
              <div 
-               className={`flex items-start gap-4 p-4 rounded-lg border-l-4 transition-all cursor-pointer ${activeProblem === 4 ? 'bg-white/10 border-blue-500' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
+               className={`flex items-start gap-3 p-3 rounded-lg border-l-4 transition-all cursor-pointer ${activeProblem === 4 ? 'bg-white/10 border-blue-500' : 'bg-white/5 border-transparent hover:bg-white/10'}`}
                onMouseEnter={() => setActiveProblem(4)}
              >
-                <div className="min-w-[24px] pt-1"><Database className={`${activeProblem === 4 ? 'text-blue-500' : 'text-gray-500'} w-6 h-6 transition-colors`} /></div>
+                <div className="min-w-[20px] pt-1"><Database className={`${activeProblem === 4 ? 'text-blue-500' : 'text-gray-500'} w-5 h-5 transition-colors`} /></div>
                 <div>
-                    <h4 className="font-bold text-white mb-1 text-lg">Ограниченная база авто</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed">
+                    <h4 className="font-bold text-white mb-0.5 text-base lg:text-lg">Ограниченная база авто</h4>
+                    <p className="text-xs lg:text-sm text-gray-400 leading-relaxed">
                         Отсутствовали редкие или новые модели.
                     </p>
                 </div>
@@ -224,7 +223,7 @@ export const ProblemSlide: React.FC = () => {
            initial={{ opacity: 0, scale: 0.9 }}
            whileInView={{ opacity: 1, scale: 1 }}
            transition={{ duration: 0.5 }}
-           className="h-[500px] w-full hidden lg:block"
+           className="h-[35vh] min-h-[300px] w-full hidden lg:block"
         >
            <BrowserWindow title="uremont.com (v1.0)">
               <div className="w-full h-full bg-gray-100 flex items-center justify-center overflow-hidden">
@@ -253,27 +252,27 @@ export const DataSlide: React.FC = () => {
         className="mb-8"
       >
         <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / CUSTDEV И ЦИФРЫ</span>
-        <h2 className="text-4xl md:text-5xl font-bold mt-2">
+        <h2 className="text-3xl md:text-5xl font-bold mt-2">
           В основе решений — <span className="text-uremont-blue">реальные боли</span>
         </h2>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 max-w-6xl">
         {/* Stat 1 */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="bg-white/5 p-6 rounded-xl border border-white/10 flex flex-col justify-between"
+          className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between"
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-5xl font-bold text-red-500 mb-2">65.7%</div>
-                <div className="text-lg font-medium text-white">Боятся навязывания лишних услуг</div>
+                <div className="text-4xl lg:text-5xl font-bold text-red-500 mb-1">65.7%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Боятся навязывания услуг</div>
              </div>
-             <ShieldCheck className="text-gray-500 w-8 h-8" />
+             <ShieldCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
-          <div className="mt-4 text-sm text-gray-400">
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
              Самый частый страх клиентов перед обращением в новый сервис.
           </div>
         </motion.div>
@@ -283,16 +282,16 @@ export const DataSlide: React.FC = () => {
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
            transition={{ delay: 0.2 }}
-           className="bg-white/5 p-6 rounded-xl border border-white/10 flex flex-col justify-between"
+           className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between"
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-5xl font-bold text-uremont-blue mb-2">69.3%</div>
-                <div className="text-lg font-medium text-white">Важно знать цену заранее</div>
+                <div className="text-4xl lg:text-5xl font-bold text-uremont-blue mb-1">69.3%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Важно знать цену заранее</div>
              </div>
-             <Wallet className="text-gray-500 w-8 h-8" />
+             <Wallet className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
-          <div className="mt-4 text-sm text-gray-400">
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
              Пользователи считают критически важным понимать рыночную стоимость до визита.
           </div>
         </motion.div>
@@ -302,17 +301,17 @@ export const DataSlide: React.FC = () => {
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
            transition={{ delay: 0.3 }}
-           className="bg-white/5 p-6 rounded-xl border border-white/10 flex flex-col justify-between"
+           className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between"
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-5xl font-bold text-uremont-accent mb-2">4.8+</div>
-                <div className="text-lg font-medium text-white">Вызывает больше доверия, чем сертификаты</div>
+                <div className="text-4xl lg:text-5xl font-bold text-uremont-accent mb-1">4.8+</div>
+                <div className="text-base lg:text-lg font-medium text-white">Доверяют рейтингу больше</div>
              </div>
-             <ThumbsUp className="text-gray-500 w-8 h-8" />
+             <ThumbsUp className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
-          <div className="mt-4 text-sm text-gray-400">
-             56.9% пользователей доверяют высокому рейтингу, и только 17.5% — сертификатам.
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
+             56.9% пользователей доверяют рейтингу, и только 17.5% — сертификатам.
           </div>
         </motion.div>
 
@@ -321,16 +320,16 @@ export const DataSlide: React.FC = () => {
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
            transition={{ delay: 0.4 }}
-           className="bg-white/5 p-6 rounded-xl border border-white/10 flex flex-col justify-between"
+           className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between"
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-5xl font-bold text-purple-500 mb-2">68.6%</div>
-                <div className="text-lg font-medium text-white">Предпочитают пошаговый сценарий</div>
+                <div className="text-4xl lg:text-5xl font-bold text-purple-500 mb-1">68.6%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Нужен пошаговый сценарий</div>
              </div>
-             <Search className="text-gray-500 w-8 h-8" />
+             <Search className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
-          <div className="mt-4 text-sm text-gray-400">
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
              Удобнее выбрать Марку → Модель → Проблему, чем писать в свободной форме.
           </div>
         </motion.div>
@@ -342,13 +341,11 @@ export const DataSlide: React.FC = () => {
 // --- Slide 5: Solution 1 (Landing & USP) ---
 export const SolutionSlide1: React.FC = () => {
   const [currentImage, setCurrentImage] = useState(0);
-  
-  // NOTE: Replace these with the actual screenshot URLs you have.
   const screenshots = [
-    "https://placehold.co/800x600/2563EB/white?text=Landing+Variant+1",
-    "https://placehold.co/800x600/10B981/white?text=Landing+Variant+2",
-    "https://placehold.co/800x600/F59E0B/white?text=Landing+Variant+3",
-    "https://placehold.co/800x600/EF4444/white?text=Landing+Variant+4"
+    "https://placehold.co/800x600/2563EB/white?text=Landing+1",
+    "https://placehold.co/800x600/10B981/white?text=Landing+2",
+    "https://placehold.co/800x600/F59E0B/white?text=Landing+3",
+    "https://placehold.co/800x600/EF4444/white?text=Landing+4"
   ];
 
   useEffect(() => {
@@ -363,7 +360,7 @@ export const SolutionSlide1: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col justify-center px-6 md:pl-12 md:pr-28">
-      <div className="grid grid-cols-1 md:grid-cols-[0.8fr_1.4fr] gap-8 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-[0.8fr_1.4fr] gap-6 lg:gap-10 items-center">
         <motion.div
            initial="hidden"
            whileInView="visible"
@@ -372,14 +369,14 @@ export const SolutionSlide1: React.FC = () => {
         >
            <span className="text-uremont-accent font-mono text-sm tracking-wider">РЕШЕНИЕ #1</span>
            <h2 className="text-3xl font-bold mt-2 mb-4">Акцент на <br /><span className="text-uremont-blue">главном</span></h2>
-           <div className="space-y-4">
+           <div className="space-y-3">
              <div className="bg-white/5 p-3 rounded-lg border-l-2 border-uremont-blue">
                <h3 className="text-white font-semibold text-sm mb-1">Выделено УТП</h3>
-               <p className="text-gray-400 text-xs">Полностью изменена структура лендинга, фокус на решении проблем пользователя.</p>
+               <p className="text-gray-400 text-xs">Переработана структура лендинга. <br />Фокус смещен на решение основного запроса пользователя.</p>
              </div>
              <div className="bg-white/5 p-3 rounded-lg border-l-2 border-uremont-accent">
                <h3 className="text-white font-semibold text-sm mb-1">Действие в 1 клик</h3>
-               <p className="text-gray-400 text-xs">Добавлена возможность перейти на карту с активным действием. Всё внимание акцентировано вокруг него.</p>
+               <p className="text-gray-400 text-xs">Добавлена возможность перейти на карту с активным действием. <br />Всё внимание акцентировано вокруг него.</p>
              </div>
            </div>
         </motion.div>
@@ -389,7 +386,7 @@ export const SolutionSlide1: React.FC = () => {
                initial={{ y: 50, opacity: 0 }}
                whileInView={{ y: 0, opacity: 1 }}
                transition={{ duration: 0.7 }}
-               className="h-[550px] w-full relative"
+               className="h-[45vh] min-h-[350px] w-full relative"
             >
               <BrowserWindow title="uremont.com/ab-test">
                  <div className="relative w-full h-full group">
@@ -425,10 +422,9 @@ export const SolutionSlide1: React.FC = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-center text-sm text-gray-400 font-mono"
+              className="text-center text-xs lg:text-sm text-gray-400 font-mono"
             >
-              4 варианта лендингов, основанные на CustDev. <br/>
-              Подготовлены для A/B тестирования на трафике
+              4 варианта лендингов, основанные на CustDev.
             </motion.p>
         </div>
       </div>
@@ -438,9 +434,21 @@ export const SolutionSlide1: React.FC = () => {
 
 // --- Slide 6: Solution 2 (Database & Services) ---
 export const SolutionSlide2: React.FC = () => {
+  const brands = ["Audi", "BMW", "Exeed", "Tank", "Toyota", "Mercedes", "Haval", "Geely", "Chery"];
+  const audiModels = [
+    { name: "A3", gen: "8Y" },
+    { name: "A4", gen: "B9" },
+    { name: "A5", gen: "F5" },
+    { name: "A6", gen: "C8" },
+    { name: "Q3", gen: "F3" },
+    { name: "Q5", gen: "FY" },
+    { name: "Q7", gen: "4M" },
+    { name: "Q8", gen: "4M" },
+  ];
+
   return (
     <div className="h-full flex flex-col justify-center px-6 md:px-24">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <motion.div
            initial="hidden"
            whileInView="visible"
@@ -448,27 +456,27 @@ export const SolutionSlide2: React.FC = () => {
            className="order-2 md:order-1"
         >
            <span className="text-uremont-accent font-mono text-sm tracking-wider">РЕШЕНИЕ #2</span>
-           <h2 className="text-4xl font-bold mt-2 mb-6">Масштабирование <br /><span className="text-uremont-blue">базы данных</span></h2>
+           <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-4">Масштабирование <br /><span className="text-uremont-blue">базы данных</span></h2>
            
            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-white/5 p-4 rounded-xl text-center flex flex-col items-center justify-center">
+              <div className="bg-white/5 p-3 rounded-xl text-center flex flex-col items-center justify-center">
                  <div className="flex items-baseline gap-2">
-                    <span className="text-gray-500 line-through text-lg">78</span>
-                    <div className="text-4xl font-bold text-uremont-blue mb-1">400+</div>
+                    <span className="text-gray-500 line-through text-base">78</span>
+                    <div className="text-3xl font-bold text-uremont-blue mb-1">400+</div>
                  </div>
                  <div className="text-xs text-gray-400">Услуг</div>
               </div>
-              <div className="bg-white/5 p-4 rounded-xl text-center flex flex-col items-center justify-center">
+              <div className="bg-white/5 p-3 rounded-xl text-center flex flex-col items-center justify-center">
                  <div className="flex items-baseline gap-2">
-                    <span className="text-gray-500 line-through text-lg">2023</span>
-                    <div className="text-4xl font-bold text-uremont-accent mb-1">2025</div>
+                    <span className="text-gray-500 line-through text-base">2023</span>
+                    <div className="text-3xl font-bold text-uremont-accent mb-1">2025</div>
                  </div>
                  <div className="text-xs text-gray-400">Модельный год</div>
               </div>
            </div>
 
-           <p className="text-lg text-gray-300 leading-relaxed mb-6">
-             Мы полностью переработали справочники. Теперь пользователи могут найти любую специфическую услугу и выбрать автомобиль любой комплектации, включая новинки рынка.
+           <p className="text-base lg:text-lg text-gray-300 leading-relaxed mb-6">
+             Полностью переработанные справочники. Теперь пользователи могут найти любую специфическую услугу и выбрать автомобиль любой комплектации, включая новинки рынка.
            </p>
         </motion.div>
 
@@ -476,28 +484,34 @@ export const SolutionSlide2: React.FC = () => {
            initial={{ y: 50, opacity: 0 }}
            whileInView={{ y: 0, opacity: 1 }}
            transition={{ duration: 0.7 }}
-           className="h-[400px] w-full order-1 md:order-2"
+           className="h-[45vh] min-h-[350px] w-full order-1 md:order-2"
         >
           <BrowserWindow title="uremont.com/catalog">
-             <div className="p-6 flex flex-col gap-4 h-full text-white bg-[#020617]">
-                <div className="w-full h-8 bg-gray-800 rounded flex items-center px-3 gap-2 border border-gray-700">
+             <div className="p-4 md:p-6 flex flex-col gap-4 h-full text-white bg-[#020617]">
+                <div className="w-full h-8 bg-gray-800 rounded flex items-center px-3 gap-2 border border-gray-700 shrink-0">
                    <Search className="w-4 h-4 text-gray-500" />
                    <div className="w-32 h-2 bg-gray-600 rounded"></div>
                 </div>
                 
-                <div className="flex gap-2 overflow-hidden">
-                   <div className="px-3 py-1 bg-uremont-blue/20 text-uremont-blue rounded-full text-[10px] border border-uremont-blue/50">Audi</div>
-                   <div className="px-3 py-1 bg-gray-800 text-gray-400 rounded-full text-[10px] border border-gray-700">BMW</div>
-                   <div className="px-3 py-1 bg-gray-800 text-gray-400 rounded-full text-[10px] border border-gray-700">Exeed</div>
-                   <div className="px-3 py-1 bg-gray-800 text-gray-400 rounded-full text-[10px] border border-gray-700">Tank</div>
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide shrink-0">
+                   {brands.map((brand, i) => (
+                      <div 
+                        key={i} 
+                        className={`px-3 py-1 rounded-full text-[10px] whitespace-nowrap border cursor-pointer transition-colors ${brand === 'Audi' ? 'bg-uremont-blue/20 text-uremont-blue border-uremont-blue/50' : 'bg-gray-800 text-gray-400 border-gray-700 hover:bg-gray-700'}`}
+                      >
+                        {brand}
+                      </div>
+                   ))}
                 </div>
 
-                <div className="flex-1 overflow-hidden grid grid-cols-2 gap-3 content-start">
-                   {[1,2,3,4,5,6].map(i => (
-                      <div key={i} className="bg-gray-800/50 p-3 rounded border border-gray-700 hover:border-uremont-blue transition-colors">
-                         <div className="w-8 h-8 bg-gray-700 rounded mb-2"></div>
-                         <div className="w-3/4 h-2 bg-gray-600 rounded mb-1"></div>
-                         <div className="w-1/2 h-2 bg-gray-700 rounded"></div>
+                <div className="flex-1 overflow-y-auto grid grid-cols-2 gap-3 content-start pr-1 custom-scrollbar">
+                   {audiModels.map((model, i) => (
+                      <div key={i} className="bg-gray-800/50 p-3 rounded border border-gray-700 hover:border-uremont-blue transition-colors flex flex-col">
+                         <div className="w-full aspect-video bg-gray-700 rounded mb-2 flex items-center justify-center">
+                             <Car className="text-gray-600 w-6 h-6" />
+                         </div>
+                         <div className="font-bold text-sm text-gray-200">{model.name}</div>
+                         <div className="text-[10px] text-gray-500">{model.gen}</div>
                       </div>
                    ))}
                 </div>
@@ -513,7 +527,7 @@ export const SolutionSlide2: React.FC = () => {
 export const SolutionSlide3: React.FC = () => {
   return (
     <div className="h-full flex flex-col justify-center px-6 md:px-24">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <motion.div
            initial="hidden"
            whileInView="visible"
@@ -521,8 +535,8 @@ export const SolutionSlide3: React.FC = () => {
            className="order-2 md:order-1"
         >
            <span className="text-uremont-accent font-mono text-sm tracking-wider">РЕШЕНИЕ #3</span>
-           <h2 className="text-4xl font-bold mt-2 mb-6">Доработки в <br /><span className="text-uremont-blue">алгоритм искусственного интеллекта</span></h2>
-           <p className="text-xl text-gray-300 leading-relaxed mb-6">
+           <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-6">Доработки алгоритма <br /><span className="text-uremont-blue">искусственного интеллекта</span></h2>
+           <p className="text-lg text-gray-300 leading-relaxed mb-6">
              Обновили алгоритм сопоставления запросов пользователей и ИИ-ответа. Система теперь понимает контекст и предлагает максимально релевантные решения.
            </p>
         </motion.div>
@@ -531,39 +545,39 @@ export const SolutionSlide3: React.FC = () => {
            initial={{ y: 50, opacity: 0 }}
            whileInView={{ y: 0, opacity: 1 }}
            transition={{ duration: 0.7 }}
-           className="h-[400px] w-full order-1 md:order-2"
+           className="h-[40vh] min-h-[300px] w-full order-1 md:order-2"
         >
           <BrowserWindow title="uremont.com/ai-chat">
-             <div className="p-6 flex flex-col h-full justify-between bg-[#020617] text-white">
-                <div className="space-y-4">
+             <div className="p-4 md:p-6 flex flex-col h-full justify-between bg-[#020617] text-white">
+                <div className="space-y-4 overflow-y-auto">
                    {/* User Message */}
                    <div className="flex justify-end">
-                      <div className="bg-uremont-blue px-4 py-2 rounded-2xl rounded-tr-none text-white text-sm max-w-[80%]">
+                      <div className="bg-uremont-blue px-4 py-2 rounded-2xl rounded-tr-none text-white text-xs md:text-sm max-w-[80%]">
                          Стук в двигателе при разгоне, Audi Q8 2024
                       </div>
                    </div>
                    
                    {/* Processing Animation */}
-                   <div className="flex gap-2 items-center text-xs text-gray-500 my-2">
-                      <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                   <div className="flex gap-2 items-center text-[10px] md:text-xs text-gray-500 my-2">
+                      <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
                       AI анализирует симптомы...
                    </div>
 
                    {/* AI Response */}
                    <div className="flex justify-start">
-                      <div className="bg-gray-800 border border-purple-500/30 px-4 py-3 rounded-2xl rounded-tl-none text-gray-200 text-sm max-w-[90%] shadow-[0_0_15px_rgba(168,85,247,0.1)]">
-                         <div className="font-bold text-purple-400 mb-1 text-xs uppercase tracking-wider">Рекомендация</div>
+                      <div className="bg-gray-800 border border-purple-500/30 px-4 py-3 rounded-2xl rounded-tl-none text-gray-200 text-xs md:text-sm max-w-[95%] shadow-[0_0_15px_rgba(168,85,247,0.1)]">
+                         <div className="font-bold text-purple-400 mb-1 text-[10px] uppercase tracking-wider">Рекомендация</div>
                          Вероятно проблема с ТНВД или гидрокомпенсаторами. <br/>
                          Подобрал 3 профильных сервиса по VAG:
                          <div className="mt-2 space-y-1">
-                            <div className="bg-gray-900/50 p-2 rounded border border-gray-700 text-xs">🛠 VAG-Expert (2.1 км)</div>
-                            <div className="bg-gray-900/50 p-2 rounded border border-gray-700 text-xs">🛠 Audi-Center (5.4 км)</div>
+                            <div className="bg-gray-900/50 p-2 rounded border border-gray-700 text-[10px]">🛠 VAG-Expert (2.1 км)</div>
+                            <div className="bg-gray-900/50 p-2 rounded border border-gray-700 text-[10px]">🛠 Audi-Center (5.4 км)</div>
                          </div>
                       </div>
                    </div>
                 </div>
                 
-                <div className="w-full h-10 bg-gray-800 rounded border border-gray-700 mt-4 flex items-center px-4 text-gray-500 text-sm">
+                <div className="w-full h-10 bg-gray-800 rounded border border-gray-700 mt-4 flex items-center px-4 text-gray-500 text-xs md:text-sm shrink-0">
                    Напишите сообщение...
                 </div>
              </div>
@@ -578,35 +592,41 @@ export const SolutionSlide3: React.FC = () => {
 export const SolutionSlide4: React.FC = () => {
   return (
     <div className="h-full flex flex-col justify-center px-6 md:px-24">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
         <motion.div
            initial="hidden"
            whileInView="visible"
            variants={containerVariants}
         >
            <span className="text-uremont-accent font-mono text-sm tracking-wider">РЕШЕНИЕ #4</span>
-           <h2 className="text-4xl font-bold mt-2 mb-6">Новый <span className="text-uremont-blue">клиентский путь</span> и <span className="text-uremont-accent">Качество СТО</span></h2>
-           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-             Переработали клиентский путь с приоритетом в простой звонок в один клик, а также пересмотрели подход к подключенным СТО, улучшив их качество.
-           </p>
-
-           <div className="flex flex-col gap-4">
-               <div className="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
-                  <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 shrink-0">
-                    <Phone size={24} />
+           <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-6">Новый <span className="text-uremont-blue">клиентский путь</span> и качество сервиса</h2>
+           
+           <div className="flex flex-col gap-3">
+               <div className="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 shrink-0">
+                    <Phone size={20} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-lg">Звонок в 1 клик</h3>
-                    <p className="text-sm text-gray-400">Минимизация шагов до контакта с сервисом</p>
+                    <h3 className="font-bold text-white text-base">Звонок в 1 клик</h3>
+                    <p className="text-xs text-gray-400">Минимизация шагов до контакта с сервисом</p>
                   </div>
                </div>
-               <div className="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
-                  <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500 shrink-0">
-                    <Star size={24} />
+               <div className="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500 shrink-0">
+                    <Star size={20} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-lg">Стандарт качества</h3>
-                    <p className="text-sm text-gray-400">Строгий отбор и регулярная проверка партнеров</p>
+                    <h3 className="font-bold text-white text-base">Стандарт качества</h3>
+                    <p className="text-xs text-gray-400">Строгий отбор и регулярная проверка партнеров</p>
+                  </div>
+               </div>
+               <div className="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500 shrink-0">
+                    <Headphones size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-base">Новые скрипты поддержки</h3>
+                    <p className="text-xs text-gray-400">Переработанные скрипты службы поддержки и улучшенное взаимодействие</p>
                   </div>
                </div>
            </div>
@@ -616,14 +636,14 @@ export const SolutionSlide4: React.FC = () => {
            initial={{ x: 50, opacity: 0 }}
            whileInView={{ x: 0, opacity: 1 }}
            transition={{ duration: 0.7 }}
-           className="relative"
+           className="relative flex justify-center items-center h-[40vh] min-h-[350px]"
         >
              {/* Abstract Visualization of Connection */}
-             <div className="relative w-full aspect-square max-w-[500px] mx-auto">
+             <div className="relative w-full aspect-square max-h-[80%] max-w-[400px]">
                  {/* Center Circle (User) */}
                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                    <div className="w-24 h-24 bg-uremont-blue rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.5)]">
-                        <Phone size={40} className="text-white animate-pulse" />
+                    <div className="w-20 h-20 bg-uremont-blue rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.5)]">
+                        <Phone size={32} className="text-white animate-pulse" />
                     </div>
                  </div>
 
@@ -631,14 +651,14 @@ export const SolutionSlide4: React.FC = () => {
                  {[0, 72, 144, 216, 288].map((deg, i) => (
                     <motion.div
                        key={i}
-                       className="absolute top-1/2 left-1/2 w-16 h-16 -ml-8 -mt-8 bg-gray-800 rounded-full border-2 border-green-500 flex items-center justify-center z-10"
-                       initial={{ rotate: deg, translateX: 140 }}
+                       className="absolute top-1/2 left-1/2 w-12 h-12 -ml-6 -mt-6 bg-gray-800 rounded-full border-2 border-green-500 flex items-center justify-center z-10"
+                       initial={{ rotate: deg, translateX: 120 }}
                        animate={{ rotate: deg + 360 }}
-                       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                       style={{ transformOrigin: "50% 50%" }} // Not quite working with simple framer animate needing complex transform
+                       transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                       style={{ transformOrigin: "50% 50%" }}
                     >
                        <div className="absolute inset-0 flex items-center justify-center" style={{ transform: `rotate(-${deg}deg)` }}>
-                          <CheckCircle size={24} className="text-green-500" />
+                          <CheckCircle size={18} className="text-green-500" />
                        </div>
                     </motion.div>
                  ))}
@@ -646,15 +666,15 @@ export const SolutionSlide4: React.FC = () => {
                  {/* Connecting Lines ring */}
                  <div className="absolute inset-0 rounded-full border border-dashed border-gray-700 animate-spin-slow" />
                  
-                 {/* Static representation for simplicity/reliability in code generation without external assets */}
+                 {/* Static ring */}
                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-[300px] h-[300px] rounded-full border border-gray-700 opacity-50"></div>
+                    <div className="w-full h-full rounded-full border border-gray-700 opacity-50"></div>
                  </div>
                  
                  {/* Badges positioned statically for layout stability */}
-                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#020617] px-4 py-2 rounded-full border border-green-500/50 shadow-lg flex items-center gap-2">
-                    <ShieldCheck size={16} className="text-green-500" />
-                    <span className="text-xs font-bold text-green-500 uppercase">Verified Partner</span>
+                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#020617] px-3 py-1.5 rounded-full border border-green-500/50 shadow-lg flex items-center gap-2 whitespace-nowrap">
+                    <ShieldCheck size={14} className="text-green-500" />
+                    <span className="text-[10px] font-bold text-green-500 uppercase">120+ проверенных СТО</span>
                  </div>
              </div>
         </motion.div>
@@ -669,29 +689,29 @@ export const PlanSlide: React.FC = () => {
     {
        icon: TrendingUp,
        title: "Экспертное УТП",
-       desc: "Доработка текстов и лендингов для помощи в принятии сложных решений без экспертизы у клиента."
+       desc: "Доработка текстов и лендингов для помощи в принятии решений."
     },
     {
        icon: Bot,
        title: "ИИ-автомеханик",
-       desc: "Создание умного помощника, который поддерживает пользователя как друг-эксперт 24/7."
+       desc: "Умный помощник, который поддерживает пользователя 24/7."
     },
     {
        icon: Repeat,
        title: "Retention & LTV",
-       desc: "Внедрение подписочных и купонных механик для удержания клиентов."
+       desc: "Подписочные механики для удержания клиентов."
     },
     {
        icon: Car,
        title: "Новые вертикали",
-       desc: "Расширение в мойки, детейлинг и другие смежные услуги."
+       desc: "Расширение в мойки, детейлинг и смежные услуги."
     }
   ];
 
   const dataPlan = {
        icon: FileBarChart,
        title: "Data-driven Dev",
-       desc: "Доработки по данным, полученным в ходе A/B тестирования и анализа воронки на трафике."
+       desc: "Доработки по данным A/B тестирования и воронки."
   };
 
   return (
@@ -701,10 +721,10 @@ export const PlanSlide: React.FC = () => {
         whileInView="visible"
         viewport={{ once: true }}
         variants={containerVariants}
-        className="mb-10"
+        className="mb-6 lg:mb-10"
       >
         <span className="text-uremont-accent font-mono text-sm tracking-wider">04 / ПЛАНЫ</span>
-        <h2 className="text-4xl md:text-5xl font-bold mt-2">
+        <h2 className="text-3xl md:text-5xl font-bold mt-2">
            Планы по улучшениям на <span className="text-uremont-blue">Q1 2026</span>
         </h2>
       </motion.div>
@@ -713,21 +733,21 @@ export const PlanSlide: React.FC = () => {
          variants={containerVariants}
          initial="hidden"
          whileInView="visible"
-         className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl h-auto lg:h-[450px]"
+         className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 max-w-7xl h-auto"
       >
          {/* Left Column: 2x2 Grid */}
-         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
             {mainPlans.map((plan, i) => (
                 <motion.div 
                    key={i}
                    variants={itemVariants}
-                   className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-uremont-blue hover:bg-white/10 transition-all flex flex-col justify-between group h-full"
+                   className="bg-white/5 p-4 lg:p-6 rounded-2xl border border-white/10 hover:border-uremont-blue hover:bg-white/10 transition-all flex flex-col justify-between group min-h-[140px]"
                 >
-                   <div className="bg-uremont-blue/20 w-12 h-12 flex items-center justify-center rounded-xl text-uremont-blue group-hover:bg-uremont-blue group-hover:text-white transition-colors mb-4">
-                      <plan.icon size={24} />
+                   <div className="bg-uremont-blue/20 w-10 h-10 flex items-center justify-center rounded-xl text-uremont-blue group-hover:bg-uremont-blue group-hover:text-white transition-colors mb-3">
+                      <plan.icon size={20} />
                    </div>
                    <div>
-                      <h3 className="text-lg font-bold text-white mb-2">{plan.title}</h3>
+                      <h3 className="text-base lg:text-lg font-bold text-white mb-1">{plan.title}</h3>
                       <p className="text-gray-400 text-xs leading-relaxed">
                          {plan.desc}
                       </p>
@@ -739,20 +759,20 @@ export const PlanSlide: React.FC = () => {
          {/* Right Column: Big Highlighted Block */}
          <motion.div 
             variants={itemVariants}
-            className="lg:col-span-1 bg-gradient-to-br from-uremont-blue/20 to-uremont-dark border border-uremont-blue/50 p-8 rounded-2xl flex flex-col justify-center items-center text-center relative overflow-hidden group h-full"
+            className="lg:col-span-1 bg-gradient-to-br from-uremont-blue/20 to-uremont-dark border border-uremont-blue/50 p-6 lg:p-8 rounded-2xl flex flex-col justify-center items-center text-center relative overflow-hidden group min-h-[200px]"
          >
             <div className="absolute inset-0 bg-uremont-blue/10 blur-3xl group-hover:bg-uremont-blue/20 transition-colors" />
             
             <div className="relative z-10">
-                <div className="bg-uremont-blue w-20 h-20 mx-auto flex items-center justify-center rounded-2xl text-white shadow-lg shadow-uremont-blue/30 mb-6 scale-100 group-hover:scale-110 transition-transform duration-500">
-                    <dataPlan.icon size={40} />
+                <div className="bg-uremont-blue w-16 h-16 lg:w-20 lg:h-20 mx-auto flex items-center justify-center rounded-2xl text-white shadow-lg shadow-uremont-blue/30 mb-4 lg:mb-6 scale-100 group-hover:scale-110 transition-transform duration-500">
+                    <dataPlan.icon size={32} />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">{dataPlan.title}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
+                <h3 className="text-xl lg:text-2xl font-bold text-white mb-3">{dataPlan.title}</h3>
+                <p className="text-gray-300 text-xs lg:text-sm leading-relaxed">
                    {dataPlan.desc}
                 </p>
-                <div className="mt-8 px-4 py-1 rounded-full border border-uremont-blue/50 text-uremont-blue text-xs font-mono">
-                    CORE METHODOLOGY
+                <div className="mt-6 px-4 py-1 rounded-full border border-uremont-blue/50 text-uremont-blue text-[10px] font-mono">
+                    ОСНОВА ИЗМЕНЕНИЙ
                 </div>
             </div>
          </motion.div>
@@ -772,15 +792,15 @@ export const DiscussionSlide: React.FC = () => {
            transition={{ duration: 0.6 }}
            className="mb-8"
         >
-           <h2 className="text-5xl font-bold text-white mb-4">Свободное обсуждение</h2>
-           <p className="text-xl text-gray-400">Готов ответить на ваши вопросы</p>
+           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Свободное обсуждение</h2>
+           <p className="text-lg md:text-xl text-gray-400">Готов ответить на ваши вопросы</p>
         </motion.div>
 
         <motion.div 
            initial={{ opacity: 0, scale: 0.9 }}
            whileInView={{ opacity: 1, scale: 1 }}
            transition={{ delay: 0.3, duration: 0.6 }}
-           className="w-full max-w-4xl aspect-video"
+           className="w-full max-w-3xl aspect-video h-[40vh] min-h-[300px]"
         >
            <BrowserWindow title="uremont.com/demo">
               <div className="w-full h-full bg-black flex items-center justify-center relative overflow-hidden group cursor-pointer">
