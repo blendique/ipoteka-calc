@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid } from 'lucide-react';
+import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid, MapPin, Wrench, MessageCircle } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -173,7 +173,7 @@ export const ProblemSlide: React.FC = () => {
                 <div>
                     <h4 className="font-bold text-white mb-0.5 text-base lg:text-lg">Нет действия в один клик</h4>
                     <p className="text-xs lg:text-sm text-gray-400 leading-relaxed">
-                        С главной страницы нельзя было сразу рассчитать стоимость или записаться.
+                        Нельзя сразу рассчитать стоимость или записаться.
                     </p>
                 </div>
              </div>
@@ -305,7 +305,7 @@ export const DataSlide: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-uremont-accent mb-1">56.9%+</div>
+                <div className="text-4xl lg:text-5xl font-bold text-uremont-accent mb-1">56.9%</div>
                 <div className="text-base lg:text-lg font-medium text-white">Доверяют рейтингу больше</div>
              </div>
              <ThumbsUp className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
@@ -590,6 +590,16 @@ export const SolutionSlide3: React.FC = () => {
 
 // --- Slide 8: Solution 4 (Customer Path & Quality) ---
 export const SolutionSlide4: React.FC = () => {
+  const [animStep, setAnimStep] = useState(0);
+
+  // Cycle through 0 (Inputs) -> 1 (Map) -> 2 (Call) -> 3 (SMS) -> 4 (Reset)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAnimStep(prev => (prev + 1) % 5);
+    }, 2000); 
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="h-full flex flex-col justify-center px-6 md:px-24">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -602,8 +612,8 @@ export const SolutionSlide4: React.FC = () => {
            <h2 className="text-3xl lg:text-4xl font-bold mt-2 mb-6">Новый <span className="text-uremont-blue">клиентский путь</span> и качество сервиса</h2>
            
            <div className="flex flex-col gap-3">
-               <div className="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 shrink-0">
+               <div className={`flex items-center gap-4 p-3 rounded-xl border transition-colors ${animStep === 2 || animStep === 3 ? 'bg-white/10 border-uremont-blue' : 'bg-white/5 border-white/10'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${animStep === 2 || animStep === 3 ? 'bg-uremont-blue text-white' : 'bg-green-500/20 text-green-500'}`}>
                     <Phone size={20} />
                   </div>
                   <div>
@@ -620,8 +630,8 @@ export const SolutionSlide4: React.FC = () => {
                     <p className="text-xs text-gray-400">Строгий отбор и регулярная проверка партнеров</p>
                   </div>
                </div>
-               <div className="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500 shrink-0">
+               <div className={`flex items-center gap-4 p-3 rounded-xl border transition-colors ${animStep === 3 ? 'bg-white/10 border-purple-500' : 'bg-white/5 border-white/10'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${animStep === 3 ? 'bg-purple-500 text-white' : 'bg-purple-500/20 text-purple-500'}`}>
                     <Headphones size={20} />
                   </div>
                   <div>
@@ -638,44 +648,149 @@ export const SolutionSlide4: React.FC = () => {
            transition={{ duration: 0.7 }}
            className="relative flex justify-center items-center h-[40vh] min-h-[350px]"
         >
-             {/* Abstract Visualization of Connection */}
-             <div className="relative w-full aspect-square max-h-[80%] max-w-[400px]">
-                 {/* Center Circle (User) */}
-                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                    <div className="w-20 h-20 bg-uremont-blue rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.5)]">
-                        <Phone size={32} className="text-white animate-pulse" />
-                    </div>
-                 </div>
+             {/* Phone Container */}
+             <div className="w-[220px] h-[400px] lg:w-[260px] lg:h-[460px] bg-gray-900 rounded-[2rem] border-4 border-gray-700 overflow-hidden relative shadow-2xl flex flex-col">
+                {/* Notch */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-gray-900 rounded-b-xl z-20"></div>
+                
+                {/* Screen Content */}
+                <div className="flex-1 bg-gradient-to-br from-gray-800 to-gray-950 relative overflow-hidden">
+                    
+                    {/* Background Map Effect */}
+                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #4b5563 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
 
-                 {/* Orbiting Circles (STO) */}
-                 {[0, 72, 144, 216, 288].map((deg, i) => (
-                    <motion.div
-                       key={i}
-                       className="absolute top-1/2 left-1/2 w-12 h-12 -ml-6 -mt-6 bg-gray-800 rounded-full border-2 border-green-500 flex items-center justify-center z-10"
-                       initial={{ rotate: deg, translateX: 120 }}
-                       animate={{ rotate: deg + 360 }}
-                       transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                       style={{ transformOrigin: "50% 50%" }}
-                    >
-                       <div className="absolute inset-0 flex items-center justify-center" style={{ transform: `rotate(-${deg}deg)` }}>
-                          <CheckCircle size={18} className="text-green-500" />
-                       </div>
-                    </motion.div>
-                 ))}
+                    <AnimatePresence mode='wait'>
+                        {/* Step 0 & 1: Form Input */}
+                        {animStep <= 1 && (
+                            <motion.div 
+                                key="form"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex flex-col justify-center px-4 space-y-3 z-10"
+                            >
+                                <motion.div 
+                                    initial={{ x: -20, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="bg-gray-800 p-3 rounded-lg border border-gray-600 flex items-center gap-3"
+                                >
+                                    <Car size={16} className="text-uremont-blue" />
+                                    <div className="text-xs text-white">Audi Q8, 2024</div>
+                                </motion.div>
+                                <motion.div 
+                                    initial={{ x: -20, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    transition={{ delay: 0.4 }}
+                                    className="bg-gray-800 p-3 rounded-lg border border-gray-600 flex items-center gap-3"
+                                >
+                                    <Wrench size={16} className="text-uremont-accent" />
+                                    <div className="text-xs text-white">Замена масла</div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ delay: 0.8 }}
+                                    className="bg-uremont-blue text-white text-xs font-bold py-2 rounded-lg text-center mt-2"
+                                >
+                                    Найти сервисы
+                                </motion.div>
+                            </motion.div>
+                        )}
 
-                 {/* Connecting Lines ring */}
-                 <div className="absolute inset-0 rounded-full border border-dashed border-gray-700 animate-spin-slow" />
-                 
-                 {/* Static ring */}
-                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-full h-full rounded-full border border-gray-700 opacity-50"></div>
-                 </div>
-                 
-                 {/* Badges positioned statically for layout stability */}
-                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#020617] px-3 py-1.5 rounded-full border border-green-500/50 shadow-lg flex items-center gap-2 whitespace-nowrap">
-                    <ShieldCheck size={14} className="text-green-500" />
-                    <span className="text-[10px] font-bold text-green-500 uppercase">120+ проверенных СТО</span>
-                 </div>
+                        {/* Step 2: Map & Pin */}
+                        {animStep === 2 && (
+                            <motion.div 
+                                key="map"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex items-center justify-center z-10"
+                            >
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                     <motion.div 
+                                        initial={{ scale: 0, y: 20 }}
+                                        animate={{ scale: 1, y: 0 }}
+                                        transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                                        className="relative"
+                                     >
+                                         <MapPin size={40} className="text-red-500 fill-current" />
+                                         <motion.div 
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.3 }}
+                                            className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap"
+                                         >
+                                            5 400 ₽
+                                         </motion.div>
+                                     </motion.div>
+                                </div>
+                                <motion.div 
+                                    initial={{ y: 50, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.8 }}
+                                    className="absolute bottom-6 w-[80%]"
+                                >
+                                    <div className="bg-green-500 text-white text-xs font-bold py-2 rounded-lg text-center shadow-lg flex items-center justify-center gap-2">
+                                        <Phone size={12} />
+                                        Позвонить
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+
+                        {/* Step 3: SMS Success */}
+                        {animStep >= 3 && (
+                            <motion.div 
+                                key="sms"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="absolute inset-0 z-10 bg-gray-900/90 backdrop-blur-sm flex flex-col pt-12 px-4"
+                            >
+                                <motion.div 
+                                    initial={{ y: -50, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ type: "spring" }}
+                                    className="bg-gray-800 rounded-2xl p-3 border border-gray-700 shadow-xl flex gap-3"
+                                >
+                                    <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shrink-0">
+                                        <MessageCircle size={16} className="text-white" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="flex justify-between items-baseline mb-1">
+                                            <span className="font-bold text-white text-[10px]">UREMONT</span>
+                                            <span className="text-[8px] text-gray-500">Сейчас</span>
+                                        </div>
+                                        <p className="text-[10px] text-gray-300 leading-tight">
+                                            Вы записаны на сервис. <br/> Audi Q8, 14:00. <br/>Предварительная стоимость: 3.000 рублей.
+                                        </p>
+                                    </div>
+                                </motion.div>
+                                <motion.div 
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 1 }}
+                                    className="mt-auto mb-8 text-center"
+                                >
+                                    <CheckCircle size={48} className="text-green-500 mx-auto mb-2" />
+                                    <h3 className="text-white font-bold">Готово!</h3>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Finger Cursor Simulating Interaction */}
+                    {animStep === 1 && (
+                         <motion.div 
+                            initial={{ x: 100, y: 100, opacity: 0 }}
+                            animate={{ x: 40, y: 140, opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute z-30"
+                         >
+                            <div className="w-8 h-8 bg-white/20 rounded-full border border-white/50 backdrop-blur-sm"></div>
+                         </motion.div>
+                    )}
+                </div>
              </div>
         </motion.div>
       </div>
@@ -711,7 +826,7 @@ export const PlanSlide: React.FC = () => {
   const dataPlan = {
        icon: FileBarChart,
        title: "Data-driven Dev",
-       desc: "Доработки по данным, полученным в рамках A/B тестирования и анализу воронки на трафике."
+       desc: "Доработки по данным, полученным в ходе A/B тестирований и анализа воронки на трафике."
   };
 
   return (
