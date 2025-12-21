@@ -344,10 +344,10 @@ export const SolutionSlide1: React.FC = () => {
   
   // Mixed content from Public folder
   const content = [
-    { type: 'image', src: '/image1.jpg' },
-    { type: 'image', src: '/image2.jpg' },
-    { type: 'video', src: '/video1.mp4' },
-    { type: 'video', src: '/video2.mp4' }
+    { type: 'image', src: 'https://pim4y1v96ezxxeus.public.blob.vercel-storage.com/1.mp4' },
+    { type: 'image', src: 'https://pim4y1v96ezxxeus.public.blob.vercel-storage.com/2.jpg' },
+    { type: 'video', src: 'https://pim4y1v96ezxxeus.public.blob.vercel-storage.com/3.jpg' },
+    { type: 'video', src: 'https://pim4y1v96ezxxeus.public.blob.vercel-storage.com/4.mp4' }
   ];
 
   useEffect(() => {
