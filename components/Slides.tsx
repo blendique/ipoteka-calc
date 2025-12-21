@@ -340,23 +340,27 @@ export const DataSlide: React.FC = () => {
 
 // --- Slide 5: Solution 1 (Landing & USP) ---
 export const SolutionSlide1: React.FC = () => {
-  const [currentImage, setCurrentImage] = useState(0);
-  const screenshots = [
-    "https://placehold.co/800x600/2563EB/white?text=Landing+1",
-    "https://placehold.co/800x600/10B981/white?text=Landing+2",
-    "https://placehold.co/800x600/F59E0B/white?text=Landing+3",
-    "https://placehold.co/800x600/EF4444/white?text=Landing+4"
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Mixed content from Public folder
+  const content = [
+    { type: 'image', src: '/image1.jpg' },
+    { type: 'image', src: '/image2.jpg' },
+    { type: 'video', src: '/video1.mp4' },
+    { type: 'video', src: '/video2.mp4' }
   ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % screenshots.length);
-    }, 3000);
+      setCurrentIndex((prev) => (prev + 1) % content.length);
+    }, 10000); // 10 seconds
     return () => clearInterval(timer);
-  }, [screenshots.length]);
+  }, [content.length]);
 
-  const nextImage = () => setCurrentImage((prev) => (prev + 1) % screenshots.length);
-  const prevImage = () => setCurrentImage((prev) => (prev - 1 + screenshots.length) % screenshots.length);
+  const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % content.length);
+  const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + content.length) % content.length);
+
+  const currentItem = content[currentIndex];
 
   return (
     <div className="h-full flex flex-col justify-center px-6 md:pl-12 md:pr-28">
@@ -386,31 +390,53 @@ export const SolutionSlide1: React.FC = () => {
                initial={{ y: 50, opacity: 0 }}
                whileInView={{ y: 0, opacity: 1 }}
                transition={{ duration: 0.7 }}
-               className="h-[45vh] min-h-[350px] w-full relative"
+               className="w-full aspect-video relative"
             >
               <BrowserWindow title="uremont.com/ab-test">
-                 <div className="relative w-full h-full group">
-                    <img 
-                      src={screenshots[currentImage]} 
-                      alt={`Landing Variant ${currentImage + 1}`}
-                      className="w-full h-full object-cover object-top transition-all duration-500"
-                    />
+                 <div className="relative w-full h-full group bg-black">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentIndex}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="absolute inset-0 w-full h-full"
+                        >
+                            {currentItem.type === 'image' ? (
+                                <img 
+                                  src={currentItem.src} 
+                                  alt={`Slide ${currentIndex + 1}`}
+                                  className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <video
+                                  src={currentItem.src}
+                                  autoPlay
+                                  muted
+                                  playsInline
+                                  loop // Loop video in case it's shorter than 10s
+                                  className="w-full h-full object-cover"
+                                />
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
                     
                     {/* Controls */}
-                    <button onClick={prevImage} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={prevSlide} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
                         <ChevronLeft size={16} />
                     </button>
-                    <button onClick={nextImage} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={nextSlide} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
                         <ChevronRight size={16} />
                     </button>
                     
                     {/* Indicators */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                        {screenshots.map((_, idx) => (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                        {content.map((_, idx) => (
                            <div 
                               key={idx} 
-                              onClick={() => setCurrentImage(idx)}
-                              className={`w-2 h-2 rounded-full cursor-pointer transition-colors ${currentImage === idx ? 'bg-white' : 'bg-white/50'}`} 
+                              onClick={() => setCurrentIndex(idx)}
+                              className={`w-2 h-2 rounded-full cursor-pointer transition-colors ${currentIndex === idx ? 'bg-white' : 'bg-white/50'}`} 
                            />
                         ))}
                     </div>
@@ -424,7 +450,7 @@ export const SolutionSlide1: React.FC = () => {
               transition={{ delay: 0.5 }}
               className="text-center text-xs lg:text-sm text-gray-400 font-mono"
             >
-              4 варианта лендингов, основанные на CustDev.
+              4 варианта (Фото/Видео), основанные на CustDev.
             </motion.p>
         </div>
       </div>
