@@ -91,7 +91,7 @@ const App: React.FC = () => {
   const renderSlide = () => {
     switch (currentSlide) {
       case 0: return <WelcomeSlide />;
-      case 1: return <AgendaSlide />;
+      case 1: return <AgendaSlide onNavigate={changeSlide} />;
       case 2: return <ProblemSlide />;
       case 3: return <DataSlide />;
       case 4: return <DataSlide2 />;
@@ -110,6 +110,27 @@ const App: React.FC = () => {
   return (
     <div className="relative w-full h-screen bg-uremont-dark overflow-hidden text-white selection:bg-uremont-blue selection:text-white">
       
+      {/* --- Mobile/Tablet Block Overlay --- */}
+      {/* Hidden on lg (1024px) and above, visible on smaller screens */}
+      <div className="fixed inset-0 z-[100] bg-uremont-dark flex flex-col items-center justify-center p-8 text-center lg:hidden">
+        <div className="mb-8 scale-150 transform">
+           <Logo />
+        </div>
+        <h2 className="text-2xl font-bold mb-4 text-white">Ой!</h2>
+        <p className="text-gray-400 mb-8 max-w-md leading-relaxed">
+          Этот сайт доступен только с компьютера. <br/>
+          А пока переходите на наш uremont.com и ремонтируйтесь с кайфом.
+        </p>
+        <a 
+          href="https://uremont.com" 
+          target="_blank" 
+          rel="noreferrer"
+          className="bg-uremont-blue hover:bg-blue-600 text-white px-8 py-3 rounded-full transition-colors font-bold shadow-lg shadow-uremont-blue/30"
+        >
+          Перейти на uremont.com
+        </a>
+      </div>
+
       {/* --- Fixed Header --- */}
       <div className="absolute top-8 left-8 md:left-12 z-50">
         <Logo className="cursor-pointer hover:opacity-80 transition-opacity" />

@@ -81,15 +81,19 @@ export const WelcomeSlide: React.FC = () => {
 };
 
 // --- Slide 2: Agenda ---
-export const AgendaSlide: React.FC = () => {
+interface AgendaSlideProps {
+  onNavigate?: (index: number) => void;
+}
+
+export const AgendaSlide: React.FC<AgendaSlideProps> = ({ onNavigate }) => {
   const points = [
-    { id: 1, title: "Основа изменений", desc: "Проблемы старой версии, требующие решения" },
-    { id: 2, title: "CustDev и цифры", desc: "Данные, на которых основаны решения: аудитория и боли, факторы доверия" },
-    { id: 3, title: "Новые решения", desc: "Переработанное УТП, новая база данных, обновление AI-алгоритмов" },
-    { id: 4, title: "Обновленная операционная модель", desc: "Технологичность, скорость и контроль качества звонков через AI" },
-    { id: 5, title: "Новая система отбора СТО", desc: "Измененные стандарты для партнеров и план масштабирования" },
-    { id: 6, title: "План доработок", desc: "Список запланированных работ на Q1 2026" },
-    { id: 7, title: "Свободное обсуждение", desc: "Q&A сессия по результатам презентации" },
+    { id: 1, title: "Основа изменений", desc: "Проблемы старой версии, требующие решения", targetSlide: 2 },
+    { id: 2, title: "CustDev и цифры", desc: "Данные, на которых основаны решения: аудитория и боли, факторы доверия", targetSlide: 3 },
+    { id: 3, title: "Новые решения", desc: "Переработанное УТП, новая база данных, обновление AI-алгоритмов", targetSlide: 5 },
+    { id: 4, title: "Обновленная операционная модель", desc: "Технологичность, скорость и контроль качества звонков через AI", targetSlide: 9 },
+    { id: 5, title: "Новая система отбора СТО", desc: "Измененные стандарты для партнеров и план масштабирования", targetSlide: 10 },
+    { id: 6, title: "План доработок", desc: "Список запланированных работ на Q1 2026", targetSlide: 11 },
+    { id: 7, title: "Свободное обсуждение", desc: "Q&A сессия по результатам презентации", targetSlide: 12 },
   ];
 
   return (
@@ -115,7 +119,8 @@ export const AgendaSlide: React.FC = () => {
           <motion.div 
             key={point.id} 
             variants={itemVariants}
-            className="group flex items-center gap-4 lg:gap-6 p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-uremont-blue/50 transition-all duration-300 cursor-default"
+            onClick={() => onNavigate && onNavigate(point.targetSlide)}
+            className="group flex items-center gap-4 lg:gap-6 p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-uremont-blue/50 transition-all duration-300 cursor-pointer active:scale-[0.99]"
           >
             <span className="flex items-center justify-center w-10 h-10 shrink-0 rounded-full bg-uremont-blue/20 text-uremont-blue font-bold text-lg group-hover:bg-uremont-blue group-hover:text-white transition-colors">
               {point.id}
@@ -128,7 +133,7 @@ export const AgendaSlide: React.FC = () => {
                 {point.desc}
               </p>
             </div>
-            <ArrowRight className="ml-auto text-gray-600 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all" />
+            <ArrowRight className="ml-auto text-gray-600 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
           </motion.div>
         ))}
       </motion.div>
