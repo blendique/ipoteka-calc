@@ -222,7 +222,7 @@ export const ProblemSlide: React.FC = () => {
            <BrowserWindow title="uremont.com (v1.0)">
               <div className="w-full h-full bg-black flex items-center justify-center overflow-hidden">
                 <img 
-                  src="https://pim4y1v96ezxxeus.public.blob.vercel-storage.com/6.png" 
+                  src="https://pim4y1v96ezxxeus.public.blob.vercel-storage.com/9.jpg" 
                   alt="Старый интерфейс лендинга"
                   className="w-full h-full object-cover"
                 />
