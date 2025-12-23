@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Logo } from './components/Logo';
 import { Navigation } from './components/Navigation';
-import { WelcomeSlide, AgendaSlide, ProblemSlide, DataSlide, SolutionSlide1, SolutionSlide2, SolutionSlide3, SolutionSlide4, PlanSlide, DiscussionSlide } from './components/Slides';
+import { WelcomeSlide, AgendaSlide, ProblemSlide, DataSlide, DataSlide2, SolutionSlide1, SolutionSlide2, SolutionSlide3, SolutionSlide4, OperationsSlide, PartnersSlide, PlanSlide, DiscussionSlide } from './components/Slides';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const TOTAL_SLIDES = 10;
+const TOTAL_SLIDES = 13;
 
 const App: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -94,12 +94,15 @@ const App: React.FC = () => {
       case 1: return <AgendaSlide />;
       case 2: return <ProblemSlide />;
       case 3: return <DataSlide />;
-      case 4: return <SolutionSlide1 />;
-      case 5: return <SolutionSlide2 />;
-      case 6: return <SolutionSlide3 />;
-      case 7: return <SolutionSlide4 />;
-      case 8: return <PlanSlide />;
-      case 9: return <DiscussionSlide />;
+      case 4: return <DataSlide2 />;
+      case 5: return <SolutionSlide1 />;
+      case 6: return <SolutionSlide2 />;
+      case 7: return <SolutionSlide3 />;
+      case 8: return <SolutionSlide4 />;
+      case 9: return <OperationsSlide />;
+      case 10: return <PartnersSlide />;
+      case 11: return <PlanSlide />;
+      case 12: return <DiscussionSlide />;
       default: return <WelcomeSlide />;
     }
   };
@@ -135,7 +138,7 @@ const App: React.FC = () => {
               </div>
               <div className="h-8 w-[1px] bg-gray-700"></div>
               <div className="text-xl font-mono text-gray-500">
-                {currentSlide < 9 ? `0${currentSlide + 1}` : currentSlide + 1} <span className="text-gray-700 text-sm">/ {TOTAL_SLIDES}</span>
+                {currentSlide < 10 ? `0${currentSlide + 1}` : currentSlide + 1} <span className="text-gray-700 text-sm">/ {TOTAL_SLIDES}</span>
               </div>
             </div>
           </motion.div>

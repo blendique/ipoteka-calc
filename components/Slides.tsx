@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid, MapPin, Wrench, MessageCircle } from 'lucide-react';
+import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid, MapPin, Wrench, MessageCircle, Percent, AlertCircle, FileCheck, PhoneCall, Timer, UserCheck, Building2, Map, Crosshair, ArrowDown, Activity, Clock, Coffee, MonitorCheck, MapPinned, LayoutDashboard, GripVertical } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -86,8 +86,10 @@ export const AgendaSlide: React.FC = () => {
     { id: 1, title: "Основа изменений", desc: "Проблемы старой версии" },
     { id: 2, title: "CustDev и цифры", desc: "Данные, на которых основаны решения" },
     { id: 3, title: "Новые решения", desc: "Переработанное УТП, новая база данных, AI алгоритмы" },
-    { id: 4, title: "План доработок", desc: "Список запланированных работ на Q1 2026" },
-    { id: 5, title: "Свободное обсуждение", desc: "Q&A сессия" },
+    { id: 4, title: "Операционная модель", desc: "Технологичность и контроль качества через AI" },
+    { id: 5, title: "Стратегия партнеров", desc: "Стандарты сети и план масштабирования" },
+    { id: 6, title: "План доработок", desc: "Список запланированных работ на Q1 2026" },
+    { id: 7, title: "Свободное обсуждение", desc: "Q&A сессия" },
   ];
 
   return (
@@ -250,30 +252,11 @@ export const DataSlide: React.FC = () => {
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 max-w-6xl">
-        {/* Stat 1 */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between"
-        >
-          <div className="flex justify-between items-start">
-             <div>
-                <div className="text-4xl lg:text-5xl font-bold text-red-500 mb-1">65.7%</div>
-                <div className="text-base lg:text-lg font-medium text-white">Боятся навязывания услуг</div>
-             </div>
-             <ShieldCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
-          </div>
-          <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Самый частый страх клиентов перед обращением в новый сервис, согласно проведенному опросу.
-          </div>
-        </motion.div>
-
-        {/* Stat 2 */}
+        {/* Stat 1 (Swapped - Was Stat 2) */}
         <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
-           transition={{ delay: 0.2 }}
+           transition={{ delay: 0.1 }}
            className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between"
         >
           <div className="flex justify-between items-start">
@@ -285,6 +268,25 @@ export const DataSlide: React.FC = () => {
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
              Пользователи считают критически важным понимать рыночную стоимость до визита.
+          </div>
+        </motion.div>
+
+        {/* Stat 2 (Swapped - Was Stat 1) */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between"
+        >
+          <div className="flex justify-between items-start">
+             <div>
+                <div className="text-4xl lg:text-5xl font-bold text-red-500 mb-1">65.7%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Боятся навязывания услуг</div>
+             </div>
+             <ShieldCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+          </div>
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
+             Самый частый страх клиентов перед обращением в новый сервис, согласно проведенному опросу.
           </div>
         </motion.div>
 
@@ -323,6 +325,104 @@ export const DataSlide: React.FC = () => {
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
              Удобнее выбрать Марку → Модель из предоставленного списка, а проблему - описывать в свободной форме.
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+// --- Slide 5: DataSlide2 (CustDev Part 2) ---
+export const DataSlide2: React.FC = () => {
+  return (
+    <div className="h-full flex flex-col justify-center px-12 md:px-24">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={containerVariants}
+        className="mb-8"
+      >
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / CUSTDEV (ЧАСТЬ 2)</span>
+        <h2 className="text-3xl md:text-5xl font-bold mt-2">
+          Подписка и <span className="text-uremont-blue">факторы доверия</span>
+        </h2>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 max-w-6xl">
+        {/* Stat 1: Subscription */}
+        <motion.div 
+           initial={{ opacity: 0, scale: 0.95 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           transition={{ delay: 0.1 }}
+           className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between hover:bg-white/10 transition-colors"
+        >
+          <div className="flex justify-between items-start">
+             <div>
+                <div className="text-4xl lg:text-5xl font-bold text-green-500 mb-1">65.7%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Готовы к подписке</div>
+             </div>
+             <Repeat className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+          </div>
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
+             Суммарная готовность платить 500₽/мес. "Ядро" лояльных пользователей — 26.5%, еще 39.2% — скорее да.
+          </div>
+        </motion.div>
+
+        {/* Stat 2: Value Drivers */}
+        <motion.div 
+           initial={{ opacity: 0, scale: 0.95 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           transition={{ delay: 0.2 }}
+           className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between hover:bg-white/10 transition-colors"
+        >
+          <div className="flex justify-between items-start">
+             <div>
+                <div className="text-4xl lg:text-5xl font-bold text-uremont-blue mb-1">54.7%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Скидки на ремонт</div>
+             </div>
+             <Wrench className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+          </div>
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
+             Драйвер ценности: скидки на "хард" (ремонт, запчасти) важнее "лайфстайла". Помощь эксперта важна лишь 12.2%.
+          </div>
+        </motion.div>
+
+        {/* Stat 3: Trust Gap */}
+        <motion.div 
+           initial={{ opacity: 0, scale: 0.95 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           transition={{ delay: 0.3 }}
+           className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between hover:bg-white/10 transition-colors"
+        >
+          <div className="flex justify-between items-start">
+             <div>
+                <div className="text-4xl lg:text-5xl font-bold text-red-500 mb-1">98.5%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Цена до визита</div>
+             </div>
+             <ShieldCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+          </div>
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
+             Фундаментальный страх — непрозрачность. 65.7% боятся навязывания услуг. Платформа выступает гарантом.
+          </div>
+        </motion.div>
+
+         {/* Stat 4: Decision Makers */}
+         <motion.div 
+           initial={{ opacity: 0, scale: 0.95 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           transition={{ delay: 0.4 }}
+           className="bg-white/5 p-5 rounded-xl border border-white/10 flex flex-col justify-between hover:bg-white/10 transition-colors"
+        >
+          <div className="flex justify-between items-start">
+             <div>
+                <div className="text-4xl lg:text-5xl font-bold text-yellow-500 mb-1">61.3%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Предварительный расчет</div>
+             </div>
+             <FileCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+          </div>
+          <div className="mt-3 text-xs lg:text-sm text-gray-400">
+             Важнее отзывов (51.8%). Киллер-фича подписки — «Гарантированная экономия» (38.1%).
           </div>
         </motion.div>
       </div>
@@ -610,7 +710,382 @@ export const SolutionSlide4: React.FC = () => {
   );
 };
 
-// --- Slide 9: Future Plans (PlanSlide) ---
+// --- Slide 9: Operations & Network (OperationsSlide) ---
+export const OperationsSlide: React.FC = () => {
+  return (
+    <div className="h-full flex flex-col justify-center px-8 md:px-12 lg:px-16">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={containerVariants}
+        className="mb-8"
+      >
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">03 / ОПЕРАЦИОННАЯ МОДЕЛЬ</span>
+        <h2 className="text-3xl md:text-5xl font-bold mt-2">
+          Умная телефония и <span className="text-uremont-blue">контроль качества</span>
+        </h2>
+      </motion.div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 h-auto min-h-[500px] items-center">
+        {/* Left Column: Text Content */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          className="space-y-8"
+        >
+            {/* Point 1 */}
+            <motion.div variants={itemVariants} className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-uremont-blue/50 transition-colors">
+                <div className="flex items-start gap-4">
+                    <div className="bg-red-500/20 p-3 rounded-lg text-red-500 shrink-0">
+                        <Timer size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-white mb-2">Маршрутизация и «правило 25 секунд»</h3>
+                        <p className="text-gray-400 text-sm leading-relaxed mb-3">
+                            Если СТО не отвечает <span className="text-white font-bold">25 секунд</span>, звонок переводится на оператора. 
+                            ИИ распознает автоответчики, сбросы и недозвоны — в таком случае оператор КЦ перезванивает за <span className="text-white font-bold">5 минут</span>.
+                        </p>
+                    </div>
+                </div>
+            </motion.div>
+
+            {/* Point 2 */}
+            <motion.div variants={itemVariants} className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-uremont-blue/50 transition-colors">
+                <div className="flex items-start gap-4">
+                    <div className="bg-uremont-blue/20 p-3 rounded-lg text-uremont-blue shrink-0">
+                        <Headphones size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-white mb-2">Бесшовный клиентский путь</h3>
+                        <p className="text-gray-400 text-sm leading-relaxed mb-3">
+                            Оператор видит контекст (Авто + Проблема). Жесткий SLA: СТО обязано перезвонить клиенту в течение <span className="text-white font-bold">20 минут</span>.
+                        </p>
+                    </div>
+                </div>
+            </motion.div>
+
+            {/* Point 3 */}
+            <motion.div variants={itemVariants} className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-uremont-blue/50 transition-colors">
+                <div className="flex items-start gap-4">
+                    <div className="bg-green-500/20 p-3 rounded-lg text-green-500 shrink-0">
+                        <BrainCircuit size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-white mb-2">AI-Контроль качества</h3>
+                        <p className="text-gray-400 text-sm leading-relaxed">
+                            Тотальный анализ разговоров: оценка тональности, факта записи и соблюдения договоренностей.
+                        </p>
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
+
+        {/* Right Column: Visual Timeline */}
+        <motion.div 
+           initial={{ opacity: 0, x: 50 }}
+           whileInView={{ opacity: 1, x: 0 }}
+           transition={{ duration: 0.8 }}
+           className="relative h-full min-h-[400px] bg-[#1e293b]/50 rounded-3xl border border-white/5 p-8 flex flex-col justify-center"
+        >
+            {/* Start Node: Client */}
+            <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col items-center z-10">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    <Users size={32} />
+                </div>
+                <div className="mt-2 font-bold text-sm">Клиент</div>
+            </div>
+
+            {/* Paths container */}
+            <div className="ml-24 flex-1 h-[300px] relative">
+                
+                {/* Router Node (Invisible split point) */}
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center z-10 border border-gray-400">
+                   <PhoneCall size={14} />
+                </div>
+
+                {/* Path 1: Success (Upper) */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
+                    {/* Upper Line */}
+                    <path d="M 32 150 C 100 150, 100 50, 200 50 L 350 50" fill="none" stroke="#10B981" strokeWidth="2" strokeDasharray="5 5" />
+                    {/* Lower Line */}
+                    <path d="M 32 150 C 100 150, 100 250, 200 250 L 350 250" fill="none" stroke="#EF4444" strokeWidth="2" />
+                </svg>
+
+                {/* Node: Station (Top) */}
+                <div className="absolute left-[200px] top-[50px] -translate-y-1/2 bg-[#0f172a] border border-green-500/50 p-4 rounded-xl flex items-center gap-3 w-[220px]">
+                    <div className="p-2 bg-green-500/20 rounded text-green-500">
+                        <Building2 size={20} />
+                    </div>
+                    <div>
+                        <div className="text-xs text-gray-400">Путь 1</div>
+                        <div className="font-bold text-sm">Ответ СТО</div>
+                    </div>
+                    <ArrowRight size={16} className="text-green-500 ml-auto" />
+                </div>
+
+                {/* Node: AI Analysis (End of Top) */}
+                <div className="absolute right-0 top-[50px] -translate-y-1/2 flex flex-col items-center">
+                    <div className="w-14 h-14 bg-green-500 text-black rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.4)] animate-pulse">
+                        <BrainCircuit size={28} />
+                    </div>
+                    <div className="mt-2 text-xs text-green-400 font-bold">AI ANALYTICS</div>
+                </div>
+
+
+                {/* Node: 25s Wait (Bottom Path Start) */}
+                <div className="absolute left-[100px] top-[200px] text-red-500 font-mono font-bold text-xl animate-pulse">
+                    25s
+                </div>
+
+                {/* Node: Operator (Bottom) */}
+                <div className="absolute left-[200px] top-[250px] -translate-y-1/2 bg-[#0f172a] border border-red-500/50 p-4 rounded-xl flex items-center gap-3 w-[220px]">
+                    <div className="p-2 bg-red-500/20 rounded text-red-500">
+                        <Headphones size={20} />
+                    </div>
+                    <div>
+                        <div className="text-xs text-gray-400">Путь 2 (Сбой)</div>
+                        <div className="font-bold text-sm">Оператор КЦ</div>
+                    </div>
+                </div>
+                
+                {/* Node: SLA 20m (End of Bottom) */}
+                <div className="absolute right-0 top-[250px] -translate-y-1/2 flex flex-col items-center">
+                    <div className="w-14 h-14 bg-red-500 text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.4)]">
+                        <Timer size={28} />
+                    </div>
+                    <div className="mt-2 text-xs text-red-400 font-bold">SLA 20 MIN</div>
+                </div>
+
+                {/* Connecting lines for Grey Zone/5min */}
+                <div className="absolute left-[200px] top-[290px] text-[10px] text-gray-400 flex items-center gap-1">
+                    <AlertCircle size={10} />
+                    <span>Автоответчик → 5 мин callback</span>
+                </div>
+            </div>
+
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+// --- Slide 10: Partners & Network (PartnersSlide) ---
+export const PartnersSlide: React.FC = () => {
+  return (
+    <div className="h-full flex flex-col justify-center px-8 md:px-12 lg:px-16 overflow-hidden">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={containerVariants}
+        className="mb-6 lg:mb-8"
+      >
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">04 / СТРАТЕГИЯ ПАРТНЕРОВ</span>
+        <h2 className="text-3xl md:text-5xl font-bold mt-2">
+          Стандарты партнерской сети и <span className="text-uremont-blue">покрытие</span>
+        </h2>
+      </motion.div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 h-auto min-h-[500px]">
+        
+        {/* Left Column: Partner Profile Card */}
+        <motion.div 
+           initial="hidden"
+           whileInView="visible"
+           variants={containerVariants}
+           className="h-full"
+        >
+           <motion.div variants={itemVariants} className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-3xl p-8 shadow-2xl relative h-full flex flex-col">
+              <div className="absolute top-0 right-10 w-24 h-1 bg-uremont-accent shadow-[0_0_15px_#10B981] rounded-b-lg"></div>
+              
+              <div className="flex items-center gap-4 mb-8">
+                  <div className="w-16 h-16 bg-uremont-blue/20 rounded-2xl flex items-center justify-center text-uremont-blue border border-uremont-blue/30">
+                      <UserCheck size={36} />
+                  </div>
+                  <div>
+                      <h3 className="text-2xl font-bold text-white">Портрет</h3>
+                      <div className="text-sm text-gray-400 uppercase tracking-widest">идеального партнера</div>
+                  </div>
+              </div>
+
+              <div className="space-y-6 flex-1">
+                  {/* Section 1 */}
+                  <div className="bg-black/20 p-4 rounded-xl border border-white/5">
+                      <h4 className="flex items-center gap-2 text-white font-bold mb-3">
+                          <Building2 size={18} className="text-uremont-accent" />
+                          Типология
+                      </h4>
+                      <div className="space-y-2 pl-6">
+                          <div className="flex items-center gap-2 text-sm text-gray-300">
+                              <div className="w-1.5 h-1.5 rounded-full bg-uremont-accent"></div>
+                              Экс-официальные дилеры
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-300">
+                              <div className="w-1.5 h-1.5 rounded-full bg-uremont-accent"></div>
+                              Сетевые станции
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-300">
+                              <div className="w-1.5 h-1.5 rounded-full bg-uremont-accent"></div>
+                              НСТО с выделенным администратором
+                          </div>
+                      </div>
+                  </div>
+
+                  {/* Section 2 */}
+                  <div className="bg-black/20 p-4 rounded-xl border border-white/5">
+                      <h4 className="flex items-center gap-2 text-white font-bold mb-3">
+                          <Coffee size={18} className="text-yellow-500" />
+                          Инфраструктура
+                      </h4>
+                      <div className="grid grid-cols-2 gap-2 pl-6">
+                           <div className="flex items-center gap-2 text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">
+                               <CheckCircle size={12} className="text-green-500" /> Ухоженный фасад
+                           </div>
+                           <div className="flex items-center gap-2 text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">
+                               <CheckCircle size={12} className="text-green-500" /> Навигация
+                           </div>
+                           <div className="flex items-center gap-2 text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">
+                               <CheckCircle size={12} className="text-green-500" /> Зона ожидания клиента
+                           </div>
+                           <div className="flex items-center gap-2 text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">
+                               <CheckCircle size={12} className="text-green-500" /> Базовый комфорт (WiFi, кофе)
+                           </div>
+                      </div>
+                  </div>
+
+                  {/* Section 3 */}
+                  <div className="bg-black/20 p-4 rounded-xl border border-white/5">
+                      <h4 className="flex items-center gap-2 text-white font-bold mb-3">
+                          <MonitorCheck size={18} className="text-blue-400" />
+                          Цифровая гигиена
+                      </h4>
+                      <div className="flex gap-2 pl-6">
+                          <span className="text-xs border border-blue-500/30 text-blue-300 px-2 py-1 rounded bg-blue-500/10">CRM</span>
+                          <span className="text-xs border border-blue-500/30 text-blue-300 px-2 py-1 rounded bg-blue-500/10">ЭДО</span>
+                          <span className="text-xs border border-blue-500/30 text-blue-300 px-2 py-1 rounded bg-blue-500/10">Прозрачные цены</span>
+                      </div>
+                  </div>
+              </div>
+           </motion.div>
+        </motion.div>
+
+        {/* Right Column: Capacity Infographic */}
+        <motion.div 
+           initial="hidden"
+           whileInView="visible"
+           variants={containerVariants}
+           className="h-full"
+        >
+            <motion.div variants={itemVariants} className="bg-[#0f172a] border border-gray-700 rounded-3xl p-6 h-full flex flex-col relative overflow-hidden shadow-2xl">
+              {/* Background Map Texture - subtle */}
+              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#4b5563_1px,transparent_1px)] bg-[size:24px_24px]" />
+              
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex justify-between items-end mb-6">
+                  <div>
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2"><LayoutDashboard className="text-uremont-blue"/> Покрытие</h3>
+                    <div className="text-sm text-gray-400">Информация о подключенных станциях</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-4xl font-bold text-uremont-blue">132</div>
+                    <div className="text-xs text-gray-400 uppercase tracking-wide">Локации подключено</div>
+                  </div>
+                </div>
+
+                {/* Bars/Infographic */}
+                <div className="flex-1 flex flex-col justify-center gap-6">
+                  
+                  {/* Moscow Row */}
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "100%" }}
+                    className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden group hover:border-red-500/30 transition-colors"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center text-red-500 font-bold shrink-0 border border-red-500/20">M</div>
+                    <div className="flex-1 z-10">
+                      <div className="flex justify-between mb-2 items-baseline">
+                         <span className="font-bold text-white text-lg">Москва</span>
+                         <span className="font-mono text-red-400 font-bold">86</span>
+                      </div>
+                      {/* Progress Bar Visual */}
+                      <div className="h-3 bg-gray-800 rounded-full overflow-hidden border border-white/5">
+                         <motion.div 
+                           initial={{ width: 0 }}
+                           whileInView={{ width: "100%" }}
+                           transition={{ duration: 1.5, ease: "easeOut" }}
+                           className="h-full bg-gradient-to-r from-red-600 to-orange-500"
+                         />
+                      </div>
+                      <div className="mt-2 text-xs text-gray-400 flex items-center gap-2">
+                        <MapPinned size={12} /> Покрытие: 12 округов (100%)
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Regions Row */}
+                  <motion.div 
+                    className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden group hover:border-green-500/30 transition-colors"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center text-green-500 font-bold shrink-0 border border-green-500/20">R</div>
+                    <div className="flex-1 z-10">
+                      <div className="flex justify-between mb-2 items-baseline">
+                         <span className="font-bold text-white text-lg">Регионы</span>
+                         <span className="font-mono text-green-400 font-bold">27</span>
+                      </div>
+                      <div className="h-3 bg-gray-800 rounded-full overflow-hidden border border-white/5">
+                         <motion.div 
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "55%" }}
+                            transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+                            className="h-full bg-gradient-to-r from-emerald-600 to-green-500"
+                         />
+                      </div>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                         <span className="text-[10px] bg-green-900/30 border border-green-500/20 px-2 py-0.5 rounded text-green-200">Миллионники - по 3 и более СТО в каждом городе</span>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* SPb Row */}
+                  <motion.div 
+                    className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center gap-4 relative overflow-hidden group hover:border-blue-500/30 transition-colors"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-500 font-bold shrink-0 border border-blue-500/20">S</div>
+                    <div className="flex-1 z-10">
+                      <div className="flex justify-between mb-2 items-baseline">
+                         <span className="font-bold text-white text-lg">Санкт-Петербург</span>
+                         <span className="font-mono text-blue-400 font-bold">19</span>
+                      </div>
+                      <div className="h-3 bg-gray-800 rounded-full overflow-hidden border border-white/5">
+                         <motion.div 
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "25%" }}
+                            transition={{ duration: 1.5, ease: "easeOut", delay: 0.4 }}
+                            className="h-full bg-gradient-to-r from-blue-600 to-cyan-500"
+                         />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                </div>
+                
+                <div className="mt-auto pt-6 border-t border-white/10 flex justify-between items-center text-xs text-gray-500">
+                   <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-uremont-accent animate-pulse"></div>
+                      <span className="text-uremont-accent font-bold">60% подключенных партнеров соответствуют новому портрету</span>
+                   </div>
+                </div>
+              </div>
+            </motion.div>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+// --- Slide 11: Future Plans (PlanSlide) ---
 export const PlanSlide: React.FC = () => {
   const mainPlans = [
     {
@@ -650,7 +1125,7 @@ export const PlanSlide: React.FC = () => {
         variants={containerVariants}
         className="mb-6 lg:mb-10"
       >
-        <span className="text-uremont-accent font-mono text-sm tracking-wider">04 / ПЛАНЫ</span>
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">05 / ПЛАНЫ</span>
         <h2 className="text-3xl md:text-5xl font-bold mt-2">
            Планы по улучшениям на <span className="text-uremont-blue">Q1 2026</span>
         </h2>
@@ -708,7 +1183,7 @@ export const PlanSlide: React.FC = () => {
   );
 };
 
-// --- Slide 10: Discussion (DiscussionSlide) ---
+// --- Slide 12: Discussion (DiscussionSlide) ---
 export const DiscussionSlide: React.FC = () => {
   return (
     <div className="h-full flex flex-col justify-center px-12 md:px-24">
