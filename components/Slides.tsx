@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid, MapPin, Wrench, MessageCircle, Percent, AlertCircle, FileCheck, PhoneCall, Timer, UserCheck, Building2, Map, Crosshair, ArrowDown, Activity, Clock, Coffee, MonitorCheck, MapPinned, LayoutDashboard, GripVertical, HelpCircle, FileText } from 'lucide-react';
+import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid, MapPin, Wrench, MessageCircle, Percent, AlertCircle, FileCheck, PhoneCall, Timer, UserCheck, Building2, Map, Crosshair, ArrowDown, Activity, Clock, Coffee, MonitorCheck, MapPinned, LayoutDashboard, GripVertical, HelpCircle, FileText, Terminal } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -556,36 +556,125 @@ export const SolutionSlide1: React.FC = () => {
 
 // --- Slide 6: Solution 2 (Database & Services) ---
 export const SolutionSlide2: React.FC = () => {
-  return (
-    <div className="h-full flex flex-col justify-center px-6 md:px-24">
-       <motion.div
-           initial="hidden"
-           whileInView="visible"
-           variants={containerVariants}
-           className="max-w-4xl mx-auto text-center"
-        >
-           <motion.span variants={itemVariants} className="text-uremont-accent font-mono text-sm tracking-wider">РЕШЕНИЕ #2</motion.span>
-           <motion.h2 variants={itemVariants} className="text-3xl lg:text-5xl font-bold mt-2 mb-10">Масштабирование <br /><span className="text-uremont-blue">базы данных</span></motion.h2>
-           
-           <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-2 gap-6 mb-10 max-w-2xl mx-auto">
-              <div className="bg-white/5 p-6 rounded-xl text-center flex flex-col items-center justify-center border border-white/10 hover:border-uremont-blue transition-colors">
-                 <div className="flex items-baseline gap-2">
-                    <div className="text-5xl font-bold text-uremont-blue mb-1">428</div>
-                 </div>
-                 <div className="text-sm text-gray-400 uppercase tracking-widest mt-2">Услуг</div>
-              </div>
-              <div className="bg-white/5 p-6 rounded-xl text-center flex flex-col items-center justify-center border border-white/10 hover:border-uremont-accent transition-colors">
-                 <div className="flex items-baseline gap-2">
-                    <div className="text-5xl font-bold text-uremont-accent mb-1">2025</div>
-                 </div>
-                 <div className="text-sm text-gray-400 uppercase tracking-widest mt-2">Модельный год</div>
-              </div>
-           </motion.div>
+  const [lines, setLines] = useState<string[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-           <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-300 leading-relaxed mx-auto max-w-2xl">
-             Полностью переработанные справочники. Теперь пользователи могут найти любую специфическую услугу и выбрать автомобиль любой комплектации, включая новинки рынка. Внедрена поддержка добавления автомобилей и услуг вручную.
-           </motion.p>
-        </motion.div>
+  const servicesList = [
+    "Свечи накаливания: снятие и установка",
+    "Теплообменник: снятие и установка",
+    "Топливная форсунка (дизельная): снятие и установка",
+    "Бампер задний: снятие и установка",
+    "Бампер передний: снятие и установка",
+    "Бачок омывателя: снятие и установка",
+    "Фара противотуманная: снятие и установка",
+    "Сцепление: прокачать",
+    "Трос коробки передач: снятие и установка",
+    "Диагностика ходовой части",
+    "Антифриз: замена",
+    "Бак топливный: слить и залить топливо",
+    "Воздушный фильтр: снятие и установка",
+    "Редуктор заднего моста: снятие и установка",
+    "Редуктор переднего моста: снятие и установка",
+    "Втулки стабилизатора заднего: снятие и установка",
+    "Защита ДВС: снятие и установка",
+    "Карданный вал: снятие и установка",
+    "Глушитель: снятие и установка",
+    "Воздушный фильтр: снятие и установка",
+    "Направляющие суппорта: замена",
+    "Опора шаровая: снятие и установка",
+    "Подрамник задний: снятие и установка",
+    "Приводной вал: снятие и установка",
+    "Тормозная жидкость: замена",
+    "Датчик температуры испарителя: снятие и установка",
+    "Лампа стоп-сигнала: снятие и установка",
+    "Предохранители: проверка",
+  ];
+
+  useEffect(() => {
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      if (currentIndex < servicesList.length) {
+        setLines(prev => [...prev, servicesList[currentIndex]]);
+        currentIndex++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 150); // Speed of typing
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [lines]);
+
+  return (
+    <div className="h-full flex flex-col justify-center px-6 md:pl-12 md:pr-24">
+       <div className="grid grid-cols-1 md:grid-cols-[0.8fr_1.4fr] gap-6 lg:gap-10 items-center">
+          
+          {/* Left Column: Text & Stats */}
+          <motion.div
+             initial="hidden"
+             whileInView="visible"
+             variants={containerVariants}
+             className="order-2 md:order-1"
+          >
+             <motion.span variants={itemVariants} className="text-uremont-accent font-mono text-sm tracking-wider">РЕШЕНИЕ #2</motion.span>
+             <motion.h2 variants={itemVariants} className="text-3xl lg:text-5xl font-bold mt-2 mb-6">Масштабирование <br /><span className="text-uremont-blue">базы данных</span></motion.h2>
+             
+             <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-uremont-blue transition-colors">
+                   <div className="text-3xl lg:text-4xl font-bold text-uremont-blue mb-1">428</div>
+                   <div className="text-xs text-gray-400 uppercase tracking-widest">Услуг</div>
+                </div>
+                <div className="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-uremont-accent transition-colors">
+                   <div className="text-3xl lg:text-4xl font-bold text-uremont-accent mb-1">2025</div>
+                   <div className="text-xs text-gray-400 uppercase tracking-widest">Модельный год</div>
+                </div>
+             </motion.div>
+
+             <motion.p variants={itemVariants} className="text-sm lg:text-base text-gray-300 leading-relaxed">
+               Полностью переработанные справочники. Пользователи могут найти любую специфичную услугу и выбрать любой автомобиль, включая новинки рынка. Внедрена поддержка добавления автомобилей и услуг вручную.
+             </motion.p>
+          </motion.div>
+
+          {/* Right Column: Terminal Visual */}
+          <motion.div 
+             initial={{ x: 50, opacity: 0 }}
+             whileInView={{ x: 0, opacity: 1 }}
+             transition={{ duration: 0.7 }}
+             className="w-full aspect-[16/10] relative order-1 md:order-2"
+          >
+             <BrowserWindow title="uremont-db-migration.ts">
+                <div className="w-full h-full bg-[#0c0c0c] p-4 font-mono text-xs md:text-sm overflow-hidden flex flex-col">
+                   <div className="flex items-center gap-2 text-gray-500 mb-2 border-b border-white/10 pb-2">
+                      <Terminal size={14} />
+                      <span>Console Output</span>
+                   </div>
+                   <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-1 scrollbar-hide">
+                      <div className="text-gray-400 italic mb-2">// Initializing DB Migration Seed...</div>
+                      {lines.map((line, index) => (
+                        <motion.div 
+                          key={index}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="flex gap-2"
+                        >
+                           <span className="text-green-500 font-bold shrink-0">[SUCCESS]</span>
+                           <span className="text-white opacity-90">Added service: {line}</span>
+                        </motion.div>
+                      ))}
+                      <div className="flex items-center gap-1 mt-2">
+                        <span className="text-blue-500">➜</span>
+                        <span className="w-2 h-4 bg-gray-400 animate-pulse inline-block"></span>
+                      </div>
+                   </div>
+                </div>
+             </BrowserWindow>
+          </motion.div>
+       </div>
     </div>
   );
 };
@@ -690,7 +779,7 @@ export const SolutionSlide4: React.FC = () => {
                 {/* Video Content */}
                 <div className="w-full h-full bg-black">
                    <video 
-                     src="https://pim4y1v96ezxxeus.public.blob.vercel-storage.com/video7.mp4" 
+                     src="https://pim4y1v96ezxxeus.public.blob.vercel-storage.com/video7.MP4" 
                      className="w-full h-full object-cover"
                      autoPlay
                      muted
