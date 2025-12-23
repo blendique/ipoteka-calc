@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid, MapPin, Wrench, MessageCircle, Percent, AlertCircle, FileCheck, PhoneCall, Timer, UserCheck, Building2, Map, Crosshair, ArrowDown, Activity, Clock, Coffee, MonitorCheck, MapPinned, LayoutDashboard, GripVertical } from 'lucide-react';
+import { ArrowRight, BarChart3, ShieldCheck, Zap, Users, MessageSquare, Search, ThumbsUp, Wallet, Database, BrainCircuit, MousePointerClick, TrendingUp, Bot, Repeat, Car, PlayCircle, ChevronLeft, ChevronRight, FileBarChart, Phone, Star, CheckCircle, Headphones, LayoutGrid, MapPin, Wrench, MessageCircle, Percent, AlertCircle, FileCheck, PhoneCall, Timer, UserCheck, Building2, Map, Crosshair, ArrowDown, Activity, Clock, Coffee, MonitorCheck, MapPinned, LayoutDashboard, GripVertical, HelpCircle, FileText } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -84,7 +84,7 @@ export const WelcomeSlide: React.FC = () => {
 export const AgendaSlide: React.FC = () => {
   const points = [
     { id: 1, title: "Основа изменений", desc: "Проблемы старой версии" },
-    { id: 2, title: "CustDev и цифры", desc: "Данные, на которых основаны решения" },
+    { id: 2, title: "CustDev и цифры", desc: "Данные, на которых основаны решения: аудитория и боли, факторы доверия" },
     { id: 3, title: "Новые решения", desc: "Переработанное УТП, новая база данных, AI алгоритмы" },
     { id: 4, title: "Операционная модель", desc: "Технологичность и контроль качества через AI" },
     { id: 5, title: "Стратегия партнеров", desc: "Стандарты сети и план масштабирования" },
@@ -234,7 +234,7 @@ export const ProblemSlide: React.FC = () => {
   );
 };
 
-// --- Slide 4: Data (CustDev) ---
+// --- Slide 4: Data (CustDev) - Updated Context & Pains ---
 export const DataSlide: React.FC = () => {
   return (
     <div className="h-full flex flex-col justify-center px-12 md:px-24">
@@ -245,14 +245,14 @@ export const DataSlide: React.FC = () => {
         variants={containerVariants}
         className="mb-8"
       >
-        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / CUSTDEV И ЦИФРЫ</span>
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / АУДИТОРИЯ И БОЛИ</span>
         <h2 className="text-3xl md:text-5xl font-bold mt-2">
-          В основе решений — <span className="text-uremont-blue">реальные боли</span>
+          В основе решений — <span className="text-uremont-blue">реальный контекст</span>
         </h2>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 max-w-6xl">
-        {/* Stat 1 (Swapped - Was Stat 2) */}
+        {/* Stat 1: Audience & Context */}
         <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
@@ -261,17 +261,17 @@ export const DataSlide: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-uremont-blue mb-1">69.3%</div>
-                <div className="text-base lg:text-lg font-medium text-white">Важно знать цену заранее</div>
+                <div className="text-4xl lg:text-5xl font-bold text-uremont-blue mb-1">63%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Низкая лояльность</div>
              </div>
-             <Wallet className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+             <Users className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Пользователи считают критически важным понимать рыночную стоимость до визита.
+             Лишь 37% всегда ездят в одно место. Аудитория легко меняет сервис: 45% у обслуживается дилеров, 38% в НСТО, 14% у знакомых. 
           </div>
         </motion.div>
 
-        {/* Stat 2 (Swapped - Was Stat 1) */}
+        {/* Stat 2: Key Pain */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -280,17 +280,17 @@ export const DataSlide: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-red-500 mb-1">65.7%</div>
-                <div className="text-base lg:text-lg font-medium text-white">Боятся навязывания услуг</div>
+                <div className="text-4xl lg:text-5xl font-bold text-red-500 mb-1">62%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Страх навязывания</div>
              </div>
-             <ShieldCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+             <AlertCircle className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Самый частый страх клиентов перед обращением в новый сервис, согласно проведенному опросу.
+             Ключевая боль рынка — стресс. 62% боятся лишних работ, 38% — переплатить. Ядро боли: недоверие + непрозрачность.
           </div>
         </motion.div>
 
-        {/* Stat 3 */}
+        {/* Stat 3: Price Problem */}
         <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
@@ -299,17 +299,17 @@ export const DataSlide: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-uremont-accent mb-1">56.9%</div>
-                <div className="text-base lg:text-lg font-medium text-white">Доверяют рейтингу больше</div>
+                <div className="text-4xl lg:text-5xl font-bold text-uremont-accent mb-1">97%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Важно знать цену заранее</div>
              </div>
-             <ThumbsUp className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+             <Wallet className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Пользователи в большей части доверяют рейтингу и живым отзывам на платформе, и только 17.5% — сертификатам.
+             Пользователи считают важным знать честную стоимость услуг заранее. При этом 67% из них не понимают структуру ценообразования. 
           </div>
         </motion.div>
 
-         {/* Stat 4 */}
+         {/* Stat 4: Complexity */}
          <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
@@ -318,13 +318,13 @@ export const DataSlide: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-purple-500 mb-1">68.6%</div>
-                <div className="text-base lg:text-lg font-medium text-white">Нужен пошаговый сценарий</div>
+                <div className="text-4xl lg:text-5xl font-bold text-purple-500 mb-1">59%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Боятся некачественных работ</div>
              </div>
-             <Search className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+             <HelpCircle className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Удобнее выбрать Марку → Модель из предоставленного списка, а проблему - описывать в свободной форме.
+             А еще им сложно выбрать СТО: 43% опрошенных не могут сравнить сервисы между собой.
           </div>
         </motion.div>
       </div>
@@ -332,7 +332,7 @@ export const DataSlide: React.FC = () => {
   );
 };
 
-// --- Slide 5: DataSlide2 (CustDev Part 2) ---
+// --- Slide 5: DataSlide2 (CustDev Part 2) - Solutions & Triggers ---
 export const DataSlide2: React.FC = () => {
   return (
     <div className="h-full flex flex-col justify-center px-12 md:px-24">
@@ -343,14 +343,14 @@ export const DataSlide2: React.FC = () => {
         variants={containerVariants}
         className="mb-8"
       >
-        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / CUSTDEV (ЧАСТЬ 2)</span>
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / ФАКТОРЫ ДОВЕРИЯ И РЕШЕНИЯ</span>
         <h2 className="text-3xl md:text-5xl font-bold mt-2">
-          Подписка и <span className="text-uremont-blue">факторы доверия</span>
+          Что <span className="text-uremont-blue">работает</span> для клиента
         </h2>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 max-w-6xl">
-        {/* Stat 1: Subscription */}
+        {/* Stat 1: Trust Triggers */}
         <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
@@ -359,17 +359,17 @@ export const DataSlide2: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-green-500 mb-1">65.7%</div>
-                <div className="text-base lg:text-lg font-medium text-white">Готовы к подписке</div>
+                <div className="text-4xl lg:text-5xl font-bold text-yellow-500 mb-1">49%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Рейтинг решает</div>
              </div>
-             <Repeat className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+             <Star className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Суммарная готовность платить 500₽/мес. "Ядро" лояльных пользователей — 26.5%, еще 39.2% — скорее да.
+             Главный триггер доверия — высокий рейтинг для 49%. Количество проведенных ремонтов автосервисом важно для 22%.
           </div>
         </motion.div>
 
-        {/* Stat 2: Value Drivers */}
+        {/* Stat 2: Effective Messages */}
         <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
@@ -378,17 +378,17 @@ export const DataSlide2: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-uremont-blue mb-1">54.7%</div>
-                <div className="text-base lg:text-lg font-medium text-white">Скидки на ремонт</div>
+                <div className="text-4xl lg:text-5xl font-bold text-uremont-blue mb-1">57%</div>
+                <div className="text-base lg:text-lg font-medium text-white">«Честные цены»</div>
              </div>
-             <Wrench className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+             <MessageSquare className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Драйвер ценности: скидки на "хард" (ремонт, запчасти) важнее "лайфстайла". Помощь эксперта важна лишь 12.2%.
+             Самый эффективный месседж — на языке выгоды. Однако при сравнении цены и рейтинга, побеждает второй.
           </div>
         </motion.div>
 
-        {/* Stat 3: Trust Gap */}
+        {/* Stat 3: Expectations */}
         <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
@@ -397,17 +397,17 @@ export const DataSlide2: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-red-500 mb-1">98.5%</div>
+                <div className="text-4xl lg:text-5xl font-bold text-green-500 mb-1">66%</div>
                 <div className="text-base lg:text-lg font-medium text-white">Цена до визита</div>
              </div>
-             <ShieldCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+             <FileText className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Фундаментальный страх — непрозрачность. 65.7% боятся навязывания услуг. Платформа выступает гарантом.
+             Главное ожидание от продукта — показать предварительную цену. Реальные отзывы важны для 44%, наличие всего в одном месте для 38%.
           </div>
         </motion.div>
 
-         {/* Stat 4: Decision Makers */}
+         {/* Stat 4: Platform Role */}
          <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
@@ -416,13 +416,13 @@ export const DataSlide2: React.FC = () => {
         >
           <div className="flex justify-between items-start">
              <div>
-                <div className="text-4xl lg:text-5xl font-bold text-yellow-500 mb-1">61.3%</div>
-                <div className="text-base lg:text-lg font-medium text-white">Предварительный расчет</div>
+                <div className="text-4xl lg:text-5xl font-bold text-purple-500 mb-1">95%</div>
+                <div className="text-base lg:text-lg font-medium text-white">Проверка СТО</div>
              </div>
-             <FileCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
+             <ShieldCheck className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Важнее отзывов (51.8%). Киллер-фича подписки — «Гарантированная экономия» (38.1%).
+             Роль платформы — верификация. Для 95% опрошенных критически важно, что СТО проверяются агрегатором.
           </div>
         </motion.div>
       </div>
@@ -760,7 +760,7 @@ export const OperationsSlide: React.FC = () => {
                     <div>
                         <h3 className="text-xl font-bold text-white mb-2">Бесшовный клиентский путь</h3>
                         <p className="text-gray-400 text-sm leading-relaxed mb-3">
-                            Оператор видит контекст (Авто + Проблема). Жесткий SLA: СТО обязано перезвонить клиенту в течение <span className="text-white font-bold">20 минут</span>.
+                            Оператор видит контекст (автомобиль, проблема, стоимость услуг). Жесткий SLA: СТО обязано перезвонить клиенту в течение <span className="text-white font-bold">20 минут</span>.
                         </p>
                     </div>
                 </div>
@@ -787,84 +787,88 @@ export const OperationsSlide: React.FC = () => {
            initial={{ opacity: 0, x: 50 }}
            whileInView={{ opacity: 1, x: 0 }}
            transition={{ duration: 0.8 }}
-           className="relative h-full min-h-[400px] bg-[#1e293b]/50 rounded-3xl border border-white/5 p-8 flex flex-col justify-center"
+           className="relative h-full min-h-[500px] bg-[#1e293b]/50 rounded-3xl border border-white/5 p-4 flex flex-col items-center justify-center"
         >
-            {/* Start Node: Client */}
-            <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col items-center z-10">
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                    <Users size={32} />
-                </div>
-                <div className="mt-2 font-bold text-sm">Клиент</div>
-            </div>
-
-            {/* Paths container */}
-            <div className="ml-24 flex-1 h-[300px] relative">
-                
-                {/* Router Node (Invisible split point) */}
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center z-10 border border-gray-400">
-                   <PhoneCall size={14} />
-                </div>
-
-                {/* Path 1: Success (Upper) */}
+             {/* Center Container for Diagram */}
+             <div className="relative w-[500px] h-[400px]">
+                {/* SVG Layer for connections */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-                    {/* Upper Line */}
-                    <path d="M 32 150 C 100 150, 100 50, 200 50 L 350 50" fill="none" stroke="#10B981" strokeWidth="2" strokeDasharray="5 5" />
-                    {/* Lower Line */}
-                    <path d="M 32 150 C 100 150, 100 250, 200 250 L 350 250" fill="none" stroke="#EF4444" strokeWidth="2" />
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#10B981" />
+                        </marker>
+                        <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#EF4444" />
+                        </marker>
+                    </defs>
+                    
+                    {/* Path 1: Green Dotted (Client Left -> Station Right Top) */}
+                    <path d="M 50 200 C 120 200, 120 80, 240 80" fill="none" stroke="#10B981" strokeWidth="3" strokeDasharray="8 8" markerEnd="url(#arrowhead)" />
+                    
+                    {/* Path 2: Red Solid (Client Left -> Operator Right Bottom) */}
+                    <path d="M 50 200 C 120 200, 120 320, 240 320" fill="none" stroke="#EF4444" strokeWidth="3" markerEnd="url(#arrowhead-red)" />
                 </svg>
 
-                {/* Node: Station (Top) */}
-                <div className="absolute left-[200px] top-[50px] -translate-y-1/2 bg-[#0f172a] border border-green-500/50 p-4 rounded-xl flex items-center gap-3 w-[220px]">
-                    <div className="p-2 bg-green-500/20 rounded text-green-500">
-                        <Building2 size={20} />
+                {/* Client + Phone Cluster (Left) */}
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex flex-col items-center -translate-x-1/2">
+                    <div className="relative">
+                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-black shadow-[0_0_30px_rgba(255,255,255,0.2)] z-10">
+                            <Users size={40} />
+                        </div>
+                        {/* Phone Icon overlay */}
                     </div>
-                    <div>
-                        <div className="text-xs text-gray-400">Путь 1</div>
-                        <div className="font-bold text-sm">Ответ СТО</div>
-                    </div>
-                    <ArrowRight size={16} className="text-green-500 ml-auto" />
+                    <div className="mt-3 font-bold text-lg text-white">Клиент</div>
                 </div>
 
-                {/* Node: AI Analysis (End of Top) */}
-                <div className="absolute right-0 top-[50px] -translate-y-1/2 flex flex-col items-center">
-                    <div className="w-14 h-14 bg-green-500 text-black rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.4)] animate-pulse">
-                        <BrainCircuit size={28} />
-                    </div>
-                    <div className="mt-2 text-xs text-green-400 font-bold">AI ANALYTICS</div>
-                </div>
-
-
-                {/* Node: 25s Wait (Bottom Path Start) */}
-                <div className="absolute left-[100px] top-[200px] text-red-500 font-mono font-bold text-xl animate-pulse">
+                {/* 25s Label (Center-ish) */}
+                <div className="absolute left-[110px] top-[260px] z-10 bg-[#1e293b] px-2 rounded-lg border border-red-500/30 text-red-500 font-mono font-bold text-2xl animate-pulse">
                     25s
                 </div>
 
-                {/* Node: Operator (Bottom) */}
-                <div className="absolute left-[200px] top-[250px] -translate-y-1/2 bg-[#0f172a] border border-red-500/50 p-4 rounded-xl flex items-center gap-3 w-[220px]">
-                    <div className="p-2 bg-red-500/20 rounded text-red-500">
-                        <Headphones size={20} />
+                {/* Upper Node: Station (Right Top) */}
+                <div className="absolute right-0 top-[80px] -translate-y-1/2 z-10 flex items-center gap-4">
+                    <div className="bg-[#0f172a] border border-green-500/50 p-4 rounded-2xl flex items-center gap-4 shadow-[0_0_30px_rgba(16,185,129,0.1)] min-w-[180px]">
+                        <div className="p-3 bg-green-500/20 rounded-xl text-green-500">
+                            <Building2 size={24} />
+                        </div>
+                        <div>
+                            <div className="text-xs text-gray-400">Путь 1</div>
+                            <div className="font-bold text-base leading-tight">Ответ СТО</div>
+                        </div>
                     </div>
-                    <div>
-                        <div className="text-xs text-gray-400">Путь 2 (Сбой)</div>
-                        <div className="font-bold text-sm">Оператор КЦ</div>
+                    
+                    <ArrowRight className="text-gray-600 w-6 h-6" />
+                    
+                    <div className="flex flex-col items-center">
+                        <div className="w-14 h-14 bg-green-500 text-black rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.4)] animate-pulse">
+                            <BrainCircuit size={28} />
+                        </div>
+                        <div className="mt-2 text-[10px] text-green-400 font-bold tracking-wider">ANALYTICS</div>
                     </div>
-                </div>
-                
-                {/* Node: SLA 20m (End of Bottom) */}
-                <div className="absolute right-0 top-[250px] -translate-y-1/2 flex flex-col items-center">
-                    <div className="w-14 h-14 bg-red-500 text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.4)]">
-                        <Timer size={28} />
-                    </div>
-                    <div className="mt-2 text-xs text-red-400 font-bold">SLA 20 MIN</div>
                 </div>
 
-                {/* Connecting lines for Grey Zone/5min */}
-                <div className="absolute left-[200px] top-[290px] text-[10px] text-gray-400 flex items-center gap-1">
-                    <AlertCircle size={10} />
-                    <span>Автоответчик → 5 мин callback</span>
+                {/* Lower Node: Operator (Right Bottom) */}
+                <div className="absolute right-0 top-[320px] -translate-y-1/2 z-10 flex items-center gap-4">
+                    <div className="bg-[#0f172a] border border-red-500/50 p-4 rounded-2xl flex items-center gap-4 shadow-[0_0_30px_rgba(239,68,68,0.1)] min-w-[180px]">
+                        <div className="p-3 bg-red-500/20 rounded-xl text-red-500">
+                            <Headphones size={24} />
+                        </div>
+                        <div>
+                            <div className="text-xs text-gray-400">Путь 2 (Сбой)</div>
+                            <div className="font-bold text-base leading-tight">Оператор КЦ</div>
+                        </div>
+                    </div>
+                    
+                    <ArrowRight className="text-gray-600 w-6 h-6" />
+                    
+                    <div className="flex flex-col items-center">
+                        <div className="w-14 h-14 bg-red-500 text-white rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.4)]">
+                            <Timer size={28} />
+                        </div>
+                        <div className="mt-2 text-[10px] text-red-400 font-bold tracking-wider">SLA 20 MIN</div>
+                    </div>
                 </div>
-            </div>
-
+             </div>
         </motion.div>
       </div>
     </div>
