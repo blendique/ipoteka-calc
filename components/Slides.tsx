@@ -250,7 +250,7 @@ export const DataSlide: React.FC = () => {
         variants={containerVariants}
         className="mb-8"
       >
-        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / АУДИТОРИЯ И БОЛИ</span>
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / АУДИТОРИЯ И БОЛИ. ОПРОШЕНО 411 РЕСПОНДЕНТОВ</span>
         <h2 className="text-3xl md:text-5xl font-bold mt-2">
           В основе решений — <span className="text-uremont-blue">настоящие проблемы</span>
         </h2>
@@ -348,7 +348,7 @@ export const DataSlide2: React.FC = () => {
         variants={containerVariants}
         className="mb-8"
       >
-        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / ФАКТОРЫ ДОВЕРИЯ И РЕШЕНИЯ</span>
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / ФАКТОРЫ ДОВЕРИЯ И РЕШЕНИЯ. ОПРОШЕНО 411 РЕСПОНДЕНТОВ</span>
         <h2 className="text-3xl md:text-5xl font-bold mt-2">
           Что говорят <span className="text-uremont-blue">потенциальные</span> клиенты?
         </h2>
@@ -446,7 +446,7 @@ export const SubscriptionSlide: React.FC = () => {
         variants={containerVariants}
         className="mb-8"
       >
-        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / ПОДПИСНАЯ МОДЕЛЬ</span>
+        <span className="text-uremont-accent font-mono text-sm tracking-wider">02 / ПОДПИСНАЯ МОДЕЛЬ. ОПРОШЕН 181 РЕСПОНДЕНТ</span>
         <h2 className="text-3xl md:text-5xl font-bold mt-2">
           Готовность к <span className="text-uremont-blue">подпискам</span>
         </h2>
