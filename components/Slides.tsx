@@ -468,7 +468,7 @@ export const SubscriptionSlide: React.FC = () => {
              <CreditCard className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             формат привычен и не вызывает отторжения.
+             Формат привычен для аудитории и не вызывает отторжения.
           </div>
         </motion.div>
 
@@ -525,7 +525,7 @@ export const SubscriptionSlide: React.FC = () => {
              <HelpCircle className="text-gray-500 w-6 h-6 lg:w-8 lg:h-8" />
           </div>
           <div className="mt-3 text-xs lg:text-sm text-gray-400">
-             Почти 70% слышат о Uremont впервые — подписка требует сильного объяснения ценности и доверия.
+             Почти 70% слышат о UREMONT впервые — подписка требует сильного объяснения ценности и доверия.
           </div>
         </motion.div>
       </div>
