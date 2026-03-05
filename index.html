@@ -123,6 +123,7 @@
                 </div>
                 <div class="custom-select-dropdown" role="listbox" hidden></div>
               </div>
+              <p id="step1_apartments_risk_hint" class="hint" style="display: none; margin-top: 6px;">При апартаментах и банке не Сбербанк в Альфа доступно только страхование жизни.</p>
             </div>
             <div class="field">
               <label>Процентная ставка, %</label>
@@ -470,6 +471,7 @@
                 </div>
                 <div class="custom-select-dropdown" role="listbox" hidden></div>
               </div>
+              <p id="apartmentsRiskHint" class="hint" style="display: none; margin-top: 6px;">При апартаментах и банке не Сбербанк в Альфа доступно только страхование жизни.</p>
             </div>
           </div>
         </div>
@@ -584,8 +586,8 @@
             </div>
           </div>
         </div>
-        <!-- Абсолют: объект — сигнализация, огонь, целевое назначение, факторы риска, застройщик -->
-        <div class="form-block" data-sks="absolut" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
+        <!-- Абсолют: объект — сигнализация, огонь, целевое назначение, факторы риска, застройщик (только для дома и ЗУ) -->
+        <div class="form-block block-conditional" data-show-when="654401 654411" data-sks="absolut" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
           <div class="field-header" style="margin-bottom: 6px;">
             <span class="label-text" style="font-weight: 600;">Дополнительные характеристики объекта (Абсолют)</span>
             <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
@@ -877,7 +879,7 @@
             </label>
           </div>
         </div>
-        <div class="form-row" data-sks="absolut sogaz">
+        <div class="form-row" id="borrowerHeightWeightRow" data-sks="absolut sogaz">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Рост, см</span>
@@ -938,8 +940,8 @@
             </select>
           </div>
         </div>
-        <!-- Жизнь -->
-        <div class="form-block" data-sks="alfa absolut" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #DEE2E6;">
+        <!-- Жизнь (скрывать при riskCode=property для Альфа/Абсолют) -->
+        <div class="form-block" id="lifeInsuranceBlock" data-sks="alfa absolut" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #DEE2E6;">
           <div class="field-header" style="margin-bottom: 8px;">
             <span class="label-text" style="font-weight: 600; color: #343A40;">Страхование жизни</span>
             <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span></span>
@@ -1318,6 +1320,7 @@
           toggleConditionalBlocks();
           toggleDynamicBlocks();
           filterCoborrowerFields();
+          applyAlfaApartmentsRiskRestriction();
           lockStep1Fields();
           if (selectedSk === 'alfa') {
             var st = document.getElementById('saleType');
@@ -1441,7 +1444,10 @@
 
       step1FilterFields.forEach(function(f) {
         var el = document.getElementById(f.id);
-        if (el) el.addEventListener('change', validateStep1);
+        if (el) el.addEventListener('change', function() {
+          validateStep1();
+          applyAlfaApartmentsRiskRestriction();
+        });
       });
 
       function copyStep1ToForm() {
@@ -1501,8 +1507,64 @@
           if (!el.getAttribute('data-sks')) el.style.display = 'none';
         });
         step3Screen.querySelectorAll('[data-sks]').forEach(showIfMatch);
+        var riskVal = (function() { var r = document.getElementById('riskCode'); return r ? r.value : ''; })();
+        var lifeBlock = document.getElementById('lifeInsuranceBlock');
+        if (lifeBlock && (sk === 'alfa' || sk === 'absolut') && riskVal === 'property') lifeBlock.style.display = 'none';
+        var hwRow = document.getElementById('borrowerHeightWeightRow');
+        if (hwRow && sk === 'sogaz' && riskVal === 'property') hwRow.style.display = 'none';
         var desc = document.getElementById('step3Desc');
         if (desc) desc.textContent = 'Оформление полиса — ' + (sk === 'alfa' ? 'Альфа' : sk === 'absolut' ? 'Абсолют' : 'СОГАЗ') + '. Заполните поля ниже (учтён выбранный банк).';
+      }
+
+      function applyAlfaApartmentsRiskRestriction() {
+        var step1Risk = document.getElementById('step1_riskCode');
+        var step1Hint = document.getElementById('step1_apartments_risk_hint');
+        var step1Bank = document.getElementById('step1_bank');
+        var step1Build = document.getElementById('step1_buildingType');
+        if (step1Risk && step1Bank && step1Build) {
+          var bank = (step1Bank.value || '').trim();
+          var build = (step1Build.value || '').trim();
+          var result = computeAvailability();
+          var restrictStep1 = build === 'APARTMENTS' && bank !== 'sber' && result.available.indexOf('alfa') !== -1;
+          if (restrictStep1) {
+            step1Risk.value = 'life';
+            step1Risk.disabled = true;
+            var f1 = step1Risk.closest('.field');
+            if (f1) f1.classList.add('field-disabled');
+            if (step1Hint) step1Hint.style.display = 'block';
+            step1Risk.dispatchEvent(new Event('change', { bubbles: true }));
+          } else {
+            step1Risk.disabled = false;
+            var f1 = step1Risk.closest('.field');
+            if (f1) f1.classList.remove('field-disabled');
+            if (step1Hint) step1Hint.style.display = 'none';
+          }
+        }
+        var riskEl = document.getElementById('riskCode');
+        var hint3 = document.getElementById('apartmentsRiskHint');
+        var bankEl = document.getElementById('bank');
+        var buildEl = document.getElementById('buildingType');
+        if (riskEl && selectedSk === 'alfa' && bankEl && buildEl) {
+          var bank = (bankEl.value || '').trim();
+          var build = (buildEl.value || '').trim();
+          var restrict3 = build === 'APARTMENTS' && bank !== 'sber';
+          if (restrict3) {
+            riskEl.value = 'life';
+            riskEl.disabled = true;
+            var f3 = riskEl.closest('.field');
+            if (f3) f3.classList.add('field-disabled');
+            if (hint3) hint3.style.display = 'block';
+            riskEl.dispatchEvent(new Event('change', { bubbles: true }));
+          } else {
+            riskEl.disabled = false;
+            var f3 = riskEl.closest('.field');
+            if (f3) f3.classList.remove('field-disabled');
+            if (hint3) hint3.style.display = 'none';
+          }
+        } else {
+          if (riskEl) { riskEl.disabled = false; var f3 = riskEl.closest('.field'); if (f3) f3.classList.remove('field-disabled'); }
+          if (hint3) hint3.style.display = 'none';
+        }
       }
 
       if (document.getElementById('btnStep1Calc')) {
@@ -1540,13 +1602,23 @@
       var bankEl = document.getElementById('bank');
       if (bankEl) {
         bankEl.addEventListener('change', function() {
-          if (step3Screen && step3Screen.style.display === 'block' && selectedSk) applySkFilter(selectedSk);
+          if (step3Screen && step3Screen.style.display === 'block' && selectedSk) {
+            applySkFilter(selectedSk);
+            applyAlfaApartmentsRiskRestriction();
+          }
           var cobHint = document.getElementById('coborrowersBlockedHint');
           if (cobHint) cobHint.style.display = 'none';
         });
       }
+      var riskCodeEl = document.getElementById('riskCode');
+      if (riskCodeEl) {
+        riskCodeEl.addEventListener('change', function() {
+          if (step3Screen && step3Screen.style.display === 'block' && selectedSk) applySkFilter(selectedSk);
+        });
+      }
 
       showStep(1);
+      applyAlfaApartmentsRiskRestriction();
 
       var buildingTypeEl = document.getElementById('buildingType');
       var saleTypeEl = document.getElementById('saleType');
@@ -1558,12 +1630,21 @@
           var showWhen = block.getAttribute('data-show-when');
           var show = false;
           if (showWhen === 'primary') show = saleVal === 'FIRST';
-          else if (showWhen) show = showWhen === buildVal;
+          else if (showWhen) {
+            var vals = showWhen.trim().split(/\s+/);
+            show = vals.indexOf(buildVal) !== -1;
+          }
           block.style.display = show ? (block.classList.contains('form-row') ? 'grid' : 'block') : 'none';
         });
       }
       if (buildingTypeEl) {
-        buildingTypeEl.addEventListener('change', toggleConditionalBlocks);
+        buildingTypeEl.addEventListener('change', function() {
+          toggleConditionalBlocks();
+          if (step3Screen && step3Screen.style.display === 'block' && selectedSk) {
+            applySkFilter(selectedSk);
+            applyAlfaApartmentsRiskRestriction();
+          }
+        });
         toggleConditionalBlocks();
       }
       if (saleTypeEl) {
@@ -1658,6 +1739,7 @@
           document.addEventListener('click', function(e) {
             if (!wrap.contains(e.target)) close();
           });
+          sel.addEventListener('change', syncTrigger);
           syncTrigger();
           buildDropdown();
         });
