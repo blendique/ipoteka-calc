@@ -27,8 +27,142 @@
       </div>
     </details>
 
+    <!-- Экран 1: Минимальные данные для предварительного расчёта -->
+    <div id="step1Screen" class="step-screen">
+      <p class="step-desc">Укажите минимальные данные — получите расчёт от всех трёх СК и выберите подходящую.</p>
+      <div class="card">
+        <div class="card-header">Данные для расчёта</div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="field">
+              <label>Банк <span class="required">*</span></label>
+              <select id="step1_bank">
+                <option value="sber" selected>Сбербанк России</option>
+                <option value="vtb">ВТБ</option>
+                <option value="rshb">Россельхозбанк</option>
+                <option value="gazprom">Газпромбанк</option>
+                <option value="domrf">Дом.РФ</option>
+                <option value="open">Открытие</option>
+                <option value="raiff">Райффайзенбанк</option>
+                <option value="mts">МТС-Банк</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Остаток долга по кредиту, ₽ <span class="required">*</span></label>
+              <input type="text" id="step1_creditValue" placeholder="100 000 – 20 000 000" value="5 000 000">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Процентная ставка, %</label>
+              <input type="text" id="step1_rate" class="input-decimal" inputmode="decimal" placeholder="8.5" value="11.5">
+            </div>
+            <div class="field">
+              <label>Дата начала полиса <span class="required">*</span></label>
+              <input type="text" id="step1_beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Срок страхования, мес. <span class="required">*</span></label>
+              <select id="step1_termInMonth">
+                <option value="12">12</option>
+                <option value="24">24</option>
+                <option value="36">36</option>
+                <option value="60">60</option>
+                <option value="120">120</option>
+                <option value="180">180</option>
+                <option value="240">240</option>
+                <option value="360" selected>360</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Вид имущества <span class="required">*</span></label>
+              <select id="step1_buildingType">
+                <option value="FLAT" selected>Квартира</option>
+                <option value="ROOM">Комната</option>
+                <option value="APARTMENTS">Апартаменты</option>
+                <option value="654401">Жилой дом</option>
+                <option value="house">Дом</option>
+                <option value="houseWithPlot">Дом + ЗУ</option>
+                <option value="1868531">Таунхаус</option>
+                <option value="654411">Земельный участок</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Тип рынка <span class="required">*</span></label>
+              <div class="radio-group radio-group-stacked">
+                <label class="radio-option"><input type="radio" name="step1_saleType" value="FIRST"><span>Первичный</span></label>
+                <label class="radio-option"><input type="radio" name="step1_saleType" value="SECOND" checked><span>Вторичный</span></label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Тип страхования (риски)</label>
+              <div class="radio-group radio-group-stacked">
+                <label class="radio-option"><input type="radio" name="step1_riskCode" value="combo" checked><span>Жизнь + имущество</span></label>
+                <label class="radio-option"><input type="radio" name="step1_riskCode" value="life"><span>Только жизнь</span></label>
+                <label class="radio-option"><input type="radio" name="step1_riskCode" value="property"><span>Только имущество</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="field">
+              <label>Адрес объекта <span class="required">*</span></label>
+              <input type="text" id="step1_objectAddress" placeholder="Регион, город, улица, дом, кв." value="г Москва, ул Ленина, д 10, кв 25">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="btnStep1Calc">Получить расчёт</button>
+      </div>
+    </div>
+
+    <!-- Экран 2: Результаты расчёта от трёх СК, выбор одной -->
+    <div id="step2Screen" class="step-screen" style="display: none;">
+      <p class="step-desc">Расчёт выполнен. Выберите страховую компанию для оформления полиса.</p>
+      <div class="card">
+        <div class="card-header">Результаты предварительного расчёта</div>
+        <div class="card-body">
+          <p style="font-size: 0.8rem; margin-bottom: 12px;">Срок действия расчёта: до <strong id="step2_calcDeadline">2025-06-08</strong>.</p>
+          <div class="sk-result-cards">
+            <div class="sk-result-card" data-sk="alfa">
+              <div class="sk-result-header"><span class="sk-tag alfa">Альфа</span></div>
+              <p class="sk-result-premium">Премия: <strong id="step2_premium_alfa">12 100</strong> ₽</p>
+              <p class="sk-result-detail" style="font-size: 0.75rem; color: var(--color-text-secondary);">Жизнь + Имущество</p>
+              <button type="button" class="btn btn-primary btn-block btn-choose-sk" data-sk="alfa">Выбрать</button>
+            </div>
+            <div class="sk-result-card" data-sk="absolut">
+              <div class="sk-result-header"><span class="sk-tag absolut">Абсолют</span></div>
+              <p class="sk-result-premium">Премия: <strong id="step2_premium_absolut">12 450</strong> ₽</p>
+              <p class="sk-result-detail" style="font-size: 0.75rem; color: var(--color-text-secondary);">Жизнь + Имущество</p>
+              <button type="button" class="btn btn-primary btn-block btn-choose-sk" data-sk="absolut">Выбрать</button>
+            </div>
+            <div class="sk-result-card" data-sk="sogaz">
+              <div class="sk-result-header"><span class="sk-tag sogaz">СОГАЗ</span></div>
+              <p class="sk-result-premium">Премия: <strong id="step2_premium_sogaz">11 900</strong> ₽</p>
+              <p class="sk-result-detail" style="font-size: 0.75rem; color: var(--color-text-secondary);">Жизнь + Имущество</p>
+              <button type="button" class="btn btn-primary btn-block btn-choose-sk" data-sk="sogaz">Выбрать</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="btnStep2Back">← Назад</button>
+      </div>
+    </div>
+
+    <!-- Экран 3: Полная форма только для выбранной СК -->
+    <div id="step3Screen" class="step-screen" style="display: none;">
+      <p class="step-desc" id="step3Desc">Оформление полиса — заполните поля для выбранной СК.</p>
+      <div class="actions" style="margin-bottom: 12px;">
+        <button type="button" class="btn btn-secondary" id="btnStep3Back">← Назад</button>
+      </div>
+
     <!-- Блок 1: Банк и кредит -->
-    <div class="card">
+    <div class="card" data-sks="alfa absolut sogaz">
       <div class="card-header">Банк и ипотечный договор</div>
       <div class="card-body">
         <div class="form-row">
@@ -76,7 +210,7 @@
             </div>
             <input type="text" id="rate" class="input-decimal" inputmode="decimal" placeholder="8.5" value="11.5" title="Только цифры, например 8.5 или 11">
           </div>
-          <div class="field">
+          <div class="field" data-sks="sogaz">
             <div class="field-header">
               <span class="label-text">Ставка при отказе от страхования, %</span>
               <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
@@ -242,7 +376,7 @@
     </div>
 
     <!-- Блок 2: Объект -->
-    <div class="card">
+    <div class="card" data-sks="alfa absolut sogaz">
       <div class="card-header">Объект страхования</div>
       <div class="card-body">
         <div class="form-block">
@@ -274,7 +408,7 @@
             </div>
           </div>
         </div>
-        <div class="form-block">
+        <div class="form-block" data-sks="alfa absolut">
           <div class="form-row single">
             <div class="field">
               <div class="field-header">
@@ -333,7 +467,7 @@
         </div>
         </div>
         <div class="form-row">
-          <div class="field">
+          <div class="field" data-sks="alfa absolut">
             <div class="field-header">
               <span class="label-text">Площадь, м²</span>
               <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span></span>
@@ -460,12 +594,13 @@
             </div>
           </div>
         </div>
-        <div class="form-row single" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
+        <div data-sks="alfa" data-banks-exclude="sber,domrf" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
+          <div class="form-row single">
           <label class="checkbox-option" style="margin-bottom: 10px;">
             <input type="checkbox" id="hasTitleRisk">
             <span>Риск титула (Альфа)</span>
             <span class="sk-labels"><span class="sk-tag alfa">Альфа</span></span>
-            <span class="help-icon">?<span class="tooltip">Отметьте, если по условиям банка/программы требуется страхование титула. Данные передаются в Альфа в titleRisk (документ права, ограничение, срок титула и т.д.).</span></span>
+            <span class="help-icon">?<span class="tooltip">Отметьте, если по условиям банка/программы требуется страхование титула. Для Сбербанка и Дом.РФ титул недоступен (спека Альфа).</span></span>
           </label>
           <div id="titleRiskBlock" class="dynamic-block">
           <div class="form-row">
@@ -520,12 +655,13 @@
             <label class="checkbox-option"><input type="checkbox"> Юрлица среди собственников</label>
           </div>
           </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Блок 3: Страхователь -->
-    <div class="card">
+    <div class="card" data-sks="alfa absolut sogaz">
       <div class="card-header">Страхователь (заёмщик)</div>
       <div class="card-body">
         <div class="form-row single">
@@ -724,7 +860,7 @@
     </div>
 
     <!-- Созаёмщики — показывается при отметке «Есть созаёмщики» -->
-    <div class="card dynamic-block" id="coborrowersCard">
+    <div class="card dynamic-block" id="coborrowersCard" data-sks="alfa absolut" data-banks-exclude-alfa="sber">
       <div class="card-header">
         <span>Созаёмщики</span>
         <span class="help-icon">?<span class="tooltip">Альфа: coInsurers (не более 1), полный Address + PersonDocument + lifeRisk при страховании жизни. Абсолют: coborrowers — документы, контакты, адреса (регистрация + фактический).</span></span>
@@ -778,7 +914,7 @@
     </div>
 
     <!-- Доп. опции -->
-    <div class="card">
+    <div class="card" data-sks="alfa absolut sogaz">
       <div class="card-header">Дополнительно</div>
       <div class="card-body">
         <label class="checkbox-option" style="margin-bottom: 12px;">
@@ -869,6 +1005,9 @@
         </div>
       </div>
     </div>
+
+    </div>
+    <!-- /step3Screen -->
   </main>
 
   <script>
@@ -962,6 +1101,107 @@
           if (el) onInputAllow(el, digitsOnlyFilter);
         });
       })();
+
+      /* ——— Трёхэтапный поток: минимальный расчёт → выбор СК → форма по СК ——— */
+      var step1Screen = document.getElementById('step1Screen');
+      var step2Screen = document.getElementById('step2Screen');
+      var step3Screen = document.getElementById('step3Screen');
+      var selectedSk = '';
+
+      function showStep(step) {
+        if (step1Screen) step1Screen.style.display = step === 1 ? 'block' : 'none';
+        if (step2Screen) step2Screen.style.display = step === 2 ? 'block' : 'none';
+        if (step3Screen) step3Screen.style.display = step === 3 ? 'block' : 'none';
+        if (step === 3 && selectedSk) applySkFilter(selectedSk);
+      }
+
+      function copyStep1ToForm() {
+        var map = [
+          ['step1_bank', 'bank'],
+          ['step1_creditValue', 'creditValue'],
+          ['step1_rate', 'rate'],
+          ['step1_beginDate', 'beginDate'],
+          ['step1_termInMonth', 'termInMonth'],
+          ['step1_buildingType', 'buildingType'],
+          ['step1_objectAddress', 'objectAddress']
+        ];
+        map.forEach(function(pair) {
+          var src = document.getElementById(pair[0]);
+          var dst = document.getElementById(pair[1]);
+          if (src && dst) dst.value = src.value;
+        });
+        var saleType = document.querySelector('input[name="step1_saleType"]:checked');
+        if (saleType) {
+          var dstSale = document.querySelector('input[name="saleType"][value="' + saleType.value + '"]');
+          if (dstSale) dstSale.checked = true;
+        }
+        var riskCode = document.querySelector('input[name="step1_riskCode"]:checked');
+        if (riskCode) {
+          var dstRisk = document.querySelector('input[name="riskCode"][value="' + riskCode.value + '"]');
+          if (dstRisk) dstRisk.checked = true;
+        }
+      }
+
+      function applySkFilter(sk) {
+        if (!step3Screen) return;
+        var bankEl = document.getElementById('bank');
+        var bank = (bankEl && bankEl.value) ? bankEl.value.trim() : '';
+        function showIfMatch(el) {
+          var sks = (el.getAttribute('data-sks') || '').split(/\s+/);
+          if (sks.indexOf(sk) === -1) { el.style.display = 'none'; return; }
+          var exclude = (el.getAttribute('data-banks-exclude') || '').split(/\s*,\s*/).filter(Boolean);
+          if (exclude.indexOf(bank) !== -1) { el.style.display = 'none'; return; }
+          var excludeAlfa = (el.getAttribute('data-banks-exclude-alfa') || '').split(/\s*,\s*/).filter(Boolean);
+          if (sk === 'alfa' && excludeAlfa.indexOf(bank) !== -1) { el.style.display = 'none'; return; }
+          var onlyBanks = (el.getAttribute('data-banks') || '').split(/\s*,\s*/).filter(Boolean);
+          if (onlyBanks.length && onlyBanks.indexOf(bank) === -1) { el.style.display = 'none'; return; }
+          el.style.display = '';
+        }
+        step3Screen.querySelectorAll('.card[data-sks]').forEach(showIfMatch);
+        step3Screen.querySelectorAll('.form-block[data-sks]').forEach(showIfMatch);
+        step3Screen.querySelectorAll('.field[data-sks]').forEach(showIfMatch);
+        step3Screen.querySelectorAll('[data-sks][data-banks-exclude], [data-sks][data-banks-exclude-alfa], [data-sks][data-banks]').forEach(showIfMatch);
+        var desc = document.getElementById('step3Desc');
+        if (desc) desc.textContent = 'Оформление полиса — ' + (sk === 'alfa' ? 'Альфа' : sk === 'absolut' ? 'Абсолют' : 'СОГАЗ') + '. Заполните поля ниже (учтён выбранный банк).';
+      }
+
+      if (document.getElementById('btnStep1Calc')) {
+        document.getElementById('btnStep1Calc').onclick = function() {
+          copyStep1ToForm();
+          var creditVal = (document.getElementById('step1_creditValue') || document.getElementById('creditValue')).value.replace(/\s/g, '');
+          var sum = parseInt(creditVal, 10) || 5000000;
+          var lifePrem = Math.round(sum * 0.00164);
+          var propPrem = Math.round(sum * 0.00085);
+          var base = lifePrem + propPrem;
+          document.getElementById('step2_premium_alfa').textContent = (base - 350).toLocaleString('ru-RU');
+          document.getElementById('step2_premium_absolut').textContent = base.toLocaleString('ru-RU');
+          document.getElementById('step2_premium_sogaz').textContent = (base - 550).toLocaleString('ru-RU');
+          var deadline = new Date();
+          deadline.setDate(deadline.getDate() + 7);
+          document.getElementById('step2_calcDeadline').textContent = deadline.toLocaleDateString('ru-RU');
+          showStep(2);
+        };
+      }
+      if (document.getElementById('btnStep2Back')) {
+        document.getElementById('btnStep2Back').onclick = function() { showStep(1); };
+      }
+      document.querySelectorAll('.btn-choose-sk').forEach(function(btn) {
+        btn.onclick = function() {
+          selectedSk = this.getAttribute('data-sk') || '';
+          showStep(3);
+        };
+      });
+      if (document.getElementById('btnStep3Back')) {
+        document.getElementById('btnStep3Back').onclick = function() { showStep(2); };
+      }
+      var bankEl = document.getElementById('bank');
+      if (bankEl) {
+        bankEl.addEventListener('change', function() {
+          if (step3Screen && step3Screen.style.display === 'block' && selectedSk) applySkFilter(selectedSk);
+        });
+      }
+
+      showStep(1);
 
       var buildingTypeEl = document.getElementById('buildingType');
       function toggleConditionalBlocks() {
