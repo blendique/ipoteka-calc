@@ -219,6 +219,20 @@ input[type="file"] { height: auto; min-height: 36px; }
 /* Лейблы СК: поле/параметр используется всеми СК (Альфа, Абсолют, СОГАЗ) — теги не показываем */
 .sk-labels.sk-labels-all,
 .sk-labels-all { display: none !important; }
+#step3Screen .sk-labels { display: none !important; }
+#step3Screen .help-icon { display: none !important; }
+#step3Screen .hint { display: none !important; }
+.field-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+  position: relative;
+}
+.field-disabled input,
+.field-disabled select,
+.field-disabled .custom-select-trigger {
+  background: var(--color-grey-20) !important;
+  cursor: not-allowed !important;
+}
 .sk-labels { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .sk-tag {
   font-size: 0.65rem;

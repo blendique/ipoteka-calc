@@ -406,12 +406,10 @@
       <div class="card-header">Объект страхования</div>
       <div class="card-body">
         <div class="form-block" data-sks="alfa absolut sogaz">
-          <div class="form-row single">
+          <div class="form-row">
             <div class="field">
               <div class="field-header">
                 <span class="label-text">Вид имущества <span class="required">*</span></span>
-                <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-                <span class="help-icon">?<span class="tooltip">Альфа: FLAT/ROOM/APARTMENTS. Абсолют: Квартира, Апартаменты, Таунхаус, Дом, ЗУ и др. СОГАЗ: flat, house, houseWithPlot. При отправке маппинг в код выбранной СК.</span></span>
               </div>
               <div class="custom-select-wrap" data-select-id="buildingType">
                 <select id="buildingType" class="custom-select-native">
@@ -432,6 +430,24 @@
                 <div class="custom-select-dropdown" role="listbox" hidden></div>
               </div>
             </div>
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Тип страхования (риски) <span class="required">*</span></span>
+              </div>
+              <div class="custom-select-wrap" data-select-id="riskCode">
+                <select id="riskCode" class="custom-select-native">
+                  <option value="combo" data-sks="alfa absolut sogaz" selected>Жизнь + имущество</option>
+                  <option value="life" data-sks="sogaz">Только жизнь</option>
+                  <option value="property" data-sks="sogaz">Только имущество</option>
+                </select>
+                <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="custom-select-text"></span>
+                  <span class="custom-select-tags"></span>
+                  <span class="custom-select-arrow">▼</span>
+                </div>
+                <div class="custom-select-dropdown" role="listbox" hidden></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-block" data-sks="alfa absolut">
@@ -439,8 +455,6 @@
             <div class="field">
               <div class="field-header">
                 <span class="label-text">Тип рынка <span class="required">*</span></span>
-                <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span></span>
-                <span class="help-icon">?<span class="tooltip">Альфа: FIRST/SECOND. Абсолют: object_type 1 — вторичка, 2 — новостройка. СОГАЗ не использует.</span></span>
               </div>
               <div class="radio-group radio-group-stacked">
                 <label class="radio-option"><input type="radio" name="saleType" value="FIRST"><span>Первичный</span></label>
@@ -448,37 +462,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="form-block" data-sks="alfa absolut sogaz">
-          <div class="form-row single">
-            <div class="field">
-              <div class="field-header">
-                <span class="label-text">Тип страхования (риски)</span>
-                <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-                <span class="help-icon">?<span class="tooltip">Альфа: по банку отдельно жизнь/имущество/титул. Абсолют: risk_life, risk_property, risk_titul. СОГАЗ: riskCode — life, property или combo (жизнь+имущество).</span></span>
-              </div>
-              <div class="radio-group radio-group-stacked">
-              <label class="radio-option">
-                <input type="radio" name="riskCode" value="combo" checked>
-                <span>Жизнь + имущество</span>
-                <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-                <span class="help-icon">?<span class="tooltip">Комбо. СОГАЗ: riskCode=combo.</span></span>
-              </label>
-              <label class="radio-option">
-                <input type="radio" name="riskCode" value="life">
-                <span>Только жизнь</span>
-                <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
-                <span class="help-icon">?<span class="tooltip">СОГАЗ: riskCode=life.</span></span>
-              </label>
-              <label class="radio-option">
-                <input type="radio" name="riskCode" value="property">
-                <span>Только имущество</span>
-                <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
-                <span class="help-icon">?<span class="tooltip">СОГАЗ: riskCode=property.</span></span>
-              </label>
-            </div>
-          </div>
-        </div>
         </div>
         <div class="form-block" data-sks="alfa absolut sogaz">
         <div class="form-row single">
@@ -1264,11 +1247,50 @@
       var step3Screen = document.getElementById('step3Screen');
       var selectedSk = '';
 
+      var step1LockedIds = ['bank', 'creditValue', 'rate', 'beginDate', 'buildingType', 'dateOfBirth', 'riskCode'];
+
+      function lockStep1Fields() {
+        step1LockedIds.forEach(function(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          var field = el.closest('.field');
+          if (field) field.classList.add('field-disabled');
+          el.setAttribute('disabled', 'disabled');
+        });
+        var genderRadios = document.querySelectorAll('input[name="gender"]');
+        genderRadios.forEach(function(r) {
+          r.setAttribute('disabled', 'disabled');
+          var field = r.closest('.field');
+          if (field) field.classList.add('field-disabled');
+        });
+      }
+
+      function unlockStep1Fields() {
+        step1LockedIds.forEach(function(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          var field = el.closest('.field');
+          if (field) field.classList.remove('field-disabled');
+          el.removeAttribute('disabled');
+        });
+        var genderRadios = document.querySelectorAll('input[name="gender"]');
+        genderRadios.forEach(function(r) {
+          r.removeAttribute('disabled');
+          var field = r.closest('.field');
+          if (field) field.classList.remove('field-disabled');
+        });
+      }
+
       function showStep(step) {
         if (step1Screen) step1Screen.style.display = step === 1 ? 'block' : 'none';
         if (step2Screen) step2Screen.style.display = step === 2 ? 'block' : 'none';
         if (step3Screen) step3Screen.style.display = step === 3 ? 'block' : 'none';
-        if (step === 3 && selectedSk) applySkFilter(selectedSk);
+        if (step === 3 && selectedSk) {
+          applySkFilter(selectedSk);
+          lockStep1Fields();
+        } else {
+          unlockStep1Fields();
+        }
       }
 
       var allSks = ['alfa', 'absolut', 'sogaz'];
@@ -1403,16 +1425,17 @@
         var saleTypeDst = document.querySelector('input[name="saleType"][value="SECOND"]');
         if (saleTypeDst) saleTypeDst.checked = true;
         var riskCodeEl = document.getElementById('step1_riskCode');
-        if (riskCodeEl) {
-          var dstRisk = document.querySelector('input[name="riskCode"][value="' + riskCodeEl.value + '"]');
-          if (dstRisk) dstRisk.checked = true;
+        var dstRiskEl = document.getElementById('riskCode');
+        if (riskCodeEl && dstRiskEl) {
+          dstRiskEl.value = riskCodeEl.value;
+          dstRiskEl.dispatchEvent(new Event('change', { bubbles: true }));
         }
         var step1GenderEl = document.getElementById('step1_gender');
         if (step1GenderEl) {
           var dstGender = document.querySelector('input[name="gender"][value="' + step1GenderEl.value + '"]');
           if (dstGender) dstGender.checked = true;
         }
-        [document.getElementById('bank'), document.getElementById('buildingType')].forEach(function(el) {
+        [document.getElementById('bank'), document.getElementById('buildingType'), document.getElementById('riskCode')].forEach(function(el) {
           if (el) el.dispatchEvent(new Event('change', { bubbles: true }));
         });
       }
