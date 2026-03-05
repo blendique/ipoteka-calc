@@ -171,6 +171,20 @@ body {
 }
 .form-row.single { grid-template-columns: 1fr; }
 .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+/* Выравнивание контролов по нижнему краю (Тип рынка + Адрес объекта) */
+.form-row.form-row-controls-align { align-items: flex-end; }
+.form-row.form-row-controls-align .field { justify-content: flex-end; }
+
+.coborrowers-option-wrap { margin-bottom: 12px; }
+.coborrowers-blocked-hint {
+  font-size: 0.8rem;
+  color: var(--color-alert-danger, #eb3333);
+  margin: 6px 0 0 0;
+  padding: 8px 10px;
+  background: #fef2f2;
+  border-radius: var(--radius-sm);
+  border: 1px solid #fecaca;
+}
 .field-spacer { min-height: 0; pointer-events: none; }
 
 /* Отдельные блоки — меньше перегруженности (Вид имущества, Тип рынка, Тип страхования) */

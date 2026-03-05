@@ -270,12 +270,18 @@
             <input type="text" id="beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025" title="Формат: дд.мм.гггг">
           </div>
         </div>
-        <div class="form-row single" data-sks="sogaz">
+        <div class="form-row" data-sks="sogaz">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Ставка при отказе от страхования, %</span>
             </div>
             <input type="text" id="cancellationRate" class="input-decimal" inputmode="decimal" placeholder="12" value="12" title="Только цифры, например 12">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <span class="label-text">Дата окончания кредитного договора</span>
+            </div>
+            <input type="text" id="creditEndDate" class="date-field" placeholder="дд.мм.гггг" value="06.04.2042" title="Формат: дд.мм.гггг">
           </div>
         </div>
         <div class="form-row">
@@ -290,14 +296,6 @@
               <span class="label-text">Дата подписания КД <span class="required">*</span></span>
             </div>
             <input type="text" id="dateCreditDoc" class="date-field" placeholder="дд.мм.гггг" value="15.04.2024" title="Формат: дд.мм.гггг">
-          </div>
-        </div>
-        <div class="form-row single" data-sks="sogaz">
-          <div class="field">
-            <div class="field-header">
-              <span class="label-text">Дата окончания кредитного договора</span>
-            </div>
-            <input type="text" id="creditEndDate" class="date-field" placeholder="дд.мм.гггг" value="06.04.2042" title="Формат: дд.мм.гггг">
           </div>
         </div>
         <div class="form-row">
@@ -476,7 +474,7 @@
           </div>
         </div>
         <div class="form-block" data-sks="alfa absolut sogaz">
-          <div class="form-row">
+          <div class="form-row form-row-controls-align">
             <div class="field" data-sks="alfa absolut">
               <div class="field-header">
                 <span class="label-text">Тип рынка <span class="required">*</span></span>
@@ -1039,10 +1037,8 @@
             <div class="form-row">
               <div class="field"><label>Код подразделения</label><input type="text" class="coborrower-department-code" placeholder="770-035" value=""></div>
             </div>
-            <div class="form-row single">
+            <div class="form-row">
               <div class="field"><label>Адрес регистрации (одна строка)</label><input type="text" class="coborrower-address" placeholder="Регион, город, улица, дом, кв." value=""></div>
-            </div>
-            <div class="form-row single">
               <div class="field">
                 <label>Адрес фактического проживания <span class="sk-tag absolut" style="font-size: 0.6rem;">Абсолют</span></label>
                 <input type="text" class="coborrower-address-fact" placeholder="Одна строка, если совпадает — как регистрация" value="">
@@ -1099,11 +1095,14 @@
     <div class="card" data-sks="alfa absolut sogaz">
       <div class="card-header">Дополнительно</div>
       <div class="card-body">
-        <label class="checkbox-option" style="margin-bottom: 12px;">
-          <input type="checkbox" id="needCoborrowers">
-          <span>Есть созаёмщики</span>
-          <span class="help-icon">?<span class="tooltip">Отметьте, если по договору есть созаёмщики. Тогда откроется блок для ввода их данных.</span></span>
-        </label>
+        <div class="coborrowers-option-wrap">
+          <label class="checkbox-option" style="margin-bottom: 4px;">
+            <input type="checkbox" id="needCoborrowers" title="По умолчанию без созаёмщиков">
+            <span>Есть созаёмщики</span>
+            <span class="help-icon">?<span class="tooltip">Отметьте, если по договору есть созаёмщики. Тогда откроется блок для ввода их данных.</span></span>
+          </label>
+          <p id="coborrowersBlockedHint" class="coborrowers-blocked-hint" style="display: none;" role="status"></p>
+        </div>
         <div class="form-row single">
           <div class="field">
             <label>Промокод</label>
@@ -1146,10 +1145,8 @@
         <p style="font-size: 0.65rem; color: #6C757D; margin-top: 8px;">Образец полиса и КИД отправлены на email страхователя.</p>
         <div id="contractDocumentsBlock" style="margin-top: 14px; padding-top: 14px; border-top: 1px solid #DEE2E6;">
           <p class="hint" style="margin-bottom: 8px; font-size: 0.8rem;">Загрузка документов (по запросу СК или банка) — на этапе оформления полиса.</p>
-          <div class="form-row single">
+          <div class="form-row">
             <div class="field"><label>Документ 1</label><input type="file" id="doc1" accept=".pdf,.jpg,.jpeg,.png"></div>
-          </div>
-          <div class="form-row single">
             <div class="field"><label>Документ 2</label><input type="file" id="doc2" accept=".pdf,.jpg,.jpeg,.png"></div>
           </div>
         </div>
@@ -1544,6 +1541,8 @@
       if (bankEl) {
         bankEl.addEventListener('change', function() {
           if (step3Screen && step3Screen.style.display === 'block' && selectedSk) applySkFilter(selectedSk);
+          var cobHint = document.getElementById('coborrowersBlockedHint');
+          if (cobHint) cobHint.style.display = 'none';
         });
       }
 
@@ -1688,7 +1687,25 @@
         if (chronicBlock && chronicEl) chronicBlock.classList.toggle('visible', chronicEl.checked);
         var needCob = document.getElementById('needCoborrowers');
         var cobCard = document.getElementById('coborrowersCard');
-        if (cobCard && needCob) cobCard.classList.toggle('visible', needCob.checked);
+        var blockedHint = document.getElementById('coborrowersBlockedHint');
+        if (blockedHint) blockedHint.style.display = 'none';
+        function isCoborrowersBlocked() {
+          if (selectedSk !== 'alfa') return false;
+          var bankEl = document.getElementById('bank');
+          var bank = (bankEl && bankEl.value) ? bankEl.value.trim() : '';
+          var card = document.getElementById('coborrowersCard');
+          if (!card) return false;
+          var exclude = (card.getAttribute('data-banks-exclude-alfa') || '').split(/\s*,\s*/).filter(Boolean);
+          return exclude.indexOf(bank) !== -1;
+        }
+        if (needCob && needCob.checked && isCoborrowersBlocked()) {
+          needCob.checked = false;
+          if (blockedHint) {
+            blockedHint.textContent = 'Для АльфаСтрахование при выборе Сбербанка созаёмщики по программе не предусмотрены.';
+            blockedHint.style.display = 'block';
+          }
+        }
+        if (cobCard && needCob) cobCard.classList.toggle('visible', needCob.checked && !isCoborrowersBlocked());
         var titleRiskEl = document.getElementById('hasTitleRisk');
         var titleRiskBlock = document.getElementById('titleRiskBlock');
         if (titleRiskBlock && titleRiskEl) titleRiskBlock.classList.toggle('visible', titleRiskEl.checked);
@@ -1697,9 +1714,46 @@
         if (el) el.addEventListener('change', toggleDynamicBlocks);
       });
       document.getElementById('chronicIllness') && document.getElementById('chronicIllness').addEventListener('click', toggleDynamicBlocks);
-      document.getElementById('needCoborrowers') && document.getElementById('needCoborrowers').addEventListener('click', toggleDynamicBlocks);
       document.getElementById('hasTitleRisk') && document.getElementById('hasTitleRisk').addEventListener('click', toggleDynamicBlocks);
+      (function initNeedCoborrowers() {
+        var needCob = document.getElementById('needCoborrowers');
+        var blockedHint = document.getElementById('coborrowersBlockedHint');
+        if (!needCob) return;
+        needCob.addEventListener('click', function() {
+          if (!needCob.checked) return;
+          var bankEl = document.getElementById('bank');
+          var bank = (bankEl && bankEl.value) ? bankEl.value.trim() : '';
+          var card = document.getElementById('coborrowersCard');
+          var exclude = (card && card.getAttribute('data-banks-exclude-alfa')) ? card.getAttribute('data-banks-exclude-alfa').split(/\s*,\s*/).filter(Boolean) : [];
+          if (selectedSk === 'alfa' && exclude.indexOf(bank) !== -1) {
+            needCob.checked = false;
+            if (blockedHint) {
+              blockedHint.textContent = 'Для АльфаСтрахование при выборе Сбербанка созаёмщики по программе не предусмотрены.';
+              blockedHint.style.display = 'block';
+            }
+            setTimeout(function() { toggleDynamicBlocks(); }, 0);
+          }
+        });
+        needCob.addEventListener('change', toggleDynamicBlocks);
+      })();
       toggleDynamicBlocks();
+
+      (function initOfficeWorkRiskGroup() {
+        var officeWork = document.getElementById('officeWork');
+        var riskGroupEl = document.getElementById('riskGroup');
+        var riskGroupRow = riskGroupEl && riskGroupEl.closest('.form-row');
+        function updateRiskGroupState() {
+          if (!riskGroupEl || !riskGroupRow) return;
+          var disabled = officeWork && officeWork.checked;
+          riskGroupEl.disabled = disabled;
+          var field = riskGroupEl.closest('.field');
+          if (field) {
+            if (disabled) field.classList.add('field-disabled'); else field.classList.remove('field-disabled');
+          }
+        }
+        if (officeWork) officeWork.addEventListener('change', updateRiskGroupState);
+        updateRiskGroupState();
+      })();
 
       var coborrowersList = document.getElementById('coborrowersList');
       var btnAddCoborrower = document.getElementById('btnAddCoborrower');
