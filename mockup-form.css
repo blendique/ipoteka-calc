@@ -496,6 +496,78 @@ input[readonly] {
   margin-top: 24px;
   flex-wrap: wrap;
 }
+.btn-block { width: 100%; }
+
+/* Экран 2: блоки предложений СК */
+.step2-card-body { padding: 24px; }
+.step2-deadline {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-bg-border);
+}
+.step2-offers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .step2-offers { grid-template-columns: 1fr; }
+}
+.step2-offer {
+  background: var(--color-bg);
+  border: 1px solid var(--color-bg-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-duration), border-color var(--transition-duration);
+}
+.step2-offer:hover {
+  border-color: var(--color-brand);
+  box-shadow: 0 4px 12px rgba(34, 125, 245, 0.12);
+}
+.step2-offer-inner {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 100%;
+}
+.step2-offer-header {
+  margin-bottom: 16px;
+}
+.step2-offer-header .sk-tag-lg {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  font-weight: var(--font-weight-semibold);
+}
+.step2-offer-premium {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.step2-offer-value {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  line-height: 1.2;
+}
+.step2-offer-currency {
+  font-size: 1rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+.step2-offer-detail {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+  flex: 1;
+}
+.step2-offer-btn {
+  margin-top: auto;
+}
 
 /* Шаги (номера) */
 .step-indicator {
