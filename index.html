@@ -112,6 +112,7 @@
           </div>
         </div>
       </div>
+      <div id="step1Error" class="step1-error" style="display: none;"></div>
       <div class="actions">
         <button type="button" class="btn btn-primary" id="btnStep1Calc">Получить расчёт</button>
       </div>
@@ -134,7 +135,8 @@
                   <span class="step2-offer-value" id="step2_premium_alfa">12 100</span>
                   <span class="step2-offer-currency">₽</span>
                 </div>
-                <p class="step2-offer-detail">Жизнь + Имущество</p>
+                <p class="step2-offer-detail" id="step2_detail_alfa">Жизнь + Имущество</p>
+                <p class="step2-offer-unavail" id="step2_unavail_alfa" style="display:none;"></p>
                 <button type="button" class="btn btn-primary btn-block btn-choose-sk step2-offer-btn" data-sk="alfa">Выбрать</button>
               </div>
             </div>
@@ -147,7 +149,8 @@
                   <span class="step2-offer-value" id="step2_premium_absolut">12 450</span>
                   <span class="step2-offer-currency">₽</span>
                 </div>
-                <p class="step2-offer-detail">Жизнь + Имущество</p>
+                <p class="step2-offer-detail" id="step2_detail_absolut">Жизнь + Имущество</p>
+                <p class="step2-offer-unavail" id="step2_unavail_absolut" style="display:none;"></p>
                 <button type="button" class="btn btn-primary btn-block btn-choose-sk step2-offer-btn" data-sk="absolut">Выбрать</button>
               </div>
             </div>
@@ -160,7 +163,8 @@
                   <span class="step2-offer-value" id="step2_premium_sogaz">11 900</span>
                   <span class="step2-offer-currency">₽</span>
                 </div>
-                <p class="step2-offer-detail">Жизнь + Имущество</p>
+                <p class="step2-offer-detail" id="step2_detail_sogaz">Жизнь + Имущество</p>
+                <p class="step2-offer-unavail" id="step2_unavail_sogaz" style="display:none;"></p>
                 <button type="button" class="btn btn-primary btn-block btn-choose-sk step2-offer-btn" data-sk="sogaz">Выбрать</button>
               </div>
             </div>
@@ -1267,6 +1271,119 @@
         if (step === 3 && selectedSk) applySkFilter(selectedSk);
       }
 
+      var allSks = ['alfa', 'absolut', 'sogaz'];
+      var skNames = { alfa: 'Альфа', absolut: 'Абсолют', sogaz: 'СОГАЗ' };
+      var step1FilterFields = [
+        { id: 'step1_buildingType', label: 'На что оформлена ипотека' },
+        { id: 'step1_bank', label: 'Банк' },
+        { id: 'step1_riskCode', label: 'Что нужно застраховать' }
+      ];
+
+      function getSelectedSks(selectId) {
+        var sel = document.getElementById(selectId);
+        if (!sel) return allSks.slice();
+        var opt = sel.options[sel.selectedIndex];
+        if (!opt) return allSks.slice();
+        var raw = (opt.getAttribute('data-sks') || '').trim();
+        if (!raw) return allSks.slice();
+        return raw.split(/\s+/);
+      }
+
+      function computeAvailability() {
+        var perField = step1FilterFields.map(function(f) {
+          return { id: f.id, label: f.label, sks: getSelectedSks(f.id) };
+        });
+        var available = allSks.slice();
+        perField.forEach(function(pf) {
+          available = available.filter(function(sk) { return pf.sks.indexOf(sk) !== -1; });
+        });
+        var reasons = {};
+        allSks.forEach(function(sk) {
+          if (available.indexOf(sk) !== -1) return;
+          var blocking = perField.filter(function(pf) { return pf.sks.indexOf(sk) === -1; });
+          reasons[sk] = blocking.map(function(b) { return b.label; });
+        });
+        var conflicts = [];
+        if (available.length === 0) {
+          var fieldSets = perField.map(function(pf) { return pf.sks; });
+          step1FilterFields.forEach(function(f, i) {
+            var others = fieldSets.filter(function(_, j) { return j !== i; });
+            var otherIntersection = allSks.slice();
+            others.forEach(function(s) { otherIntersection = otherIntersection.filter(function(sk) { return s.indexOf(sk) !== -1; }); });
+            var mine = perField[i].sks;
+            var overlap = mine.filter(function(sk) { return otherIntersection.indexOf(sk) !== -1; });
+            if (overlap.length === 0) conflicts.push(f.id);
+          });
+        }
+        return { available: available, reasons: reasons, conflicts: conflicts };
+      }
+
+      function validateStep1() {
+        var result = computeAvailability();
+        var errEl = document.getElementById('step1Error');
+        step1FilterFields.forEach(function(f) {
+          var wrap = document.getElementById(f.id);
+          if (wrap) {
+            var parent = wrap.closest('.field');
+            if (parent) parent.classList.remove('field-error');
+          }
+        });
+        if (result.conflicts.length > 0) {
+          result.conflicts.forEach(function(fid) {
+            var wrap = document.getElementById(fid);
+            if (wrap) {
+              var parent = wrap.closest('.field');
+              if (parent) parent.classList.add('field-error');
+            }
+          });
+          if (errEl) {
+            errEl.textContent = 'Выбраны противоречащие правила — ни одна СК не подходит для этой комбинации параметров.';
+            errEl.style.display = 'block';
+          }
+        } else {
+          if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
+        }
+        return result;
+      }
+
+      function applyStep2Availability(result) {
+        var riskLabel = '';
+        var riskEl = document.getElementById('step1_riskCode');
+        if (riskEl && riskEl.options[riskEl.selectedIndex]) {
+          riskLabel = riskEl.options[riskEl.selectedIndex].textContent;
+        }
+        allSks.forEach(function(sk) {
+          var offer = document.querySelector('.step2-offer[data-sk="' + sk + '"]');
+          if (!offer) return;
+          var btn = offer.querySelector('.btn-choose-sk');
+          var premBlock = offer.querySelector('.step2-offer-premium');
+          var detailEl = document.getElementById('step2_detail_' + sk);
+          var unavailEl = document.getElementById('step2_unavail_' + sk);
+          if (result.available.indexOf(sk) !== -1) {
+            offer.classList.remove('step2-offer-disabled');
+            if (btn) { btn.disabled = false; btn.style.display = ''; }
+            if (premBlock) premBlock.style.display = '';
+            if (detailEl) { detailEl.textContent = riskLabel || 'Жизнь + Имущество'; detailEl.style.display = ''; }
+            if (unavailEl) unavailEl.style.display = 'none';
+          } else {
+            offer.classList.add('step2-offer-disabled');
+            if (btn) { btn.disabled = true; btn.style.display = 'none'; }
+            if (premBlock) premBlock.style.display = 'none';
+            if (detailEl) detailEl.style.display = 'none';
+            if (unavailEl) {
+              var why = (result.reasons[sk] || []).join(', ');
+              unavailEl.textContent = 'Недоступно: ' + why;
+              unavailEl.style.display = 'block';
+            }
+          }
+        });
+      }
+
+      step1FilterFields.forEach(function(f) {
+        var el = document.getElementById(f.id);
+        if (el) el.addEventListener('change', validateStep1);
+      });
+
       function copyStep1ToForm() {
         var map = [
           ['step1_bank', 'bank'],
@@ -1327,6 +1444,8 @@
 
       if (document.getElementById('btnStep1Calc')) {
         document.getElementById('btnStep1Calc').onclick = function() {
+          var result = validateStep1();
+          if (result.conflicts.length > 0) return;
           copyStep1ToForm();
           var creditVal = (document.getElementById('step1_creditValue') || document.getElementById('creditValue')).value.replace(/\s/g, '');
           var sum = parseInt(creditVal, 10) || 5000000;
@@ -1339,6 +1458,7 @@
           var deadline = new Date();
           deadline.setDate(deadline.getDate() + 7);
           document.getElementById('step2_calcDeadline').textContent = deadline.toLocaleDateString('ru-RU');
+          applyStep2Availability(result);
           showStep(2);
         };
       }

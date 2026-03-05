@@ -496,6 +496,25 @@ input[readonly] {
   margin-top: 24px;
   flex-wrap: wrap;
 }
+/* Ошибка валидации на экране 1 */
+.step1-error {
+  background: #fef2f2;
+  border: 1px solid var(--color-alert-danger);
+  border-radius: var(--radius-sm);
+  color: var(--color-alert-danger);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-semibold);
+  margin-top: 16px;
+}
+.field-error .custom-select-trigger,
+.field-error select:not(.custom-select-native),
+.field-error input {
+  border-color: var(--color-alert-danger) !important;
+  box-shadow: 0 0 0 3px rgba(235, 51, 51, 0.12) !important;
+}
+.field-error > label { color: var(--color-alert-danger) !important; }
+
 .btn-block { width: 100%; }
 
 /* Экран 2: блоки предложений СК */
@@ -567,6 +586,19 @@ input[readonly] {
 }
 .step2-offer-btn {
   margin-top: auto;
+}
+.step2-offer-disabled {
+  opacity: 0.55;
+  pointer-events: none;
+  border-color: var(--color-bg-border);
+  box-shadow: none;
+}
+.step2-offer-unavail {
+  font-size: 0.8rem;
+  color: var(--color-alert-danger);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: 12px;
+  flex: 1;
 }
 
 /* Шаги (номера) */
