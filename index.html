@@ -15,21 +15,9 @@
   <main class="layout">
     <h1 class="page-title">Ипотека</h1>
 
-    <details class="faq-block">
-      <summary>Зачем везде написаны СК (Альфа, Абсолют, СОГАЗ)?</summary>
-      <div class="faq-body">
-        <p><strong>СК</strong> — страховая компания. Мы отправляем заявку в несколько компаний сразу, чтобы вы могли сравнить цены.</p>
-        <ul>
-          <li><strong>Хотите расчёт от всех?</strong> Заполняйте все поля и указывайте данные везде, где есть метки СК — тогда расчёт пойдёт во все выбранные компании.</li>
-          <li><strong>Нужен расчёт только от одной СК?</strong> Обязательно заполняйте поля, помеченные этой СК (Альфа, Абсолют или СОГАЗ); остальные можно не заполнять.</li>
-          <li>Поля без метки СК используются всеми. Звёздочка <span class="required">*</span> означает обязательное поле для отмеченных СК.</li>
-        </ul>
-      </div>
-    </details>
-
     <!-- Экран 1: Минимальные данные для предварительного расчёта -->
     <div id="step1Screen" class="step-screen">
-      <p class="step-desc">Укажите минимальные данные — получите расчёт от всех трёх СК и выберите подходящую.</p>
+      <p class="step-desc">Введите минимальные данные — получите расчёт от всех СК (АльфаСтрахование, Абсолют, СОГАЗ) и выберите подходящее предложение.</p>
       <div class="card">
         <div class="card-header">Данные для расчёта</div>
         <div class="card-body">
@@ -165,6 +153,7 @@
     <div class="card" data-sks="alfa absolut sogaz">
       <div class="card-header">Банк и ипотечный договор</div>
       <div class="card-body">
+        <div class="form-block" data-sks="alfa absolut sogaz">
         <div class="form-row">
           <div class="field">
             <div class="field-header">
@@ -238,7 +227,7 @@
             </div>
             <input type="text" id="dateCreditDoc" class="date-field" placeholder="дд.мм.гггг" value="15.04.2024" title="Формат: дд.мм.гггг">
           </div>
-          <div class="field">
+          <div class="field" data-sks="sogaz">
             <div class="field-header">
               <span class="label-text">Дата окончания кредитного договора</span>
               <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
@@ -259,7 +248,7 @@
           <div class="field field-spacer"></div>
         </div>
         <div class="form-row">
-          <div class="field">
+          <div class="field" data-sks="alfa">
             <div class="field-header">
               <span class="label-text">Срок страхования, мес. <span class="required">*</span></span>
               <span class="sk-labels"><span class="sk-tag alfa">Альфа</span></span>
@@ -316,60 +305,63 @@
             <input type="text" id="cityCredit" placeholder="Город" value="Москва">
           </div>
         </div>
-        <div class="form-row">
-          <div class="field">
-            <div class="field-header">
-              <span class="label-text">Цель страхования <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
-              <span class="help-icon">?<span class="tooltip">Абсолют: ins_purpose. 1 — новый кредит, 2 — дострахование, 3 — рефинансирование, 4 — смена СК, 5 — перезаключение.</span></span>
-            </div>
-            <select id="insPurpose">
-              <option value="1" selected>Новый кредит</option>
-              <option value="2">Дострахование рисков</option>
-              <option value="3">Рефинансирование</option>
-              <option value="4">Смена страховой компании</option>
-              <option value="5">Перезаключение договора</option>
-            </select>
-          </div>
-          <div class="field">
-            <div class="field-header">
-              <span class="label-text">Причина перезаключения</span>
-              <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
-              <span class="help-icon">?<span class="tooltip">Обязательна при цели «Перезаключение». 1–5: неоплата, смена страхователя, смена объекта, изменение рисков, иное.</span></span>
-            </div>
-            <select id="renewReason">
-              <option value="">—</option>
-              <option value="1">Неоплата ранее заключённого</option>
-              <option value="2">Смена страхователя</option>
-              <option value="3">Смена объекта</option>
-              <option value="4">Изменение набора рисков</option>
-              <option value="5">Иное</option>
-            </select>
-          </div>
         </div>
-        <div id="renewReasonRemarkBlock" class="dynamic-block form-row">
-          <div class="field" style="grid-column: 1 / -1;">
-            <label>Описание причины перезаключения <span class="required">*</span> (при «Иное»)</label>
-            <input type="text" id="renewReasonRemark" placeholder="Текст причины">
-          </div>
-        </div>
-        <div id="prevSkBlock" class="dynamic-block form-row">
-          <div class="field">
-            <div class="field-header">
-              <span class="label-text">Предыдущая СК (при смене страховой)</span>
-              <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
-              <span class="help-icon">?<span class="tooltip">Абсолют: ins_previous, справочник prev_sk. Обязателен при цели «Смена СК».</span></span>
+        <div class="form-block" data-sks="absolut">
+          <div class="form-row">
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Цель страхования <span class="required">*</span></span>
+                <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+                <span class="help-icon">?<span class="tooltip">Абсолют: ins_purpose. 1 — новый кредит, 2 — дострахование, 3 — рефинансирование, 4 — смена СК, 5 — перезаключение.</span></span>
+              </div>
+              <select id="insPurpose">
+                <option value="1" selected>Новый кредит</option>
+                <option value="2">Дострахование рисков</option>
+                <option value="3">Рефинансирование</option>
+                <option value="4">Смена страховой компании</option>
+                <option value="5">Перезаключение договора</option>
+              </select>
             </div>
-            <select id="insPrevious">
-              <option value="">—</option>
-              <option value="1857051">АК-Барс Страхование</option>
-              <option value="953181">Альфа-Страхование</option>
-              <option value="858971">ВСК</option>
-              <option value="858451">ВТБ Страхование</option>
-              <option value="859541">Зетта-Страхование</option>
-              <option value="858931">Ингосстрах</option>
-              <option value="958631">Либерти Страхование</option>
-            </select>
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Причина перезаключения</span>
+                <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+                <span class="help-icon">?<span class="tooltip">Обязательна при цели «Перезаключение». 1–5: неоплата, смена страхователя, смена объекта, изменение рисков, иное.</span></span>
+              </div>
+              <select id="renewReason">
+                <option value="">—</option>
+                <option value="1">Неоплата ранее заключённого</option>
+                <option value="2">Смена страхователя</option>
+                <option value="3">Смена объекта</option>
+                <option value="4">Изменение набора рисков</option>
+                <option value="5">Иное</option>
+              </select>
+            </div>
+          </div>
+          <div id="renewReasonRemarkBlock" class="dynamic-block form-row">
+            <div class="field" style="grid-column: 1 / -1;">
+              <label>Описание причины перезаключения <span class="required">*</span> (при «Иное»)</label>
+              <input type="text" id="renewReasonRemark" placeholder="Текст причины">
+            </div>
+          </div>
+          <div id="prevSkBlock" class="dynamic-block form-row">
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Предыдущая СК (при смене страховой)</span>
+                <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+                <span class="help-icon">?<span class="tooltip">Абсолют: ins_previous, справочник prev_sk. Обязателен при цели «Смена СК».</span></span>
+              </div>
+              <select id="insPrevious">
+                <option value="">—</option>
+                <option value="1857051">АК-Барс Страхование</option>
+                <option value="953181">Альфа-Страхование</option>
+                <option value="858971">ВСК</option>
+                <option value="858451">ВТБ Страхование</option>
+                <option value="859541">Зетта-Страхование</option>
+                <option value="858931">Ингосстрах</option>
+                <option value="958631">Либерти Страхование</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -379,7 +371,7 @@
     <div class="card" data-sks="alfa absolut sogaz">
       <div class="card-header">Объект страхования</div>
       <div class="card-body">
-        <div class="form-block">
+        <div class="form-block" data-sks="alfa absolut sogaz">
           <div class="form-row single">
             <div class="field">
               <div class="field-header">
@@ -423,7 +415,7 @@
             </div>
           </div>
         </div>
-        <div class="form-block">
+        <div class="form-block" data-sks="alfa absolut sogaz">
           <div class="form-row single">
             <div class="field">
               <div class="field-header">
@@ -454,7 +446,7 @@
           </div>
         </div>
         </div>
-        <div class="form-block">
+        <div class="form-block" data-sks="alfa absolut sogaz">
         <div class="form-row single">
           <div class="field">
             <div class="field-header">
@@ -543,7 +535,7 @@
           </div>
         </div>
         <!-- Абсолют: материал стен/перекрытий (при выборе «Жилой дом (Абсолют)») -->
-        <div class="form-row block-conditional" data-show-when="654401" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
+        <div class="form-row block-conditional" data-show-when="654401" data-sks="absolut" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
           <div class="field-header" style="margin-bottom: 6px;">
             <span class="label-text" style="font-weight: 600;">Материал стен / перекрытий</span>
             <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
@@ -571,7 +563,7 @@
           </div>
         </div>
         <!-- СОГАЗ: земельный участок (при выборе «Дом + ЗУ») -->
-        <div class="form-row single block-conditional" data-show-when="houseWithPlot" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
+        <div class="form-row single block-conditional" data-show-when="houseWithPlot" data-sks="sogaz" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
           <div class="field-header" style="margin-bottom: 6px;">
             <span class="label-text" style="font-weight: 600;">Земельный участок (отдельный объект)</span>
             <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
@@ -1147,7 +1139,8 @@
         var bankEl = document.getElementById('bank');
         var bank = (bankEl && bankEl.value) ? bankEl.value.trim() : '';
         function showIfMatch(el) {
-          var sks = (el.getAttribute('data-sks') || '').split(/\s+/);
+          if (el.tagName === 'OPTION') return;
+          var sks = (el.getAttribute('data-sks') || '').split(/\s+/).filter(Boolean);
           if (sks.indexOf(sk) === -1) { el.style.display = 'none'; return; }
           var exclude = (el.getAttribute('data-banks-exclude') || '').split(/\s*,\s*/).filter(Boolean);
           if (exclude.indexOf(bank) !== -1) { el.style.display = 'none'; return; }
@@ -1155,12 +1148,13 @@
           if (sk === 'alfa' && excludeAlfa.indexOf(bank) !== -1) { el.style.display = 'none'; return; }
           var onlyBanks = (el.getAttribute('data-banks') || '').split(/\s*,\s*/).filter(Boolean);
           if (onlyBanks.length && onlyBanks.indexOf(bank) === -1) { el.style.display = 'none'; return; }
-          el.style.display = '';
+          el.style.display = el.classList.contains('form-row') ? 'grid' : (el.classList.contains('card') ? 'block' : '');
+          if (el.style.display === '') el.style.display = 'block';
         }
-        step3Screen.querySelectorAll('.card[data-sks]').forEach(showIfMatch);
-        step3Screen.querySelectorAll('.form-block[data-sks]').forEach(showIfMatch);
-        step3Screen.querySelectorAll('.field[data-sks]').forEach(showIfMatch);
-        step3Screen.querySelectorAll('[data-sks][data-banks-exclude], [data-sks][data-banks-exclude-alfa], [data-sks][data-banks]').forEach(showIfMatch);
+        step3Screen.querySelectorAll('.card, .form-block').forEach(function(el) {
+          if (!el.getAttribute('data-sks')) el.style.display = 'none';
+        });
+        step3Screen.querySelectorAll('[data-sks]').forEach(showIfMatch);
         var desc = document.getElementById('step3Desc');
         if (desc) desc.textContent = 'Оформление полиса — ' + (sk === 'alfa' ? 'Альфа' : sk === 'absolut' ? 'Абсолют' : 'СОГАЗ') + '. Заполните поля ниже (учтён выбранный банк).';
       }

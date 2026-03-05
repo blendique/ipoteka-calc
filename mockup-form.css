@@ -219,6 +219,7 @@ input[type="file"] { height: auto; min-height: 36px; }
 /* Лейблы СК: поле/параметр используется всеми СК (Альфа, Абсолют, СОГАЗ) — теги не показываем */
 .sk-labels.sk-labels-all,
 .sk-labels-all { display: none !important; }
+#step3Screen .sk-labels { display: none !important; }
 .sk-labels { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .sk-tag {
   font-size: 0.65rem;
