@@ -219,7 +219,6 @@ input[type="file"] { height: auto; min-height: 36px; }
 /* Лейблы СК: поле/параметр используется всеми СК (Альфа, Абсолют, СОГАЗ) — теги не показываем */
 .sk-labels.sk-labels-all,
 .sk-labels-all { display: none !important; }
-#step3Screen .sk-labels { display: none !important; }
 .sk-labels { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .sk-tag {
   font-size: 0.65rem;
@@ -490,28 +489,6 @@ input[readonly] {
   border: 1px solid var(--color-bg-border);
 }
 .btn-secondary:hover { background: var(--color-brand-ghost); border-color: var(--color-brand); color: var(--color-brand); }
-
-/* Трёхэтапный поток */
-.step-screen { margin-bottom: 20px; }
-.step-desc { font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: 16px; }
-.sk-result-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 16px;
-}
-@media (max-width: 768px) {
-  .sk-result-cards { grid-template-columns: 1fr; }
-}
-.sk-result-card {
-  border: 1px solid var(--color-bg-border);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  background: var(--color-bg-ghost);
-}
-.sk-result-header { margin-bottom: 8px; }
-.sk-result-premium { font-size: 1rem; margin: 8px 0; }
-.btn-block { width: 100%; justify-content: center; }
 
 .actions {
   display: flex;

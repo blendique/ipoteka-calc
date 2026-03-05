@@ -15,7 +15,7 @@
   <main class="layout">
     <h1 class="page-title">Ипотека</h1>
 
-    <!-- Экран 1: Минимальные данные для предварительного расчёта -->
+    <!-- Экран 1: Минимальные данные для предварительного расчёта (как у Сравни.ру: банк, остаток, что страховать, дата рождения, пол + дата начала и вид имущества для расчёта) -->
     <div id="step1Screen" class="step-screen">
       <p class="step-desc">Введите минимальные данные — получите расчёт от всех СК (АльфаСтрахование, Абсолют, СОГАЗ) и выберите подходящее предложение.</p>
       <div class="card">
@@ -24,15 +24,15 @@
           <div class="form-row">
             <div class="field">
               <label>Банк <span class="required">*</span></label>
-              <select id="step1_bank">
-                <option value="sber" selected>Сбербанк России</option>
-                <option value="vtb">ВТБ</option>
-                <option value="rshb">Россельхозбанк</option>
-                <option value="gazprom">Газпромбанк</option>
-                <option value="domrf">Дом.РФ</option>
-                <option value="open">Открытие</option>
-                <option value="raiff">Райффайзенбанк</option>
-                <option value="mts">МТС-Банк</option>
+              <select id="step1_bank" title="В скобках — в каких СК доступен расчёт по этому банку">
+                <option value="sber" data-sks="alfa absolut sogaz" selected>Сбербанк России — Альфа, Абсолют, СОГАЗ</option>
+                <option value="vtb" data-sks="alfa absolut sogaz">ВТБ — Альфа, Абсолют, СОГАЗ</option>
+                <option value="rshb" data-sks="sogaz">Россельхозбанк — СОГАЗ</option>
+                <option value="gazprom" data-sks="alfa absolut">Газпромбанк — Альфа, Абсолют</option>
+                <option value="domrf" data-sks="alfa absolut">Дом.РФ — Альфа, Абсолют</option>
+                <option value="open" data-sks="alfa absolut">Открытие — Альфа, Абсолют</option>
+                <option value="raiff" data-sks="alfa absolut">Райффайзенбанк — Альфа, Абсолют</option>
+                <option value="mts" data-sks="alfa absolut">МТС-Банк — Альфа, Абсолют</option>
               </select>
             </div>
             <div class="field">
@@ -42,30 +42,40 @@
           </div>
           <div class="form-row">
             <div class="field">
-              <label>Процентная ставка, %</label>
-              <input type="text" id="step1_rate" class="input-decimal" inputmode="decimal" placeholder="8.5" value="11.5">
+              <label>Дата рождения заёмщика <span class="required">*</span></label>
+              <input type="text" id="step1_dateOfBirth" class="date-field" placeholder="дд.мм.гггг" value="15.03.1985" title="Нужна для расчёта тарифа по риску жизни">
             </div>
             <div class="field">
-              <label>Дата начала полиса <span class="required">*</span></label>
-              <input type="text" id="step1_beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025">
+              <label>Пол заёмщика <span class="required">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="step1_gender" value="M" checked><span>М</span></label>
+                <label class="radio-option"><input type="radio" name="step1_gender" value="F"><span>Ж</span></label>
+              </div>
             </div>
           </div>
           <div class="form-row">
             <div class="field">
-              <label>Срок страхования, мес. <span class="required">*</span></label>
-              <select id="step1_termInMonth">
-                <option value="12">12</option>
-                <option value="24">24</option>
-                <option value="36">36</option>
-                <option value="60">60</option>
-                <option value="120">120</option>
-                <option value="180">180</option>
-                <option value="240">240</option>
-                <option value="360" selected>360</option>
-              </select>
+              <label>Что нужно застраховать (тип рисков) <span class="required">*</span></label>
+              <div class="radio-group radio-group-stacked">
+                <label class="radio-option">
+                  <input type="radio" name="step1_riskCode" value="combo" checked>
+                  <span>Жизнь + имущество</span>
+                  <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="step1_riskCode" value="life">
+                  <span>Только жизнь</span>
+                  <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="step1_riskCode" value="property">
+                  <span>Только имущество</span>
+                  <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
+                </label>
+              </div>
             </div>
             <div class="field">
-              <label>Вид имущества <span class="required">*</span></label>
+              <label>На что оформлена ипотека</label>
               <select id="step1_buildingType">
                 <option value="FLAT" selected>Квартира</option>
                 <option value="ROOM">Комната</option>
@@ -80,25 +90,12 @@
           </div>
           <div class="form-row">
             <div class="field">
-              <label>Тип рынка <span class="required">*</span></label>
-              <div class="radio-group radio-group-stacked">
-                <label class="radio-option"><input type="radio" name="step1_saleType" value="FIRST"><span>Первичный</span></label>
-                <label class="radio-option"><input type="radio" name="step1_saleType" value="SECOND" checked><span>Вторичный</span></label>
-              </div>
+              <label>Дата начала полиса <span class="required">*</span></label>
+              <input type="text" id="step1_beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025">
             </div>
             <div class="field">
-              <label>Тип страхования (риски)</label>
-              <div class="radio-group radio-group-stacked">
-                <label class="radio-option"><input type="radio" name="step1_riskCode" value="combo" checked><span>Жизнь + имущество</span></label>
-                <label class="radio-option"><input type="radio" name="step1_riskCode" value="life"><span>Только жизнь</span></label>
-                <label class="radio-option"><input type="radio" name="step1_riskCode" value="property"><span>Только имущество</span></label>
-              </div>
-            </div>
-          </div>
-          <div class="form-row single">
-            <div class="field">
-              <label>Адрес объекта <span class="required">*</span></label>
-              <input type="text" id="step1_objectAddress" placeholder="Регион, город, улица, дом, кв." value="г Москва, ул Ленина, д 10, кв 25">
+              <label>Процентная ставка, %</label>
+              <input type="text" id="step1_rate" class="input-decimal" inputmode="decimal" placeholder="8.5" value="11.5" title="Используется в расчёте премии">
             </div>
           </div>
         </div>
@@ -562,6 +559,92 @@
             </div>
           </div>
         </div>
+        <!-- Абсолют: объект — сигнализация, огонь, целевое назначение, факторы риска, застройщик -->
+        <div class="form-block" data-sks="absolut" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
+          <div class="field-header" style="margin-bottom: 6px;">
+            <span class="label-text" style="font-weight: 600;">Дополнительные характеристики объекта (Абсолют)</span>
+            <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Сигнализация</span>
+                <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+                <span class="help-icon">?<span class="tooltip">Абсолют: справочник alarms. Для новых объектов.</span></span>
+              </div>
+              <select id="alarms">
+                <option value="">—</option>
+                <option value="1">Пожарная</option>
+                <option value="2">Охранная</option>
+                <option value="3">Другое</option>
+                <option value="0" selected>Нет</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Источник открытого огня</span>
+                <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+                <span class="help-icon">?<span class="tooltip">Абсолют: справочник fire_sources.</span></span>
+              </div>
+              <select id="fireSources">
+                <option value="">—</option>
+                <option value="1">Газовая плита</option>
+                <option value="2">Газовая колонка</option>
+                <option value="3">Камин</option>
+                <option value="4">Печь</option>
+                <option value="0" selected>Нет</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Целевое назначение</span>
+                <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+                <span class="help-icon">?<span class="tooltip">Абсолют: справочник purpose. Для нежилых и особых типов (офис, торговля, общепит и т.д.).</span></span>
+              </div>
+              <select id="purpose">
+                <option value="">—</option>
+                <option value="1">Жилое</option>
+                <option value="2">Офисное</option>
+                <option value="3">Торговое</option>
+                <option value="4">Общепит</option>
+                <option value="5">Иное</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Доп. факторы риска</span>
+                <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+                <span class="help-icon">?<span class="tooltip">Абсолют: справочник risk_factors (бассейн, сауна, хлебопекарное и т.д.).</span></span>
+              </div>
+              <select id="riskFactors">
+                <option value="">—</option>
+                <option value="1">Бассейн</option>
+                <option value="2">Сауна</option>
+                <option value="3">Хлебопекарное</option>
+                <option value="4">Другое</option>
+                <option value="0" selected>Нет</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row single block-conditional" data-show-when="primary" id="developersRow">
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Застройщик</span>
+                <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+                <span class="help-icon">?<span class="tooltip">Абсолют: справочник /dicti/mortgage/developers. Показывать при первичном рынке/новостройке.</span></span>
+              </div>
+              <select id="developers">
+                <option value="">—</option>
+                <option value="1">ПИК</option>
+                <option value="2">Самолет</option>
+                <option value="3">ЛСР</option>
+                <option value="4">Иное</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <!-- СОГАЗ: земельный участок (при выборе «Дом + ЗУ») -->
         <div class="form-row single block-conditional" data-show-when="houseWithPlot" data-sks="sogaz" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #DEE2E6;">
           <div class="field-header" style="margin-bottom: 6px;">
@@ -596,6 +679,14 @@
           </label>
           <div id="titleRiskBlock" class="dynamic-block">
           <div class="form-row">
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Рыночная стоимость титула, ₽</span>
+                <span class="sk-labels"><span class="sk-tag alfa">Альфа</span></span>
+                <span class="help-icon">?<span class="tooltip">Альфа: titleRisk.insuranceBaseAmount — отдельно от рыночной стоимости объекта.</span></span>
+              </div>
+              <input type="text" id="titleMarketPrice" placeholder="Сумма" value="">
+            </div>
             <div class="field">
               <div class="field-header">
                 <span class="label-text">Документ, подтверждающий право собственности</span>
@@ -711,7 +802,7 @@
             <input type="text" id="addressReg" placeholder="Регион, город, улица, дом, кв." value="г Москва, ул Красная Пресня, д 24, кв 25">
           </div>
         </div>
-        <div class="form-row single">
+        <div class="form-row single" data-sks="absolut">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Адрес фактического проживания (одна строка)</span>
@@ -742,12 +833,26 @@
             <label>Код подразделения <span class="required">*</span></label>
             <input type="text" id="departmentCode" placeholder="770-035" value="770-035">
           </div>
-          <label class="checkbox-option" style="align-self: flex-end; padding-bottom: 10px;">
-            <input type="checkbox" id="resident" checked>
-            <span>Резидент РФ</span>
-          </label>
+          <div class="field" data-sks="absolut">
+            <div class="field-header">
+              <span class="label-text">Код документа</span>
+              <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+              <span class="help-icon">?<span class="tooltip">Абсолют: document.code — 1165 РФ, 1159 иностр., 1156 загран.</span></span>
+            </div>
+            <select id="documentCode">
+              <option value="1165" selected>Паспорт РФ</option>
+              <option value="1159">Иностранный паспорт</option>
+              <option value="1156">Загранпаспорт</option>
+            </select>
+          </div>
+          <div data-sks="alfa" style="align-self: flex-end; padding-bottom: 10px;">
+            <label class="checkbox-option">
+              <input type="checkbox" id="resident" checked>
+              <span>Резидент РФ</span>
+            </label>
+          </div>
         </div>
-        <div class="form-row">
+        <div class="form-row" data-sks="absolut sogaz">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Рост, см</span>
@@ -765,13 +870,33 @@
             <input type="number" id="weight" placeholder="70" min="30" max="200" value="82">
           </div>
         </div>
-        <label class="checkbox-option" style="margin-bottom: 8px;">
-          <input type="checkbox" id="officeWork" checked>
-          <span>Офисная работа (не связана с риском)</span>
-          <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
-          <span class="help-icon">?<span class="tooltip">Абсолют: office_work.</span></span>
-        </label>
-        <div class="form-row">
+        <div class="form-row" data-sks="absolut">
+          <div class="field">
+            <div class="field-header">
+              <span class="label-text">Давление верх, мм рт.ст.</span>
+              <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+              <span class="help-icon">?<span class="tooltip">Абсолют: pressure_up при is_declaration (анкета).</span></span>
+            </div>
+            <input type="number" id="pressureUp" placeholder="120" min="80" max="200" value="">
+          </div>
+          <div class="field">
+            <div class="field-header">
+              <span class="label-text">Давление нижнее, мм рт.ст.</span>
+              <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+              <span class="help-icon">?<span class="tooltip">Абсолют: pressure_down при is_declaration.</span></span>
+            </div>
+            <input type="number" id="pressureDown" placeholder="80" min="50" max="120" value="">
+          </div>
+        </div>
+        <div data-sks="absolut">
+          <label class="checkbox-option" style="margin-bottom: 8px;">
+            <input type="checkbox" id="officeWork" checked>
+            <span>Офисная работа (не связана с риском)</span>
+            <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span></span>
+            <span class="help-icon">?<span class="tooltip">Абсолют: office_work.</span></span>
+          </label>
+        </div>
+        <div class="form-row" data-sks="absolut">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Группа риска</span>
@@ -789,14 +914,14 @@
           </div>
         </div>
         <!-- Жизнь -->
-        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #DEE2E6;">
+        <div class="form-block" data-sks="alfa absolut sogaz" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #DEE2E6;">
           <div class="field-header" style="margin-bottom: 8px;">
             <span class="label-text" style="font-weight: 600; color: #343A40;">Страхование жизни</span>
             <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
             <span class="help-icon">?<span class="tooltip">Альфа: профессия и спорт из справочников. Абсолют: profession_isn, risk_group_isn, office_work, chronic_illness. СОГАЗ: при life/combo — height, weight.</span></span>
           </div>
           <div class="form-row">
-            <div class="field">
+            <div class="field" data-sks="alfa absolut">
               <div class="field-header">
                 <span class="label-text">Профессия</span>
                 <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span></span>
@@ -817,7 +942,7 @@
                 <option value="1948701">Работники железнодорожного транспорта (Абсолют)</option>
               </select>
             </div>
-            <div class="field">
+            <div class="field" data-sks="alfa">
               <div class="field-header">
                 <span class="label-text">Вид спорта</span>
                 <span class="sk-labels"><span class="sk-tag alfa">Альфа</span></span>
@@ -835,16 +960,18 @@
               </select>
             </div>
           </div>
-          <label class="checkbox-option" style="margin-top: 8px;">
-            <input type="checkbox" id="chronicIllness">
-            <span>Есть хронические заболевания</span>
-            <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span></span>
-            <span class="help-icon">?<span class="tooltip">В спеках — только да/нет. При отметке «да» можно указать перечень для анкеты СК (если требуется).</span></span>
-          </label>
-          <div id="chronicIllnessRemarkBlock" class="dynamic-block form-row" style="margin-top: 8px;">
-            <div class="field" style="grid-column: 1 / -1;">
-              <label>Перечень заболеваний (если требуется СК)</label>
-              <input type="text" id="chronicIllnessRemark" placeholder="Кратко укажите перечень">
+          <div data-sks="alfa absolut">
+            <label class="checkbox-option" style="margin-top: 8px;">
+              <input type="checkbox" id="chronicIllness">
+              <span>Есть хронические заболевания</span>
+              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span></span>
+              <span class="help-icon">?<span class="tooltip">В спеках — только да/нет. При отметке «да» можно указать перечень для анкеты СК (если требуется).</span></span>
+            </label>
+            <div id="chronicIllnessRemarkBlock" class="dynamic-block form-row" style="margin-top: 8px;">
+              <div class="field" style="grid-column: 1 / -1;">
+                <label>Перечень заболеваний (если требуется СК)</label>
+                <input type="text" id="chronicIllnessRemark" placeholder="Кратко укажите перечень">
+              </div>
             </div>
           </div>
         </div>
@@ -1113,25 +1240,31 @@
           ['step1_creditValue', 'creditValue'],
           ['step1_rate', 'rate'],
           ['step1_beginDate', 'beginDate'],
-          ['step1_termInMonth', 'termInMonth'],
           ['step1_buildingType', 'buildingType'],
-          ['step1_objectAddress', 'objectAddress']
+          ['step1_dateOfBirth', 'dateOfBirth']
         ];
         map.forEach(function(pair) {
           var src = document.getElementById(pair[0]);
           var dst = document.getElementById(pair[1]);
           if (src && dst) dst.value = src.value;
         });
-        var saleType = document.querySelector('input[name="step1_saleType"]:checked');
-        if (saleType) {
-          var dstSale = document.querySelector('input[name="saleType"][value="' + saleType.value + '"]');
-          if (dstSale) dstSale.checked = true;
-        }
+        var termEl = document.getElementById('termInMonth');
+        if (termEl) termEl.value = '360';
+        var saleTypeDst = document.querySelector('input[name="saleType"][value="SECOND"]');
+        if (saleTypeDst) saleTypeDst.checked = true;
         var riskCode = document.querySelector('input[name="step1_riskCode"]:checked');
         if (riskCode) {
           var dstRisk = document.querySelector('input[name="riskCode"][value="' + riskCode.value + '"]');
           if (dstRisk) dstRisk.checked = true;
         }
+        var step1Gender = document.querySelector('input[name="step1_gender"]:checked');
+        if (step1Gender) {
+          var dstGender = document.querySelector('input[name="gender"][value="' + step1Gender.value + '"]');
+          if (dstGender) dstGender.checked = true;
+        }
+        [document.getElementById('bank'), document.getElementById('buildingType')].forEach(function(el) {
+          if (el) el.dispatchEvent(new Event('change', { bubbles: true }));
+        });
       }
 
       function applySkFilter(sk) {
@@ -1198,11 +1331,15 @@
       showStep(1);
 
       var buildingTypeEl = document.getElementById('buildingType');
+      var saleTypeChecked = function() { var r = document.querySelector('input[name="saleType"]:checked'); return r ? r.value : ''; };
       function toggleConditionalBlocks() {
-        var v = (buildingTypeEl && buildingTypeEl.value) || '';
+        var buildVal = (buildingTypeEl && buildingTypeEl.value) || '';
+        var saleVal = saleTypeChecked();
         document.querySelectorAll('.block-conditional').forEach(function(block) {
           var showWhen = block.getAttribute('data-show-when');
-          var show = showWhen && showWhen === v;
+          var show = false;
+          if (showWhen === 'primary') show = saleVal === 'FIRST';
+          else if (showWhen) show = showWhen === buildVal;
           block.style.display = show ? (block.classList.contains('form-row') ? 'grid' : 'block') : 'none';
         });
       }
@@ -1210,6 +1347,10 @@
         buildingTypeEl.addEventListener('change', toggleConditionalBlocks);
         toggleConditionalBlocks();
       }
+      document.querySelectorAll('input[name="saleType"]').forEach(function(r) {
+        r.addEventListener('change', toggleConditionalBlocks);
+      });
+      toggleConditionalBlocks();
 
       (function initPolicyEndDate() {
         var beginEl = document.getElementById('beginDate');
