@@ -228,58 +228,45 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Процентная ставка, %</span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">Альфа: по п.8; Райффайзенбанк только 10%. Абсолют: по программе (raising). СОГАЗ: loanRate и cancellationRate.</span></span>
             </div>
             <input type="text" id="rate" class="input-decimal" inputmode="decimal" placeholder="8.5" value="11.5" title="Только цифры, например 8.5 или 11">
           </div>
-          <div class="field" data-sks="sogaz">
+          <div class="field">
+            <div class="field-header">
+              <span class="label-text">Дата начала полиса <span class="required">*</span></span>
+            </div>
+            <input type="text" id="beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025" title="Формат: дд.мм.гггг">
+          </div>
+        </div>
+        <div class="form-row single" data-sks="sogaz">
+          <div class="field">
             <div class="field-header">
               <span class="label-text">Ставка при отказе от страхования, %</span>
-              <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">СОГАЗ: creditData.cancellationRate.</span></span>
             </div>
             <input type="text" id="cancellationRate" class="input-decimal" inputmode="decimal" placeholder="12" value="12" title="Только цифры, например 12">
           </div>
         </div>
-        <div class="form-row single">
+        <div class="form-row">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Номер кредитного договора <span class="required">*</span></span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">Обязателен при сохранении (Альфа). СОГАЗ: creditData.number.</span></span>
             </div>
             <input type="text" id="numberCreditDoc" placeholder="123/45/67890-001" value="26/12-18-93-15">
           </div>
-        </div>
-        <div class="form-row">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Дата подписания КД <span class="required">*</span></span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">Дата кредитного договора. СОГАЗ: creditData.startDate.</span></span>
             </div>
             <input type="text" id="dateCreditDoc" class="date-field" placeholder="дд.мм.гггг" value="15.04.2024" title="Формат: дд.мм.гггг">
           </div>
-          <div class="field" data-sks="sogaz">
+        </div>
+        <div class="form-row single" data-sks="sogaz">
+          <div class="field">
             <div class="field-header">
               <span class="label-text">Дата окончания кредитного договора</span>
-              <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">СОГАЗ: creditData.endDate. Срок кредита.</span></span>
             </div>
             <input type="text" id="creditEndDate" class="date-field" placeholder="дд.мм.гггг" value="06.04.2042" title="Формат: дд.мм.гггг">
           </div>
-        </div>
-        <div class="form-row">
-          <div class="field">
-            <div class="field-header">
-              <span class="label-text">Дата начала полиса <span class="required">*</span></span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">Альфа: не раньше сегодня и не более 3 мес. Абсолют/СОГАЗ: дата начала действия договора.</span></span>
-            </div>
-            <input type="text" id="beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025" title="Формат: дд.мм.гггг">
-          </div>
-          <div class="field field-spacer"></div>
         </div>
         <div class="form-row">
           <div class="field" data-sks="alfa">
@@ -450,30 +437,24 @@
             </div>
           </div>
         </div>
-        <div class="form-block" data-sks="alfa absolut">
-          <div class="form-row single">
-            <div class="field">
+        <div class="form-block" data-sks="alfa absolut sogaz">
+          <div class="form-row">
+            <div class="field" data-sks="alfa absolut">
               <div class="field-header">
                 <span class="label-text">Тип рынка <span class="required">*</span></span>
               </div>
-              <div class="radio-group radio-group-stacked">
-                <label class="radio-option"><input type="radio" name="saleType" value="FIRST"><span>Первичный</span></label>
-                <label class="radio-option"><input type="radio" name="saleType" value="SECOND" checked><span>Вторичный</span></label>
+              <select id="saleType">
+                <option value="SECOND" selected>Вторичный</option>
+                <option value="FIRST">Первичный</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-header">
+                <span class="label-text">Адрес объекта <span class="required">*</span></span>
               </div>
+              <input type="text" id="objectAddress" placeholder="г Москва, ул Ленина, д 10, кв 25" value="г Москва, ул Ленина, д 10, кв 25">
             </div>
           </div>
-        </div>
-        <div class="form-block" data-sks="alfa absolut sogaz">
-        <div class="form-row single">
-          <div class="field">
-            <div class="field-header">
-              <span class="label-text">Адрес объекта <span class="required">*</span></span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">Одна строка: регион, город, улица, дом, корпус, кв. СОГАЗ: паттерн «Регион, город, дом».</span></span>
-            </div>
-            <input type="text" id="objectAddress" placeholder="г Москва, ул Ленина, д 10, кв 25" value="г Москва, ул Ленина, д 10, кв 25">
-          </div>
-        </div>
         </div>
         <div class="form-row">
           <div class="field" data-sks="alfa absolut">
@@ -511,43 +492,31 @@
             <input type="text" id="kadastr" placeholder="77:05:0005005:10331" value="77:01:0001001:1234">
           </div>
         </div>
-        <div class="form-row single">
+        <div class="form-row single" data-sks="alfa absolut sogaz">
           <div style="display: flex; flex-wrap: wrap; gap: 10px 16px;">
-            <label class="checkbox-option">
-              <input type="checkbox">
+            <label class="checkbox-option" data-sks="alfa">
+              <input type="checkbox" id="goruch">
               <span>Горючие стены/перекрытия</span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span></span>
-              <span class="help-icon">?<span class="tooltip">propertyRisk.goruch — только Альфа.</span></span>
             </label>
-            <label class="checkbox-option">
-              <input type="checkbox">
+            <label class="checkbox-option" data-sks="alfa">
+              <input type="checkbox" id="capitalRepairExists">
               <span>Был капремонт/перепланировка</span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span></span>
-              <span class="help-icon">?<span class="tooltip">capitalRepairExists — только Альфа.</span></span>
             </label>
-            <label class="checkbox-option">
-              <input type="checkbox">
+            <label class="checkbox-option" data-sks="alfa">
+              <input type="checkbox" id="repairWorkInProgress">
               <span>Ремонт в процессе</span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span></span>
-              <span class="help-icon">?<span class="tooltip">repairWorkInProgress — только Альфа.</span></span>
             </label>
-            <label class="checkbox-option">
-              <input type="checkbox">
+            <label class="checkbox-option" data-sks="alfa">
+              <input type="checkbox" id="poolExists">
               <span>Есть бассейн</span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span></span>
-              <span class="help-icon">?<span class="tooltip">poolExists — только Альфа.</span></span>
             </label>
-            <label class="checkbox-option">
-              <input type="checkbox">
+            <label class="checkbox-option" data-sks="absolut sogaz">
+              <input type="checkbox" id="woodenWalls">
               <span>Деревянные стены</span>
-              <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">Абсолют: wooden_elements. СОГАЗ: wallWoodMaterial (для house).</span></span>
             </label>
-            <label class="checkbox-option">
-              <input type="checkbox">
+            <label class="checkbox-option" data-sks="sogaz">
+              <input type="checkbox" id="woodenFloors">
               <span>Деревянные перекрытия</span>
-              <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">floorWoodMaterial — только СОГАЗ (для house).</span></span>
             </label>
           </div>
         </div>
@@ -777,25 +746,15 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Пол <span class="required">*</span></span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">Альфа/Абсолют: M или F (М/Ж). СОГАЗ: Male или Female. При отправке в СОГАЗ маппим M→Male, F→Female.</span></span>
             </div>
-            <div class="radio-group">
-              <label class="radio-option">
-                <input type="radio" name="gender" value="M" checked>
-                <span>М</span>
-              </label>
-              <label class="radio-option">
-                <input type="radio" name="gender" value="F">
-                <span>Ж</span>
-              </label>
-            </div>
+            <select id="gender">
+              <option value="M" selected>Мужчина</option>
+              <option value="F">Женщина</option>
+            </select>
           </div>
           <div class="field">
             <div class="field-header">
               <span class="label-text">Дата рождения <span class="required">*</span></span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">Альфа: лимиты по банку (п.7). Формат даты: дд.мм.гггг.</span></span>
             </div>
             <input type="text" id="dateOfBirth" class="date-field" placeholder="дд.мм.гггг" value="15.03.1985" title="Формат: дд.мм.гггг">
           </div>
@@ -842,17 +801,17 @@
             <input type="text" id="passportIssueDate" class="date-field" placeholder="дд.мм.гггг" value="20.06.2015" title="Формат: дд.мм.гггг">
           </div>
         </div>
-        <div class="form-row single">
+        <div class="form-row">
           <div class="field">
             <label>Кем выдан <span class="required">*</span></label>
             <input type="text" id="passportIssuedBy" placeholder="ОВД района..." value="ОВД Центрального р-на г. Москвы">
           </div>
-        </div>
-        <div class="form-row">
           <div class="field">
             <label>Код подразделения <span class="required">*</span></label>
             <input type="text" id="departmentCode" placeholder="770-035" value="770-035">
           </div>
+        </div>
+        <div class="form-row">
           <div class="field" data-sks="absolut">
             <div class="field-header">
               <span class="label-text">Код документа</span>
@@ -1247,7 +1206,7 @@
       var step3Screen = document.getElementById('step3Screen');
       var selectedSk = '';
 
-      var step1LockedIds = ['bank', 'creditValue', 'rate', 'beginDate', 'buildingType', 'dateOfBirth', 'riskCode'];
+      var step1LockedIds = ['bank', 'creditValue', 'rate', 'beginDate', 'buildingType', 'dateOfBirth', 'riskCode', 'gender'];
 
       function lockStep1Fields() {
         step1LockedIds.forEach(function(id) {
@@ -1256,12 +1215,6 @@
           var field = el.closest('.field');
           if (field) field.classList.add('field-disabled');
           el.setAttribute('disabled', 'disabled');
-        });
-        var genderRadios = document.querySelectorAll('input[name="gender"]');
-        genderRadios.forEach(function(r) {
-          r.setAttribute('disabled', 'disabled');
-          var field = r.closest('.field');
-          if (field) field.classList.add('field-disabled');
         });
       }
 
@@ -1273,12 +1226,6 @@
           if (field) field.classList.remove('field-disabled');
           el.removeAttribute('disabled');
         });
-        var genderRadios = document.querySelectorAll('input[name="gender"]');
-        genderRadios.forEach(function(r) {
-          r.removeAttribute('disabled');
-          var field = r.closest('.field');
-          if (field) field.classList.remove('field-disabled');
-        });
       }
 
       function showStep(step) {
@@ -1287,6 +1234,7 @@
         if (step3Screen) step3Screen.style.display = step === 3 ? 'block' : 'none';
         if (step === 3 && selectedSk) {
           applySkFilter(selectedSk);
+          toggleConditionalBlocks();
           lockStep1Fields();
         } else {
           unlockStep1Fields();
@@ -1422,8 +1370,8 @@
         });
         var termEl = document.getElementById('termInMonth');
         if (termEl) termEl.value = '360';
-        var saleTypeDst = document.querySelector('input[name="saleType"][value="SECOND"]');
-        if (saleTypeDst) saleTypeDst.checked = true;
+        var saleTypeDst = document.getElementById('saleType');
+        if (saleTypeDst) saleTypeDst.value = 'SECOND';
         var riskCodeEl = document.getElementById('step1_riskCode');
         var dstRiskEl = document.getElementById('riskCode');
         if (riskCodeEl && dstRiskEl) {
@@ -1431,9 +1379,9 @@
           dstRiskEl.dispatchEvent(new Event('change', { bubbles: true }));
         }
         var step1GenderEl = document.getElementById('step1_gender');
-        if (step1GenderEl) {
-          var dstGender = document.querySelector('input[name="gender"][value="' + step1GenderEl.value + '"]');
-          if (dstGender) dstGender.checked = true;
+        var dstGenderEl = document.getElementById('gender');
+        if (step1GenderEl && dstGenderEl) {
+          dstGenderEl.value = step1GenderEl.value;
         }
         [document.getElementById('bank'), document.getElementById('buildingType'), document.getElementById('riskCode')].forEach(function(el) {
           if (el) el.dispatchEvent(new Event('change', { bubbles: true }));
@@ -1454,8 +1402,9 @@
           if (sk === 'alfa' && excludeAlfa.indexOf(bank) !== -1) { el.style.display = 'none'; return; }
           var onlyBanks = (el.getAttribute('data-banks') || '').split(/\s*,\s*/).filter(Boolean);
           if (onlyBanks.length && onlyBanks.indexOf(bank) === -1) { el.style.display = 'none'; return; }
-          el.style.display = el.classList.contains('form-row') ? 'grid' : (el.classList.contains('card') ? 'block' : '');
-          if (el.style.display === '') el.style.display = 'block';
+          if (el.classList.contains('form-row')) el.style.display = 'grid';
+          else if (el.classList.contains('checkbox-option')) el.style.display = 'inline-flex';
+          else el.style.display = 'block';
         }
         step3Screen.querySelectorAll('.card, .form-block').forEach(function(el) {
           if (!el.getAttribute('data-sks')) el.style.display = 'none';
@@ -1507,7 +1456,8 @@
       showStep(1);
 
       var buildingTypeEl = document.getElementById('buildingType');
-      var saleTypeChecked = function() { var r = document.querySelector('input[name="saleType"]:checked'); return r ? r.value : ''; };
+      var saleTypeEl = document.getElementById('saleType');
+      var saleTypeChecked = function() { return saleTypeEl ? saleTypeEl.value : ''; };
       function toggleConditionalBlocks() {
         var buildVal = (buildingTypeEl && buildingTypeEl.value) || '';
         var saleVal = saleTypeChecked();
@@ -1523,9 +1473,9 @@
         buildingTypeEl.addEventListener('change', toggleConditionalBlocks);
         toggleConditionalBlocks();
       }
-      document.querySelectorAll('input[name="saleType"]').forEach(function(r) {
-        r.addEventListener('change', toggleConditionalBlocks);
-      });
+      if (saleTypeEl) {
+        saleTypeEl.addEventListener('change', toggleConditionalBlocks);
+      }
       toggleConditionalBlocks();
 
       (function initPolicyEndDate() {
