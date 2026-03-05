@@ -27,13 +27,19 @@
               <div class="custom-select-wrap" data-select-id="step1_buildingType">
                 <select id="step1_buildingType" class="custom-select-native">
                   <option value="FLAT" data-sks="alfa absolut sogaz" selected>Квартира</option>
-                  <option value="ROOM" data-sks="alfa absolut sogaz">Комната</option>
+                  <option value="ROOM" data-sks="alfa sogaz">Комната</option>
                   <option value="APARTMENTS" data-sks="alfa absolut sogaz">Апартаменты</option>
                   <option value="654401" data-sks="absolut">Жилой дом</option>
                   <option value="house" data-sks="sogaz">Дом</option>
                   <option value="houseWithPlot" data-sks="sogaz">Дом + ЗУ</option>
                   <option value="1868531" data-sks="absolut">Таунхаус</option>
                   <option value="654411" data-sks="absolut">Земельный участок</option>
+                  <option value="833631" data-sks="absolut">Нежилое помещение</option>
+                  <option value="654431" data-sks="absolut">Гараж</option>
+                  <option value="654421" data-sks="absolut">Машиноместо</option>
+                  <option value="654451" data-sks="absolut">Гостевой дом</option>
+                  <option value="2008621" data-sks="absolut">Кладовка</option>
+                  <option value="654441" data-sks="absolut">Баня</option>
                 </select>
                 <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false">
                   <span class="custom-select-text"></span>
@@ -55,6 +61,19 @@
                   <option value="open" data-sks="alfa absolut">Открытие</option>
                   <option value="raiff" data-sks="alfa absolut">Райффайзенбанк</option>
                   <option value="mts" data-sks="alfa absolut">МТС-Банк</option>
+                  <option value="uralsib" data-sks="alfa">Уралсиб</option>
+                  <option value="mkb" data-sks="alfa">МКБ</option>
+                  <option value="atb" data-sks="alfa">АТБ</option>
+                  <option value="tbank" data-sks="alfa">Т-Банк</option>
+                  <option value="akbars" data-sks="alfa">АК Барс</option>
+                  <option value="unicredit" data-sks="alfa">Юникредит</option>
+                  <option value="levoberezh" data-sks="alfa">Левобережный</option>
+                  <option value="primsoc" data-sks="alfa">Примсоцбанк</option>
+                  <option value="chelind" data-sks="alfa">Челиндбанк</option>
+                  <option value="hlynov" data-sks="alfa">Хлынов</option>
+                  <option value="energobank" data-sks="alfa">Энергобанк</option>
+                  <option value="orenburg" data-sks="alfa">Оренбург</option>
+                  <option value="bmbank" data-sks="alfa">БМ-Банк</option>
                 </select>
                 <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false">
                   <span class="custom-select-text"></span>
@@ -94,8 +113,8 @@
               <div class="custom-select-wrap" data-select-id="step1_riskCode">
                 <select id="step1_riskCode" class="custom-select-native" title="В каких СК доступен этот тип">
                   <option value="combo" data-sks="alfa absolut sogaz" selected>Жизнь + имущество</option>
-                  <option value="life" data-sks="sogaz">Только жизнь</option>
-                  <option value="property" data-sks="sogaz">Только имущество</option>
+                  <option value="life" data-sks="alfa absolut sogaz">Только жизнь</option>
+                  <option value="property" data-sks="alfa absolut sogaz">Только имущество</option>
                 </select>
                 <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false">
                   <span class="custom-select-text"></span>
@@ -206,6 +225,19 @@
                 <option value="open" data-alfa="5" data-sks="alfa absolut">Открытие</option>
                 <option value="raiff" data-alfa="10" data-sks="alfa absolut">Райффайзенбанк</option>
                 <option value="mts" data-alfa="13" data-sks="alfa absolut">МТС-Банк</option>
+                <option value="uralsib" data-alfa="7" data-sks="alfa">Уралсиб</option>
+                <option value="mkb" data-alfa="8" data-sks="alfa">МКБ</option>
+                <option value="atb" data-alfa="9" data-sks="alfa">АТБ</option>
+                <option value="tbank" data-alfa="11" data-sks="alfa">Т-Банк</option>
+                <option value="akbars" data-alfa="12" data-sks="alfa">АК Барс</option>
+                <option value="unicredit" data-alfa="14" data-sks="alfa">Юникредит</option>
+                <option value="levoberezh" data-alfa="15" data-sks="alfa">Левобережный</option>
+                <option value="primsoc" data-alfa="16" data-sks="alfa">Примсоцбанк</option>
+                <option value="chelind" data-alfa="17" data-sks="alfa">Челиндбанк</option>
+                <option value="hlynov" data-alfa="18" data-sks="alfa">Хлынов</option>
+                <option value="energobank" data-alfa="19" data-sks="alfa">Энергобанк</option>
+                <option value="orenburg" data-alfa="20" data-sks="alfa">Оренбург</option>
+                <option value="bmbank" data-alfa="21" data-sks="alfa">БМ-Банк</option>
               </select>
               <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false">
                 <span class="custom-select-text"></span>
@@ -293,7 +325,7 @@
               <span class="sk-labels"><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Считается от даты начала и срока в мес. Абсолют: date_end. СОГАЗ: endDate.</span></span>
             </div>
-            <input type="text" id="endDate" class="date-field date-field-readonly" placeholder="дд.мм.гггг" value="31.05.2055" title="Считается автоматически" readonly>
+            <input type="text" id="endDate" class="date-field" placeholder="дд.мм.гггг" value="31.05.2055" title="СОГАЗ: редактируемое. Абсолют: рассчитывается автоматически.">
           </div>
         </div>
         <div class="form-row">
@@ -401,13 +433,19 @@
               <div class="custom-select-wrap" data-select-id="buildingType">
                 <select id="buildingType" class="custom-select-native">
                   <option value="FLAT" data-sks="alfa absolut sogaz" selected>Квартира</option>
-                  <option value="ROOM" data-sks="alfa absolut sogaz">Комната</option>
+                  <option value="ROOM" data-sks="alfa sogaz">Комната</option>
                   <option value="APARTMENTS" data-sks="alfa absolut sogaz">Апартаменты</option>
                   <option value="654401" data-sks="absolut">Жилой дом</option>
                   <option value="house" data-sks="sogaz">Дом</option>
                   <option value="houseWithPlot" data-sks="sogaz">Дом + ЗУ</option>
                   <option value="1868531" data-sks="absolut">Таунхаус</option>
                   <option value="654411" data-sks="absolut">Земельный участок</option>
+                  <option value="833631" data-sks="absolut">Нежилое помещение</option>
+                  <option value="654431" data-sks="absolut">Гараж</option>
+                  <option value="654421" data-sks="absolut">Машиноместо</option>
+                  <option value="654451" data-sks="absolut">Гостевой дом</option>
+                  <option value="2008621" data-sks="absolut">Кладовка</option>
+                  <option value="654441" data-sks="absolut">Баня</option>
                 </select>
                 <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false">
                   <span class="custom-select-text"></span>
@@ -424,8 +462,8 @@
               <div class="custom-select-wrap" data-select-id="riskCode">
                 <select id="riskCode" class="custom-select-native">
                   <option value="combo" data-sks="alfa absolut sogaz" selected>Жизнь + имущество</option>
-                  <option value="life" data-sks="sogaz">Только жизнь</option>
-                  <option value="property" data-sks="sogaz">Только имущество</option>
+                  <option value="life" data-sks="alfa absolut sogaz">Только жизнь</option>
+                  <option value="property" data-sks="alfa absolut sogaz">Только имущество</option>
                 </select>
                 <div class="custom-select-trigger" tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false">
                   <span class="custom-select-text"></span>
@@ -465,29 +503,29 @@
             </div>
             <input type="number" id="propertyArea" placeholder="67" min="1" step="0.1" value="67">
           </div>
-          <div class="field">
+          <div class="field" data-sks="alfa sogaz">
             <div class="field-header">
               <span class="label-text">Год постройки</span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">СОГАЗ: flat≥1945, house≥1980. Альфа: не старше 1960. Допустимый диапазон: 1945–2026.</span></span>
             </div>
             <input type="number" id="buildingYear" placeholder="Например 2010" min="1945" max="2026" value="2010" title="Год от 1945 до 2026">
           </div>
         </div>
         <div class="form-row">
-          <div class="field">
+          <div class="field" data-sks="alfa sogaz">
             <div class="field-header">
               <span class="label-text">Рыночная стоимость, ₽</span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">СОГАЗ: только для house и plot (marketPrice).</span></span>
+              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="help-icon">?<span class="tooltip">Альфа: insuranceBaseAmount (рыночная стоимость объекта). СОГАЗ: marketPrice (для house и plot).</span></span>
             </div>
             <input type="text" id="marketPrice" placeholder="10 000 000" value="6 500 000">
           </div>
-          <div class="field">
+          <div class="field" data-sks="alfa sogaz">
             <div class="field-header">
               <span class="label-text">Кадастровый номер</span>
-              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">СОГАЗ: для house и plot (cadastralNumber), не для flat.</span></span>
+              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="help-icon">?<span class="tooltip">Альфа: kadastr. СОГАЗ: cadastralNumber (для house и plot).</span></span>
             </div>
             <input type="text" id="kadastr" placeholder="77:05:0005005:10331" value="77:01:0001001:1234">
           </div>
@@ -510,7 +548,7 @@
               <input type="checkbox" id="poolExists">
               <span>Есть бассейн</span>
             </label>
-            <label class="checkbox-option" data-sks="absolut sogaz">
+            <label class="checkbox-option" data-sks="sogaz">
               <input type="checkbox" id="woodenWalls">
               <span>Деревянные стены</span>
             </label>
@@ -720,11 +758,11 @@
             </div>
           </div>
           <div style="display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 8px;">
-            <label class="checkbox-option"><input type="checkbox"> Сделка по доверенности</label>
-            <label class="checkbox-option"><input type="checkbox"> Собственники младше 18 или старше 65</label>
-            <label class="checkbox-option"><input type="checkbox"> Нет согласия супруга</label>
-            <label class="checkbox-option"><input type="checkbox"> В собственности менее 3 лет</label>
-            <label class="checkbox-option"><input type="checkbox"> Юрлица среди собственников</label>
+            <label class="checkbox-option"><input type="checkbox" id="attorneyAgreement"> Сделка по доверенности</label>
+            <label class="checkbox-option"><input type="checkbox" id="criticalAgeOwner"> Собственники младше 18 или старше 65</label>
+            <label class="checkbox-option"><input type="checkbox" id="noSpouseApproval"> Нет согласия супруга</label>
+            <label class="checkbox-option"><input type="checkbox" id="ownershipLessThreeYears"> В собственности менее 3 лет</label>
+            <label class="checkbox-option"><input type="checkbox" id="juridicalOwner"> Юрлица среди собственников</label>
           </div>
           </div>
           </div>
@@ -811,6 +849,16 @@
             <input type="text" id="departmentCode" placeholder="770-035" value="770-035">
           </div>
         </div>
+        <div class="form-row single" data-sks="sogaz">
+          <div class="field">
+            <div class="field-header">
+              <span class="label-text">Адрес выдачи полиса (issueAddress) <span class="required">*</span></span>
+              <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="help-icon">?<span class="tooltip">СОГАЗ: issueAddress — «Регион, город». Обязательно при окончательном расчёте (MarketMortgageCreate).</span></span>
+            </div>
+            <input type="text" id="issueAddress" placeholder="Москва, г Москва" value="Москва, г Москва">
+          </div>
+        </div>
         <div class="form-row">
           <div class="field" data-sks="absolut">
             <div class="field-header">
@@ -893,10 +941,10 @@
           </div>
         </div>
         <!-- Жизнь -->
-        <div class="form-block" data-sks="alfa absolut sogaz" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #DEE2E6;">
+        <div class="form-block" data-sks="alfa absolut" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #DEE2E6;">
           <div class="field-header" style="margin-bottom: 8px;">
             <span class="label-text" style="font-weight: 600; color: #343A40;">Страхование жизни</span>
-            <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+            <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span></span>
             <span class="help-icon">?<span class="tooltip">Альфа: профессия и спорт из справочников. Абсолют: profession_isn, risk_group_isn, office_work, chronic_illness. СОГАЗ: при life/combo — height, weight.</span></span>
           </div>
           <div class="form-row">
@@ -958,7 +1006,7 @@
     </div>
 
     <!-- Созаёмщики — показывается при отметке «Есть созаёмщики» -->
-    <div class="card dynamic-block" id="coborrowersCard" data-sks="alfa absolut" data-banks-exclude-alfa="sber">
+    <div class="card dynamic-block" id="coborrowersCard" data-sks="alfa absolut sogaz" data-banks-exclude-alfa="sber">
       <div class="card-header">
         <span>Созаёмщики</span>
         <span class="help-icon">?<span class="tooltip">Альфа: coInsurers (не более 1), полный Address + PersonDocument + lifeRisk при страховании жизни. Абсолют: coborrowers — документы, контакты, адреса (регистрация + фактический).</span></span>
@@ -1005,6 +1053,42 @@
               <div class="field"><label>Email</label><input type="email" class="coborrower-email" placeholder="email@example.com" value=""></div>
             </div>
             <label class="checkbox-option" style="margin-bottom: 6px;"><input type="checkbox" class="coborrower-resident" checked> Резидент РФ</label>
+            <div class="coborrower-life-fields" data-sks="alfa absolut">
+              <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #DEE2E6; font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">Данные по риску жизни (созаёмщик)</div>
+              <div class="form-row">
+                <div class="field" data-sks="alfa absolut"><label>Профессия</label>
+                  <select class="coborrower-profession">
+                    <option value="">Выберите из справочника</option>
+                    <option value="23">Офисный сотрудник</option>
+                    <option value="247">Работники здравоохранения</option>
+                    <option value="17">Автомобильный транспорт</option>
+                    <option value="18">Водолазы</option>
+                    <option value="19">Кровельщики</option>
+                    <option value="20">Летчики-испытатели</option>
+                  </select>
+                </div>
+                <div class="field" data-sks="alfa"><label>Вид спорта</label>
+                  <select class="coborrower-sport">
+                    <option value="">Нет / не из списка</option>
+                    <option value="366" selected>Нет опасного спорта</option>
+                    <option value="336">Автоспорт</option>
+                    <option value="345">Плавание</option>
+                    <option value="347">Горные лыжи</option>
+                    <option value="348">Единоборства</option>
+                    <option value="349">Парашютный спорт</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row" data-sks="absolut">
+                <div class="field"><label>Рост, см</label><input type="number" class="coborrower-height" placeholder="175" min="100" max="250" value=""></div>
+                <div class="field"><label>Вес, кг</label><input type="number" class="coborrower-weight" placeholder="70" min="30" max="200" value=""></div>
+              </div>
+              <div class="form-row" data-sks="absolut">
+                <div class="field"><label>Давление верх, мм рт.ст.</label><input type="number" class="coborrower-pressure-up" placeholder="120" min="80" max="200" value=""></div>
+                <div class="field"><label>Давление нижнее, мм рт.ст.</label><input type="number" class="coborrower-pressure-down" placeholder="80" min="50" max="120" value=""></div>
+              </div>
+              <label class="checkbox-option" data-sks="alfa absolut" style="margin-top: 4px;"><input type="checkbox" class="coborrower-chronic-illness"> Хронические заболевания</label>
+            </div>
           </div>
         </div>
         <button type="button" class="btn btn-secondary" id="btnAddCoborrower" style="font-size: 0.75rem;">+ Добавить созаёмщика</button>
@@ -1235,7 +1319,16 @@
         if (step === 3 && selectedSk) {
           applySkFilter(selectedSk);
           toggleConditionalBlocks();
+          toggleDynamicBlocks();
+          filterCoborrowerFields();
           lockStep1Fields();
+          if (selectedSk === 'alfa') {
+            var st = document.getElementById('saleType');
+            if (st) { st.value = 'SECOND'; st.disabled = true; st.closest('.field').classList.add('field-disabled'); }
+          } else {
+            var st = document.getElementById('saleType');
+            if (st) { st.disabled = false; var f = st.closest('.field'); if (f) f.classList.remove('field-disabled'); }
+          }
         } else {
           unlockStep1Fields();
         }
@@ -1402,6 +1495,7 @@
           if (sk === 'alfa' && excludeAlfa.indexOf(bank) !== -1) { el.style.display = 'none'; return; }
           var onlyBanks = (el.getAttribute('data-banks') || '').split(/\s*,\s*/).filter(Boolean);
           if (onlyBanks.length && onlyBanks.indexOf(bank) === -1) { el.style.display = 'none'; return; }
+          if (el.classList.contains('dynamic-block')) { el.style.display = ''; return; }
           if (el.classList.contains('form-row')) el.style.display = 'grid';
           else if (el.classList.contains('checkbox-option')) el.style.display = 'inline-flex';
           else el.style.display = 'block';
@@ -1570,6 +1664,18 @@
         });
       })();
 
+      function filterCoborrowerFields() {
+        if (!selectedSk) return;
+        var cobCard = document.getElementById('coborrowersCard');
+        if (!cobCard) return;
+        cobCard.querySelectorAll('[data-sks]').forEach(function(el) {
+          if (el.tagName === 'OPTION') return;
+          var sks = (el.getAttribute('data-sks') || '').split(/\s+/).filter(Boolean);
+          if (sks.indexOf(selectedSk) === -1) { el.style.display = 'none'; }
+          else { el.style.display = ''; }
+        });
+      }
+
       function toggleDynamicBlocks() {
         var renewReason = document.getElementById('renewReason');
         var insPurpose = document.getElementById('insPurpose');
@@ -1621,7 +1727,12 @@
         btnAddCoborrower.addEventListener('click', function() {
           var first = coborrowersList.querySelector('.coborrower-block');
           if (!first) return;
-          var num = coborrowersList.querySelectorAll('.coborrower-block').length + 1;
+          var current = coborrowersList.querySelectorAll('.coborrower-block').length;
+          if (selectedSk === 'alfa' && current >= 1) {
+            alert('Альфа: допускается не более 1 созаёмщика.');
+            return;
+          }
+          var num = current + 1;
           var clone = first.cloneNode(true);
           var titleEl = clone.querySelector('.coborrower-title');
           if (titleEl) titleEl.textContent = 'Созаёмщик ' + num;
@@ -1630,6 +1741,7 @@
           if (residentCb) residentCb.checked = true;
           coborrowersList.appendChild(clone);
           updateCoborrowerTitlesAndDeleteButtons();
+          filterCoborrowerFields();
         });
       }
       updateCoborrowerTitlesAndDeleteButtons();
