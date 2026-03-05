@@ -35,7 +35,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Банк <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Не все банки поддерживаются всеми СК. СОГАЗ — только Сбербанк, ВТБ, Россельхозбанк. При отправке: Альфа — id из API, Абсолют — isn программы, СОГАЗ — sber/vtb/rshb.</span></span>
             </div>
             <div class="custom-select-wrap" data-select-id="bank">
@@ -61,7 +61,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Остаток долга по кредиту, ₽ <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Альфа: 100 000 – 20 000 000. Передаётся как creditValue / limit.sum / loanBalance.</span></span>
             </div>
             <input type="text" id="creditValue" placeholder="100 000 – 20 000 000" value="5 000 000">
@@ -71,10 +71,10 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Процентная ставка, %</span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Альфа: по п.8; Райффайзенбанк только 10%. Абсолют: по программе (raising). СОГАЗ: loanRate и cancellationRate.</span></span>
             </div>
-            <input type="number" id="rate" placeholder="8.5" step="0.1" value="11.5">
+            <input type="text" id="rate" class="input-decimal" inputmode="decimal" placeholder="8.5" value="11.5" title="Только цифры, например 8.5 или 11">
           </div>
           <div class="field">
             <div class="field-header">
@@ -82,14 +82,14 @@
               <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">СОГАЗ: creditData.cancellationRate.</span></span>
             </div>
-            <input type="number" id="cancellationRate" placeholder="12" step="0.1" value="12">
+            <input type="text" id="cancellationRate" class="input-decimal" inputmode="decimal" placeholder="12" value="12" title="Только цифры, например 12">
           </div>
         </div>
         <div class="form-row single">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Номер кредитного договора <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Обязателен при сохранении (Альфа). СОГАЗ: creditData.number.</span></span>
             </div>
             <input type="text" id="numberCreditDoc" placeholder="123/45/67890-001" value="26/12-18-93-15">
@@ -99,7 +99,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Дата подписания КД <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Дата кредитного договора. СОГАЗ: creditData.startDate.</span></span>
             </div>
             <input type="text" id="dateCreditDoc" class="date-field" placeholder="дд.мм.гггг" value="15.04.2024" title="Формат: дд.мм.гггг">
@@ -117,7 +117,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Дата начала полиса <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Альфа: не раньше сегодня и не более 3 мес. Абсолют/СОГАЗ: дата начала действия договора.</span></span>
             </div>
             <input type="text" id="beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025" title="Формат: дд.мм.гггг">
@@ -156,7 +156,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Регион заключения договора <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Абсолют: credit.address (text или fias_id). СОГАЗ: issueAddress — паттерн «Регион, город».</span></span>
             </div>
             <select id="regionCredit">
@@ -176,7 +176,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Город <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Населённый пункт заключения кредитного договора.</span></span>
             </div>
             <input type="text" id="cityCredit" placeholder="Город" value="Москва">
@@ -250,7 +250,7 @@
             <div class="field">
               <div class="field-header">
                 <span class="label-text">Вид имущества <span class="required">*</span></span>
-                <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+                <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
                 <span class="help-icon">?<span class="tooltip">Альфа: FLAT/ROOM/APARTMENTS. Абсолют: Квартира, Апартаменты, Таунхаус, Дом, ЗУ и др. СОГАЗ: flat, house, houseWithPlot. При отправке маппинг в код выбранной СК.</span></span>
               </div>
               <div class="custom-select-wrap" data-select-id="buildingType">
@@ -294,14 +294,14 @@
             <div class="field">
               <div class="field-header">
                 <span class="label-text">Тип страхования (риски)</span>
-                <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+                <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
                 <span class="help-icon">?<span class="tooltip">Альфа: по банку отдельно жизнь/имущество/титул. Абсолют: risk_life, risk_property, risk_titul. СОГАЗ: riskCode — life, property или combo (жизнь+имущество).</span></span>
               </div>
               <div class="radio-group radio-group-stacked">
               <label class="radio-option">
                 <input type="radio" name="riskCode" value="combo" checked>
                 <span>Жизнь + имущество</span>
-                <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+                <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
                 <span class="help-icon">?<span class="tooltip">Комбо. СОГАЗ: riskCode=combo.</span></span>
               </label>
               <label class="radio-option">
@@ -325,7 +325,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Адрес объекта <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Одна строка: регион, город, улица, дом, корпус, кв. СОГАЗ: паттерн «Регион, город, дом».</span></span>
             </div>
             <input type="text" id="objectAddress" placeholder="г Москва, ул Ленина, д 10, кв 25" value="г Москва, ул Ленина, д 10, кв 25">
@@ -344,38 +344,17 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Год постройки</span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-              <span class="help-icon">?<span class="tooltip">СОГАЗ: flat≥1945, house≥1980. Альфа: не старше 1960.</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="help-icon">?<span class="tooltip">СОГАЗ: flat≥1945, house≥1980. Альфа: не старше 1960. Допустимый диапазон: 1945–2026.</span></span>
             </div>
-            <select id="buildingYear">
-              <option value="">Выберите год</option>
-              <option value="2026">2026</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
-              <option value="2021">2021</option>
-              <option value="2020">2020</option>
-              <option value="2015">2015</option>
-              <option value="2010" selected>2010</option>
-              <option value="2005">2005</option>
-              <option value="2000">2000</option>
-              <option value="1995">1995</option>
-              <option value="1990">1990</option>
-              <option value="1985">1985</option>
-              <option value="1980">1980</option>
-              <option value="1975">1975</option>
-              <option value="1970">1970</option>
-              <option value="1965">1965</option>
-              <option value="1960">1960</option>
-            </select>
+            <input type="number" id="buildingYear" placeholder="Например 2010" min="1945" max="2026" value="2010" title="Год от 1945 до 2026">
           </div>
         </div>
         <div class="form-row">
           <div class="field">
             <div class="field-header">
               <span class="label-text">Рыночная стоимость, ₽</span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">СОГАЗ: только для house и plot (marketPrice).</span></span>
             </div>
             <input type="text" id="marketPrice" placeholder="10 000 000" value="6 500 000">
@@ -383,7 +362,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Кадастровый номер</span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">СОГАЗ: для house и plot (cadastralNumber), не для flat.</span></span>
             </div>
             <input type="text" id="kadastr" placeholder="77:05:0005005:10331" value="77:01:0001001:1234">
@@ -559,7 +538,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Пол <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Альфа/Абсолют: M или F (М/Ж). СОГАЗ: Male или Female. При отправке в СОГАЗ маппим M→Male, F→Female.</span></span>
             </div>
             <div class="radio-group">
@@ -576,7 +555,7 @@
           <div class="field">
             <div class="field-header">
               <span class="label-text">Дата рождения <span class="required">*</span></span>
-              <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+              <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
               <span class="help-icon">?<span class="tooltip">Альфа: лимиты по банку (п.7). Формат даты: дд.мм.гггг.</span></span>
             </div>
             <input type="text" id="dateOfBirth" class="date-field" placeholder="дд.мм.гггг" value="15.03.1985" title="Формат: дд.мм.гггг">
@@ -685,7 +664,7 @@
         <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #DEE2E6;">
           <div class="field-header" style="margin-bottom: 8px;">
             <span class="label-text" style="font-weight: 600; color: #343A40;">Страхование жизни</span>
-            <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
+            <span class="sk-labels sk-labels-all"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
             <span class="help-icon">?<span class="tooltip">Альфа: профессия и спорт из справочников. Абсолют: profession_isn, risk_group_isn, office_work, chronic_illness. СОГАЗ: при life/combo — height, weight.</span></span>
           </div>
           <div class="form-row">
@@ -894,6 +873,96 @@
 
   <script>
     (function() {
+      /* ——— Базовые валидации ввода ——— */
+      (function initValidations() {
+        function onInputAllow(el, filterFn) {
+          if (!el) return;
+          el.addEventListener('input', function() {
+            var start = el.selectionStart, val = el.value;
+            var filtered = filterFn(val);
+            if (filtered !== val) {
+              el.value = filtered;
+              el.setSelectionRange(Math.min(start, filtered.length), Math.min(start, filtered.length));
+            }
+          });
+        }
+        function onBlurClamp(el, minVal, maxVal) {
+          if (!el) return;
+          el.addEventListener('blur', function() {
+            var n = parseInt(el.value, 10);
+            if (el.value !== '' && !isNaN(n)) {
+              if (n < minVal) el.value = minVal;
+              else if (n > maxVal) el.value = maxVal;
+            }
+          });
+        }
+        /* ФИО: только буквы (в т.ч. кириллица), пробелы, дефис */
+        function fioFilter(val) { return val.replace(/[0-9\d]/g, '').replace(/[^\u0400-\u04FF\u0020\u002D]/g, function(c) { return /[\u0400-\u04FF\u0020\u002D]/.test(c) ? c : ''; }); }
+        document.querySelectorAll('#fio, .coborrower-fio').forEach(function(el) { onInputAllow(el, fioFilter); });
+        /* Дата: маска дд.мм.гггг — только цифры и точки, авто-вставка точек */
+        document.querySelectorAll('.date-field').forEach(function(el) {
+          if (el.readOnly) return;
+          el.addEventListener('input', function() {
+            var v = this.value.replace(/[^\d]/g, '');
+            if (v.length > 8) v = v.slice(0, 8);
+            var out = '';
+            if (v.length > 0) out = v.slice(0, 2);
+            if (v.length > 2) out += '.' + v.slice(2, 4);
+            if (v.length > 4) out += '.' + v.slice(4, 8);
+            if (this.value !== out) {
+              var pos = out.length;
+              this.value = out;
+              this.setSelectionRange(pos, pos);
+            }
+          });
+        });
+        /* Процентная ставка и ставка при отказе: только цифры и одна запятая/точка */
+        function decimalFilter(val) {
+          var s = val.replace(/[^\d.,]/g, '');
+          var comma = s.replace(/[^.,]/g, '');
+          if (comma.length > 1) {
+            var idx = s.lastIndexOf('.') > s.lastIndexOf(',') ? s.lastIndexOf('.') : s.lastIndexOf(',');
+            s = s.slice(0, idx) + s.slice(idx + 1);
+          }
+          return s;
+        }
+        document.querySelectorAll('.input-decimal').forEach(function(el) { onInputAllow(el, decimalFilter); });
+        /* Остаток долга, рыночная стоимость: только цифры и пробелы (для разделителя тысяч) */
+        function digitsSpacesFilter(val) { return val.replace(/[^\d\s]/g, ''); }
+        ['creditValue', 'marketPrice', 'plotMarketPrice'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) onInputAllow(el, digitsSpacesFilter);
+        });
+        /* Серия/номер паспорта: ХХХХ ХХХХХХ — только цифры и один пробел после 4-й цифры */
+        var passportSn = document.getElementById('passportSeriesNumber');
+        if (passportSn) {
+          passportSn.addEventListener('input', function() {
+            var v = this.value.replace(/\D/g, '');
+            if (v.length > 10) v = v.slice(0, 10);
+            var out = v.length > 4 ? v.slice(0, 4) + ' ' + v.slice(4) : v;
+            if (this.value !== out) {
+              this.value = out;
+              this.setSelectionRange(out.length, out.length);
+            }
+          });
+        }
+        /* Код подразделения: цифры и дефис (формат 770-035) */
+        var deptCode = document.getElementById('departmentCode');
+        if (deptCode) onInputAllow(deptCode, function(v) { return v.replace(/[^\d\-]/g, ''); });
+        /* Год постройки: 1945–2026, только цифры + ограничение при blur */
+        var buildingYear = document.getElementById('buildingYear');
+        if (buildingYear) {
+          onInputAllow(buildingYear, function(v) { return v.replace(/\D/g, '').slice(0, 4); });
+          onBlurClamp(buildingYear, 1945, 2026);
+        }
+        /* Целочисленные поля — только цифры (без букв): доля, рост, вес, срок титула */
+        function digitsOnlyFilter(val) { return val.replace(/\D/g, ''); }
+        ['share', 'height', 'weight', 'titleTermMonth'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) onInputAllow(el, digitsOnlyFilter);
+        });
+      })();
+
       var buildingTypeEl = document.getElementById('buildingType');
       function toggleConditionalBlocks() {
         var v = (buildingTypeEl && buildingTypeEl.value) || '';
