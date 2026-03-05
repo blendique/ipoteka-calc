@@ -23,6 +23,19 @@
         <div class="card-body">
           <div class="form-row">
             <div class="field">
+              <label>На что оформлена ипотека <span class="required">*</span></label>
+              <select id="step1_buildingType">
+                <option value="FLAT" selected>Квартира</option>
+                <option value="ROOM">Комната</option>
+                <option value="APARTMENTS">Апартаменты</option>
+                <option value="654401">Жилой дом</option>
+                <option value="house">Дом</option>
+                <option value="houseWithPlot">Дом + ЗУ</option>
+                <option value="1868531">Таунхаус</option>
+                <option value="654411">Земельный участок</option>
+              </select>
+            </div>
+            <div class="field">
               <label>Банк <span class="required">*</span></label>
               <select id="step1_bank" title="В скобках — в каких СК доступен расчёт по этому банку">
                 <option value="sber" data-sks="alfa absolut sogaz" selected>Сбербанк России — Альфа, Абсолют, СОГАЗ</option>
@@ -35,9 +48,15 @@
                 <option value="mts" data-sks="alfa absolut">МТС-Банк — Альфа, Абсолют</option>
               </select>
             </div>
+          </div>
+          <div class="form-row">
             <div class="field">
               <label>Остаток долга по кредиту, ₽ <span class="required">*</span></label>
               <input type="text" id="step1_creditValue" placeholder="100 000 – 20 000 000" value="5 000 000">
+            </div>
+            <div class="field">
+              <label>Дата начала полиса <span class="required">*</span></label>
+              <input type="text" id="step1_beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025">
             </div>
           </div>
           <div class="form-row">
@@ -47,51 +66,20 @@
             </div>
             <div class="field">
               <label>Пол заёмщика <span class="required">*</span></label>
-              <div class="radio-group">
-                <label class="radio-option"><input type="radio" name="step1_gender" value="M" checked><span>М</span></label>
-                <label class="radio-option"><input type="radio" name="step1_gender" value="F"><span>Ж</span></label>
-              </div>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="field">
-              <label>Что нужно застраховать (тип рисков) <span class="required">*</span></label>
-              <div class="radio-group radio-group-stacked">
-                <label class="radio-option">
-                  <input type="radio" name="step1_riskCode" value="combo" checked>
-                  <span>Жизнь + имущество</span>
-                  <span class="sk-labels"><span class="sk-tag alfa">Альфа</span><span class="sk-tag absolut">Абсолют</span><span class="sk-tag sogaz">СОГАЗ</span></span>
-                </label>
-                <label class="radio-option">
-                  <input type="radio" name="step1_riskCode" value="life">
-                  <span>Только жизнь</span>
-                  <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
-                </label>
-                <label class="radio-option">
-                  <input type="radio" name="step1_riskCode" value="property">
-                  <span>Только имущество</span>
-                  <span class="sk-labels"><span class="sk-tag sogaz">СОГАЗ</span></span>
-                </label>
-              </div>
-            </div>
-            <div class="field">
-              <label>На что оформлена ипотека</label>
-              <select id="step1_buildingType">
-                <option value="FLAT" selected>Квартира</option>
-                <option value="ROOM">Комната</option>
-                <option value="APARTMENTS">Апартаменты</option>
-                <option value="654401">Жилой дом</option>
-                <option value="house">Дом</option>
-                <option value="houseWithPlot">Дом + ЗУ</option>
-                <option value="1868531">Таунхаус</option>
-                <option value="654411">Земельный участок</option>
+              <select id="step1_gender">
+                <option value="M" selected>Мужчина</option>
+                <option value="F">Женщина</option>
               </select>
             </div>
           </div>
           <div class="form-row">
             <div class="field">
-              <label>Дата начала полиса <span class="required">*</span></label>
-              <input type="text" id="step1_beginDate" class="date-field" placeholder="дд.мм.гггг" value="01.06.2025">
+              <label>Что нужно застраховать (тип рисков) <span class="required">*</span></label>
+              <select id="step1_riskCode" title="В скобках — в каких СК доступен этот тип">
+                <option value="combo" selected>Жизнь + имущество — Альфа, Абсолют, СОГАЗ</option>
+                <option value="life">Только жизнь — СОГАЗ</option>
+                <option value="property">Только имущество — СОГАЗ</option>
+              </select>
             </div>
             <div class="field">
               <label>Процентная ставка, %</label>
@@ -1252,14 +1240,14 @@
         if (termEl) termEl.value = '360';
         var saleTypeDst = document.querySelector('input[name="saleType"][value="SECOND"]');
         if (saleTypeDst) saleTypeDst.checked = true;
-        var riskCode = document.querySelector('input[name="step1_riskCode"]:checked');
-        if (riskCode) {
-          var dstRisk = document.querySelector('input[name="riskCode"][value="' + riskCode.value + '"]');
+        var riskCodeEl = document.getElementById('step1_riskCode');
+        if (riskCodeEl) {
+          var dstRisk = document.querySelector('input[name="riskCode"][value="' + riskCodeEl.value + '"]');
           if (dstRisk) dstRisk.checked = true;
         }
-        var step1Gender = document.querySelector('input[name="step1_gender"]:checked');
-        if (step1Gender) {
-          var dstGender = document.querySelector('input[name="gender"][value="' + step1Gender.value + '"]');
+        var step1GenderEl = document.getElementById('step1_gender');
+        if (step1GenderEl) {
+          var dstGender = document.querySelector('input[name="gender"][value="' + step1GenderEl.value + '"]');
           if (dstGender) dstGender.checked = true;
         }
         [document.getElementById('bank'), document.getElementById('buildingType')].forEach(function(el) {
