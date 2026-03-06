@@ -1732,7 +1732,7 @@
           ConnectorDebug.logResponse('200 OK', { bankId: bankVal, calc: mockQuestionaryForBank(bankVal), save: mockQuestionaryForBank(bankVal) });
           ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/restriction/bank/' + bankVal);
           ConnectorDebug.logResponse('200 OK', { minInsuredAge: 18, maxInsuredAge: 70, minInsuranceTerm: 12, maxInsuranceTerm: 360, maxSharePerInsured: 100, totalMaxShare: 100 });
-          ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'beginDate, agent, mortgageAgreement(bankName,address{state,city},dateCreditDoc), insuranceObject, insurer (+ по questionary п.8)');
+          ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'creditValue: ' + sumLog + ', bankName, beginDate, address{state,city}, dateCreditDoc, buildingType: ' + typeUi + ', gender: ' + genderUi + ', dateOfBirth, insurer (+ по п.8)');
           connectorState.alfa.upid = 'MOCK-UPID-' + Math.floor(Math.random() * 1e9);
           ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: [], calcId: 104042, upid: connectorState.alfa.upid, kv: 0.2 });
           ConnectorDebug.log('Абсолют: авторизация — Authorization: Basic base64(ClientID:ClientSecret), body: grant_type=client_credentials');
@@ -1742,7 +1742,7 @@
           ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-1', result: { data: { program: [{ isn: 1917331, name: '...' }] } }, status: { code: 'success', message: null } });
           ConnectorDebug.logRequest('GET', 'https://represtapi.absolutins.ru/ords/rest/api/dicti/mortgage/credit_bank/details', 'банки + программы (Bearer)');
           ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-2', result: { data: { credit_banks: [] } }, status: { code: 'success', message: null } });
-          ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/express/create', 'программа (ISN), банк, тип объекта (check_object), тип рынка (object_type), date_begin, дата КД, сумма кредита, дата рождения, пол. Authorization: Bearer');
+          ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/express/create', 'credit/sum: ' + sumLog + ', bank, check_object, object_type, date_begin, date_credit_doc, dateOfBirth: ' + dobUi + ', gender. Bearer');
           connectorState.absolut.expressId = 'MOCK-ABS-EXP-' + Math.floor(Math.random() * 1e9);
           ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-3', result: { data: { premium: Math.round(sumLog * 0.0025), calculationId: connectorState.absolut.expressId } }, status: { code: 'success', message: null } });
           ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/auth', 'grant_type=client_credentials, client_id, client_secret');
@@ -1770,10 +1770,9 @@
           var sum = parseInt(creditVal, 10) || 5000000;
           var lifePrem = Math.round(sum * 0.00164);
           var propPrem = Math.round(sum * 0.00085);
-          var base = lifePrem + propPrem;
-          document.getElementById('step2_premium_alfa').textContent = (base - 350).toLocaleString('ru-RU');
-          document.getElementById('step2_premium_absolut').textContent = base.toLocaleString('ru-RU');
-          document.getElementById('step2_premium_sogaz').textContent = (base - 550).toLocaleString('ru-RU');
+          document.getElementById('step2_premium_alfa').textContent = (lifePrem + propPrem).toLocaleString('ru-RU');
+          document.getElementById('step2_premium_absolut').textContent = (Math.round(sum * 0.0025)).toLocaleString('ru-RU');
+          document.getElementById('step2_premium_sogaz').textContent = (Math.round(sum * 0.0024)).toLocaleString('ru-RU');
           var deadline = new Date();
           deadline.setDate(deadline.getDate() + 7);
           document.getElementById('step2_calcDeadline').textContent = deadline.toLocaleDateString('ru-RU');
@@ -2115,7 +2114,7 @@
           var creditValLog = (document.getElementById('creditValue') && document.getElementById('creditValue').value || '').replace(/\s/g, '');
           var sumLog = parseInt(creditValLog, 10) || 5000000;
           if (selectedSk === 'alfa') {
-            ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'полный payload + по questionary п.8 (TEST)');
+            ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'creditValue: ' + sumLog + ', bankName, beginDate, buildingType, insurer, ... (+ по п.8)');
             if (!connectorState.alfa.upid) connectorState.alfa.upid = 'MOCK-UPID-' + Math.floor(Math.random() * 1e9);
             ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: [], calcId: 104042, upid: connectorState.alfa.upid, kv: 0.2 });
           } else if (selectedSk === 'absolut') {
