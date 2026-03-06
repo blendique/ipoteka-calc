@@ -1233,11 +1233,11 @@
             append('<span class="log-time">' + timeStr() + '</span> <span class="log-spec">← ' + statusText.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>' + (bodyStr ? '<br><span class="log-spec">' + bodyShort.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>' : ''));
           },
           logField: function(label, specNames) {
-            var parts = ['<span class="log-time">' + timeStr() + '</span> <span class="log-field">Поле: ' + (label || '').replace(/</g, '&lt;') + '</span><br>'];
-            if (specNames.alfa) parts.push('<span class="log-spec">Альфа: ' + specNames.alfa.replace(/</g, '&lt;') + '</span> ');
-            if (specNames.absolut) parts.push('<span class="log-spec">Абсолют: ' + specNames.absolut.replace(/</g, '&lt;') + '</span> ');
+            var parts = ['<span class="log-time">' + timeStr() + '</span> <span class="log-field">Поле: ' + (label || '').replace(/</g, '&lt;') + '</span>'];
+            if (specNames.alfa) parts.push('<span class="log-spec">Альфа: ' + specNames.alfa.replace(/</g, '&lt;') + '</span>');
+            if (specNames.absolut) parts.push('<span class="log-spec">Абсолют: ' + specNames.absolut.replace(/</g, '&lt;') + '</span>');
             if (specNames.sogaz) parts.push('<span class="log-spec">СОГАЗ: ' + specNames.sogaz.replace(/</g, '&lt;') + '</span>');
-            append(parts.join(''));
+            append(parts.join('<br>'));
           },
           logSep: function() { append('<div class="log-sep">———</div>'); }
         };
@@ -1318,8 +1318,8 @@
       ConnectorDebug.log('Коннектор: фокус/выбор поля → имена в спеках Альфа / Абсолют / СОГАЗ. Кнопки → запросы/ответы по спецификации.');
       ConnectorDebug.logSep();
       ConnectorDebug.log('Схема (как в спеках):');
-      ConnectorDebug.log('• Альфа: token → (dict/questionary/restriction) → POST /mortgage/partner/alfa/calc → POST /mortgage/partner/alfa/contract');
-      ConnectorDebug.log('• Абсолют: token → dict → POST /mortgage/multiyear/calculation/express/create → POST /mortgage/multiyear/calculation/create → PUT /mortgage/multiyear/approval/send → agreement/create → payment');
+      ConnectorDebug.log('• Альфа: POST /oauth/token (password) → GET bank/allowed → GET questionary/restriction → POST alfa/calc → POST alfa/contract → GET contract/{upid}/status → payment → printForm (п.0, 1.12 спека v22)');
+      ConnectorDebug.log('• Абсолют: POST /oauth/token (Basic base64) → GET dicti (program, credit_bank/details) → POST express/create → POST calculation/create → PUT approval/send → POST agreement/create → PUT agreement/set/signed/{isn} → POST payment/link → GET print/agreement/{isn}');
       ConnectorDebug.log('• СОГАЗ: POST /auth → POST /MarketMortgageEstimation/1 → (estimationId) → POST /MarketMortgageCreate/1 → POST /ContractReceivePayment/1');
       ConnectorDebug.logSep();
 
@@ -1726,20 +1726,25 @@
           ConnectorDebug.log('▶ Получить расчёт (предварительный)');
           ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/oauth/token', 'username=***&password=***&grant_type=password (токен: MOCKMOCKMOCK)');
           ConnectorDebug.logResponse('200 OK', { access_token: 'MOCKMOCKMOCK', token_type: 'bearer', expires_in: 900 });
-          ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/bank/allowed');
-          ConnectorDebug.logResponse('200 OK', [{ id: 1, code: bankVal, bankName: 'MOCK BANK', islifeRiskAvailable: true, isPropertyRiskAvailable: true, isTitleRiskAvailable: bankVal !== 'sber' }]);
+          ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/bank/allowed', 'п.2 — id, code, bankName, islifeRiskAvailable, isPropertyRiskAvailable, isTitleRiskAvailable');
+          ConnectorDebug.logResponse('200 OK', { bankList: [{ id: 1, code: bankVal, bankName: 'MOCK BANK', islifeRiskAvailable: true, isPropertyRiskAvailable: true, isTitleRiskAvailable: bankVal !== 'sber' }] });
           ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/questionary/bank/' + bankVal);
           ConnectorDebug.logResponse('200 OK', { bankId: bankVal, calc: mockQuestionaryForBank(bankVal), save: mockQuestionaryForBank(bankVal) });
           ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/restriction/bank/' + bankVal);
           ConnectorDebug.logResponse('200 OK', { minInsuredAge: 18, maxInsuredAge: 70, minInsuranceTerm: 12, maxInsuranceTerm: 360, maxSharePerInsured: 100, totalMaxShare: 100 });
-          ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'beginDate, agent, mortgageAgreement, insuranceObject, insurer (+ по п.8)');
+          ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'beginDate, agent, mortgageAgreement(bankName,address{state,city},dateCreditDoc), insuranceObject, insurer (+ по questionary п.8)');
           connectorState.alfa.upid = 'MOCK-UPID-' + Math.floor(Math.random() * 1e9);
-          ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: '', upid: connectorState.alfa.upid, kv: 0.2 });
-          ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/oauth/token', 'client_credentials (токен: MOCKMOCKMOCK)');
+          ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: [], calcId: 104042, upid: connectorState.alfa.upid, kv: 0.2 });
+          ConnectorDebug.log('Абсолют: авторизация — Authorization: Basic base64(ClientID:ClientSecret), body: grant_type=client_credentials');
+          ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/oauth/token', 'grant_type=client_credentials');
           ConnectorDebug.logResponse('200 OK', { access_token: 'MOCKMOCKMOCK', token_type: 'bearer', expires_in: 3600 });
-          ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/express/create', 'программа, банк, тип объекта, тип рынка, дата начала, дата КД, сумма кредита, дата рождения, пол');
+          ConnectorDebug.logRequest('GET', 'https://represtapi.absolutins.ru/ords/rest/api/dicti/mortgage/program', 'справочник программ (Bearer)');
+          ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-1', result: { data: { program: [{ isn: 1917331, name: '...' }] } }, status: { code: 'success', message: null } });
+          ConnectorDebug.logRequest('GET', 'https://represtapi.absolutins.ru/ords/rest/api/dicti/mortgage/credit_bank/details', 'банки + программы (Bearer)');
+          ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-2', result: { data: { credit_banks: [] } }, status: { code: 'success', message: null } });
+          ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/express/create', 'программа (ISN), банк, тип объекта (check_object), тип рынка (object_type), date_begin, дата КД, сумма кредита, дата рождения, пол. Authorization: Bearer');
           connectorState.absolut.expressId = 'MOCK-ABS-EXP-' + Math.floor(Math.random() * 1e9);
-          ConnectorDebug.logResponse('200 OK', { premium: Math.round(sumLog * 0.0025), calculationId: connectorState.absolut.expressId });
+          ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-3', result: { data: { premium: Math.round(sumLog * 0.0025), calculationId: connectorState.absolut.expressId } }, status: { code: 'success', message: null } });
           ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/auth', 'grant_type=client_credentials, client_id, client_secret');
           ConnectorDebug.logResponse('200 OK', { access_token: 'MOCKMOCKMOCK', token_type: 'bearer' });
           ConnectorDebug.log('СОГАЗ: маппинг UI→API: gender ' + genderUi + '→' + mapSogazGender(genderUi) + ', type ' + typeUi + '→' + mapSogazType(typeUi));
@@ -2110,13 +2115,13 @@
           var creditValLog = (document.getElementById('creditValue') && document.getElementById('creditValue').value || '').replace(/\s/g, '');
           var sumLog = parseInt(creditValLog, 10) || 5000000;
           if (selectedSk === 'alfa') {
-            ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'полный payload + по questionary (TEST)');
+            ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'полный payload + по questionary п.8 (TEST)');
             if (!connectorState.alfa.upid) connectorState.alfa.upid = 'MOCK-UPID-' + Math.floor(Math.random() * 1e9);
-            ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: '', upid: connectorState.alfa.upid, kv: 0.2 });
+            ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: [], calcId: 104042, upid: connectorState.alfa.upid, kv: 0.2 });
           } else if (selectedSk === 'absolut') {
-            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/create', 'полный расчёт с андеррайтингом');
+            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/create', 'полный расчёт с андеррайтингом, скорингом, ММИЛ. Bearer');
             connectorState.absolut.fullId = 'MOCK-ABS-FULL-' + Math.floor(Math.random() * 1e9);
-            ConnectorDebug.logResponse('200 OK', { ready_to_agreement: true, calculationId: connectorState.absolut.fullId });
+            ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-FULL', result: { data: { ready_to_agreement: true, calculationId: connectorState.absolut.fullId } }, status: { code: 'success', message: null } });
           } else if (selectedSk === 'sogaz') {
             ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageCreate/1', 'estimationId + insuredPersons, insuredObjects, creditData. Bearer MOCKMOCKMOCK');
             if (!connectorState.sogaz.estimationId) connectorState.sogaz.estimationId = 'MOCK-SGZ-EST-' + Math.floor(Math.random() * 1e9);
@@ -2156,19 +2161,24 @@
           ConnectorDebug.logSep();
           ConnectorDebug.log('▶ Оформить полис, СК: ' + (selectedSk || '—'));
           if (selectedSk === 'alfa') {
-            ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/contract', 'как calc + доп. поля (ФИО, паспорт, контакты) (TEST)');
+            ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/contract', 'как calc + numberCreditDoc, ФИО, паспорт, контакты, propertyArea (п.10)');
             connectorState.alfa.contractNumber = 'MOCK-ALFA-' + Math.floor(1000000000 + Math.random() * 9000000000);
-            ConnectorDebug.logResponse('200 OK', { contractNumber: connectorState.alfa.contractNumber, upid: connectorState.alfa.upid || ('MOCK-UPID-' + Math.floor(Math.random() * 1e9)) });
+            connectorState.alfa.contractId = 160514216;
+            ConnectorDebug.logResponse('200 OK', { contractNumber: connectorState.alfa.contractNumber, contractId: connectorState.alfa.contractId, upid: connectorState.alfa.upid || ('MOCK-UPID-' + Math.floor(Math.random() * 1e9)) });
+            ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/contract/' + (connectorState.alfa.upid || '') + '/status', 'п.11 — contractId, contractNumber, statusName');
+            ConnectorDebug.logResponse('200 OK', { contractId: connectorState.alfa.contractId, contractNumber: connectorState.alfa.contractNumber, statusName: 'Сохранен', statusDate: '2023-07-03T15:54:27', upid: connectorState.alfa.upid });
           } else if (selectedSk === 'absolut') {
-            ConnectorDebug.logRequest('PUT', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/approval/send', 'подтверждение');
-            ConnectorDebug.logResponse('200 OK', { approved: true });
-            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/agreement/create', 'создание договора');
+            ConnectorDebug.logRequest('PUT', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/approval/send', 'подтверждение расчёта (по спеке п.17). Bearer');
+            ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-APP', result: { data: {} }, status: { code: 'success', message: null } });
+            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/agreement/create', 'создание договора (п.18). Bearer');
             connectorState.absolut.isn = 'MOCK-ABS-ISN-' + Math.floor(Math.random() * 1e9);
-            ConnectorDebug.logResponse('200 OK', { isn: connectorState.absolut.isn });
-            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/payment/link/agreement', 'ссылка на оплату по договору');
-            ConnectorDebug.logResponse('200 OK', { paymentUrl: 'https://pay.example/redirect/' + connectorState.absolut.isn });
-            ConnectorDebug.logRequest('GET', 'https://represtapi.absolutins.ru/ords/rest/api/print/agreement/' + connectorState.absolut.isn, 'печать договора');
-            ConnectorDebug.logResponse('200 OK', { documentUrl: 'https://docs.example/agreement/' + connectorState.absolut.isn + '.pdf' });
+            ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-AGR', result: { data: { isn: connectorState.absolut.isn } }, status: { code: 'success', message: null } });
+            ConnectorDebug.logRequest('PUT', 'https://represtapi.absolutins.ru/ords/rest/api/agreement/set/signed/' + connectorState.absolut.isn, 'подписание договора (п.19). Bearer');
+            ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-SIGN', result: { data: {} }, status: { code: 'success', message: null } });
+            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/payment/link/agreement', 'ссылка на оплату (п.20). Bearer');
+            ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-PAY', result: { data: { paymentUrl: 'https://pay.example/redirect/' + connectorState.absolut.isn } }, status: { code: 'success', message: null } });
+            ConnectorDebug.logRequest('GET', 'https://represtapi.absolutins.ru/ords/rest/api/print/agreement/' + connectorState.absolut.isn, 'печатная форма договора (п.21). Bearer');
+            ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-PRINT', result: { data: { documentUrl: 'https://docs.example/agreement/' + connectorState.absolut.isn + '.pdf' } }, status: { code: 'success', message: null } });
           } else if (selectedSk === 'sogaz') {
             ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageCreate/1', 'estimationId + insuredPersons, insuredObjects, creditData. Bearer MOCKMOCKMOCK');
             connectorState.sogaz.contractNumber = 'SGZKIS-' + Math.floor(1000000000 + Math.random() * 9000000000) + 'FT/CM';

@@ -23,6 +23,52 @@
 
 ## 1. АльфаСтрахование (Alfa)
 
+> **Источник:** Ипотека. Другие банки. Спецификация API для партнёров v22 (PDF). Тестовый стенд: `b2b-test2.alfastrah.ru/msrv_dev`, бой: `b2b.alfastrah.ru/msrvg`. Ответ расчёта/сохранения: `upid`, `calcId`, `canBeIssued`, `underwriterMessage`, премии по рискам.
+
+### 1.0 Базовые URL и авторизация (по спеке v22)
+
+| Переменная | Тест | Бой |
+|------------|------|-----|
+| **oauth/token** | `https://b2b-test2.alfastrah.ru/msrv_dev/oauth/token` | `https://b2b.alfastrah.ru/msrvg/oauth/token` |
+| **base (REST)** | `https://b2b-test2.alfastrah.ru/msrv_dev/` | `https://b2b.alfastrah.ru/msrvg/` |
+
+**Авторизация (п.1):** OAuth 2.0, password grant
+
+- Метод: `POST`
+- Content-Type: `multipart/form-data`
+- Тело: `username`, `password`, `grant_type=password`
+- Ответ: `access_token`, `token_type: "bearer"`, `refresh_token`, `expires_in` (срок жизни токена в секундах, на момент спеки ~15 минут)
+- Обращение к защищённым сервисам: заголовок `Authorization: Bearer <access_token>`
+- Обновление токена: тот же URL, параметры `grant_type=refresh_token`, `refresh_token`
+
+**Эндпоинты (п.2–18):**
+
+| # | Назначение | Метод | URL (тест) |
+|---|------------|-------|------------|
+| 2 | Доступные банки | GET | `.../mortgage/dictionary/bank/allowed` |
+| 3 | Справочник спорта | GET | `.../mortgage/dictionary/sport/bank/{bankId}` |
+| 4 | Справочник профессий | GET | `.../mortgage/dictionary/profession/bank/{bankId}` |
+| 5 | Ограничения прав (титул) | GET | `.../mortgage/dictionary/restriction/property/right` |
+| 6 | Документы подтверждения (титул) | GET | `.../mortgage/dictionary/document/confirmation` |
+| 7 | Ограничения банка | GET | `.../mortgage/dictionary/restriction/bank/{bankId}` |
+| 8 | Поля анкеты (questionary) | GET | `.../mortgage/dictionary/questionary/bank/{bankId}` |
+| 9 | Расчёт | POST | `.../mortgage/partner/alfa/calc` |
+| 10 | Сохранение договора | POST | `.../mortgage/partner/alfa/contract` |
+| 11 | Статус сохранения | GET | `.../mortgage/partner/alfa/contract/{upid}/status` |
+| 14 | Способы оплаты | GET | `.../payment-methods/methods?merchantOrderNumber=&merchantOrderType=` |
+| 14 | Создание заказа оплаты | POST | `.../payment-methods/payment/{payment_system}` |
+| 14 | Оплата ПОДЕЛИ | POST | `.../podeli-payment/order` |
+| 15 | Печатная форма заявления | GET | `.../mortgage/partner/alfa/contract/{contractId}/printFormApp?upid={upid}` |
+| 16 | Печатная форма полиса | GET | `.../mortgage/partner/alfa/contract/{contractId}/printForm?upid={upid}` |
+| 17 | Оплата на стороне партнёра | POST | `.../mortgage/partner/alfa/payment/external` |
+| 18 | Статус оплаты | GET | `.../payment-status/{mdorder}` |
+
+**Ответ расчёта (п.9):** `lifePremium`, `propertyPremium`, `titlePremium`, `canBeIssued`, `underwriterMessage` (массив `{ riskType, message }`), `calcId`, `kv`, **`upid`** (идентификатор партнёрского расчёта). Для Сбербанка при двух рисках (жизнь+имущество) печатные формы вызываются для каждого `contractId` отдельно (п.15, 16).
+
+**Ответ сохранения (п.10):** те же поля + `upid`. В запрос сохранения передаётся тело как в расчёте + обязательные для сохранения поля (ФИО, паспорт, контакты, адрес, `numberCreditDoc`, `propertyArea` и т.д.).
+
+**Ответ статуса (п.11):** GET `.../contract/{upid}/status` → для банка ≠ Сбер: `contractId`, `contractNumber`, `statusName`, `statusDate`, `statusReason`, премии, `upid`. Для Сбербанка: `lifeContract` и `propertyContract` (каждый с `contractId`, `contractNumber`, `statusName`, `statusDate`), премии, `upid`. Оплата (п.14): `merchantOrderNumber` = `contractId` из ответа п.11 (или id единого чека); для печатной формы используются `contractId` и `upid` из п.11.
+
 ### 1.1 Авторизация
 
 - **OAuth 2.0** (password grant)
@@ -102,16 +148,17 @@
 | coInsurers[] | gender, dateOfBirth, share, lifeRisk | — | — | Не более 1 созаёмщика. Заполняется при страховании жизни созаёмщика |
 | root | promoCode | string | — | Промокод (скидка к тарифу, не к премии) |
 
-#### Ответ расчёта
+#### Ответ расчёта (п.9 спеки v22)
 
 | Поле | Описание |
 |------|----------|
-| lifePremium | Премия по жизни |
-| propertyPremium | Премия по имуществу |
-| titlePremium | Премия по титулу |
-| canBeIssued | Можно ли оформить |
-| underwriterMessage | Причины отказа по рискам |
-| upid | ID расчёта |
+| lifePremium, propertyPremium, titlePremium | Премии по рискам |
+| lifePremiumWithoutPromo, propertyPremiumWithoutPromo, titlePremiumWithoutPromo | Премии без промокода |
+| lifeInsuranceAmount, propertyInsuranceAmount, titleInsuranceAmount | Страховые суммы по рискам |
+| canBeIssued | Можно ли перейти к оформлению |
+| underwriterMessage | Массив `{ riskType, message }` — риск и причина отказа по скорингу |
+| calcId | Идентификатор расчёта (число) |
+| upid | Идентификатор партнёрского расчёта (строка, передаётся в contract и status) |
 | kv | Размер КВ |
 
 ### 1.6 Сохранение — `POST /mortgage/partner/alfa/contract`
@@ -197,11 +244,80 @@
 
 > Если кредит > рыночной стоимости — имущество/титул считается по рыночной
 
+### 1.12 Полный жизненный цикл (п.0 спеки v22)
+
+Порядок вызова сервисов при оформлении полиса:
+
+```
+1. POST /oauth/token → access_token (username, password, grant_type=password; multipart/form-data)
+2. GET  /mortgage/dictionary/bank/allowed → список банков (id, code, bankName, islifeRiskAvailable, isPropertyRiskAvailable, isTitleRiskAvailable)
+3. GET  /mortgage/dictionary/sport/bank/{bankId}        — если islifeRiskAvailable=true
+4. GET  /mortgage/dictionary/profession/bank/{bankId}   — если islifeRiskAvailable=true
+5. GET  /mortgage/dictionary/restriction/property/right  — если isTitleRiskAvailable=true
+6. GET  /mortgage/dictionary/document/confirmation      — если isTitleRiskAvailable=true
+7. GET  /mortgage/dictionary/restriction/bank/{bankId}  — ограничения банка (возраст, сроки, доли)
+8. GET  /mortgage/dictionary/questionary/bank/{bankId}  → calc/save — список полей для расчёта и сохранения
+9. POST /mortgage/partner/alfa/calc   → upid, calcId, canBeIssued, underwriterMessage, премии
+10. POST /mortgage/partner/alfa/contract → upid, премии (тело: как calc + numberCreditDoc, ФИО, паспорт, контакты, propertyArea)
+11. GET  /mortgage/partner/alfa/contract/{upid}/status  → contractId, contractNumber, statusName (для Сбера — lifeContract, propertyContract)
+12. GET  /payment-methods/methods?merchantOrderNumber={contractId}&merchantOrderType=CONTRACT
+13. POST /payment-methods/payment/{payment_system} или POST /podeli-payment/order → ссылка на оплату
+14. GET  /mortgage/partner/alfa/contract/{contractId}/printFormApp?upid={upid} — заявление
+15. GET  /mortgage/partner/alfa/contract/{contractId}/printForm?upid={upid}   — полис (для Сбера — по каждому contractId)
+```
+
+Оплата на стороне партнёра: POST `/mortgage/partner/alfa/payment/external` (mdOrder, premium, upid). Статус оплаты: GET `/payment-status/{mdorder}`.
+
 ---
 
 ## 2. Абсолют Страхование (Absolut)
 
-### 2.1 Авторизация
+> **Источник:** Абсолют — Ипотечное страхование многолетнее. Новые объекты имущества (docx). В спеке один стенд: `represtapi.absolutins.ru` (тестовый/песочница). Ответы API: обёртка `{ "call_id": "...", "result": { "data": { ... } }, "status": { "code": "success", "message": null } }`.
+
+### 2.0 Базовые URL и авторизация (тестовый стенд)
+
+| Переменная | URL |
+|------------|-----|
+| **oauth/token** | `https://represtapi.absolutins.ru/ords/rest/oauth/token` |
+| **base_url (API)** | `https://represtapi.absolutins.ru/ords/rest/api/` |
+
+**Авторизация:** OAuth 2.0 (client_credentials)
+
+- Метод: `POST`
+- Заголовки: `Content-Type: application/x-www-form-urlencoded`, `Authorization: Basic <base64(ClientID:ClientSecret)>`
+- Тело: `grant_type=client_credentials` (и при необходимости `scope`)
+- Ответ: `{ "access_token": "...", "token_type": "bearer", "expires_in": 3600 }` (токен 1 час)
+- Далее все запросы к API: заголовок `Authorization: Bearer <access_token>`
+
+**Эндпоинты (полные URL):**
+
+| # | Назначение | Метод | URL |
+|---|------------|-------|-----|
+| 1 | Токен | POST | `https://represtapi.absolutins.ru/ords/rest/oauth/token` |
+| 2 | Страны | GET | `.../api/dicti/mortgage/countries` |
+| 3 | Профессии | GET | `.../api/dicti/mortgage/profession` |
+| 4 | Группы рисков | GET | `.../api/dicti/mortgage/risk_group` |
+| 5 | Программы | GET | `.../api/dicti/mortgage/program` |
+| 6 | Банки (устар.) | GET | `.../api/dicti/mortgage/credit_bank` |
+| 7 | Банки + программы | GET | `.../api/dicti/mortgage/credit_bank/details` |
+| 8 | Предыдущие СК | GET | `.../api/dicti/mortgage/prev_sk` |
+| 9 | Застройщики | GET | `.../api/dicti/mortgage/developers` |
+| 10 | Сигнализации | GET | `.../api/dicti/mortgage/alarms` |
+| 11 | Источники огня | GET | `.../api/dicti/mortgage/fire_sources` |
+| 12 | Целевое назначение | GET | `.../api/dicti/mortgage/purpose` |
+| 13 | Факторы риска | GET | `.../api/dicti/mortgage/risk_factors` |
+| 14 | Материалы (стены/перекрытия) | GET | `.../api/dicti/materials` |
+| 15 | Предварительный расчёт | POST | `.../api/mortgage/multiyear/calculation/express/create` |
+| 16 | Полный расчёт | POST | `.../api/mortgage/multiyear/calculation/create` |
+| 17 | Подтверждение расчёта | PUT | `.../api/mortgage/multiyear/approval/send` |
+| 18 | Создание договора | POST | `.../api/mortgage/multiyear/agreement/create` |
+| 19 | Подписание договора | PUT | `.../api/agreement/set/signed/{isn}` |
+| 20 | Ссылка на оплату | POST | `.../api/payment/link/agreement` |
+| 21 | Печатная форма договора | GET | `.../api/print/agreement/{isn}` |
+
+**Формат ответа API:** `{ "call_id": "<uuid>", "result": { "data": { ... } }, "status": { "code": "success" | "error", "message": null | "<текст>" } }`. При ошибке — `status.code: "error"`, в теле могут быть детали.
+
+### 2.1 Авторизация (дублирование для совместимости)
 
 - **OAuth 2.0** (client_credentials)
 - **Тест:** `https://represtapi.absolutins.ru/ords/rest/oauth/token`
@@ -259,17 +375,19 @@
 | 4 | Смена СК | `ins_previous` (ISN из справочника prev_sk) |
 | 5 | Перезаключение договора | `renew_reason` (1-5) |
 
-### 2.6 Предварительный расчёт
+### 2.6 Предварительный расчёт — `POST /mortgage/multiyear/calculation/express/create`
 
-**`POST /mortgage/multiyear/calculation/express/create`**
+**Запрос (минимальные данные по спеке):** программа (ISN из справочника program), банк (из credit_bank/details), тип объекта (check_object — ISN), тип рынка (object_type: 1 или 2), дата начала полиса, дата КД, сумма кредита, дата рождения заёмщика, пол.
 
-Минимальные данные: программа, банк, тип объекта, тип рынка, дата начала, дата КД, сумма кредита, дата рождения, пол.
+**Ответ:** в обёртке API: `result.data` с полями расчёта (в т.ч. премия, идентификатор расчёта для следующего шага). `status.code: "success"`.
 
-### 2.7 Полный расчёт
+### 2.7 Полный расчёт — `POST /mortgage/multiyear/calculation/create`
 
-**`POST /mortgage/multiyear/calculation/create`**
+**Запрос:** полные данные по анкете (в т.ч. после экспресс-расчёта).
 
-С андеррайтингом, скорингом, проверкой ММИЛ. Ответ: `ready_to_agreement` (true/false).
+С андеррайтингом, скорингом, проверкой ММИЛ.
+
+**Ответ:** `result.data.ready_to_agreement` (true/false). `status.code: "success"`.
 
 ### 2.8 Дополнительные параметры объекта
 
@@ -297,19 +415,23 @@
 - Скоринг по каждому клиенту отдельно
 - Количество уточнять в Postman-коллекции
 
-### 2.11 Полный жизненный цикл
+### 2.11 Полный жизненный цикл (по спеке docx)
+
+Порядок вызовов (все после получения токена, заголовок `Authorization: Bearer <token>`):
 
 ```
-1. POST /oauth/token → токен
-2. GET  /dicti/mortgage/... → справочники
-3. POST /mortgage/multiyear/calculation/express/create → экспресс-расчёт
-4. POST /mortgage/multiyear/calculation/create → полный расчёт
-5. PUT  /mortgage/multiyear/approval/send → подтверждение
-6. POST /mortgage/multiyear/agreement/create → договор
-7. PUT  /agreement/set/signed/{isn} → подписание
-8. POST /payment/link/agreement → оплата
-9. GET  /print/agreement/{isn} → печатная форма
+1. POST /ords/rest/oauth/token → access_token (Authorization: Basic base64(ClientID:ClientSecret), body: grant_type=client_credentials)
+2. GET  /api/dicti/mortgage/... → справочники (program, credit_bank/details, profession, risk_group и др.)
+3. POST /api/mortgage/multiyear/calculation/express/create → экспресс-расчёт (предварительный)
+4. POST /api/mortgage/multiyear/calculation/create → полный расчёт
+5. PUT  /api/mortgage/multiyear/approval/send → подтверждение расчёта
+6. POST /api/mortgage/multiyear/agreement/create → создание договора (ответ: isn)
+7. PUT  /api/agreement/set/signed/{isn} → подписание договора
+8. POST /api/payment/link/agreement → ссылка на оплату
+9. GET  /api/print/agreement/{isn} → печатная форма договора
 ```
+
+Ответы всех API (кроме oauth): `{ "call_id": "<uuid>", "result": { "data": { ... } }, "status": { "code": "success" | "error", "message": null | "<текст>" } }`.
 
 ---
 
@@ -667,9 +789,9 @@
 
 | СК | Что в спеке | Совпадает с флоу опердира? |
 |----|-------------|----------------------------|
-| **Абсолют** | **П.2.6–2.7:** сначала **предварительный расчёт** `POST /mortgage/multiyear/calculation/express/create` на **минимальных данных** (программа, банк, тип объекта, тип рынка, дата начала, дата КД, сумма кредита, дата рождения, пол), потом **полный расчёт** `POST /mortgage/multiyear/calculation/create` с андеррайтингом и доп. полями. П.2.11: шаги 3→4 — express → полный расчёт. | ✅ **Да.** Минималка → расчёт (премия) → дособор данных → полный расчёт. |
+| **Абсолют** | **П.2.6–2.7, 2.11 (спека docx):** авторизация Basic base64(ClientID:ClientSecret) → справочники (program, credit_bank/details) → **предварительный расчёт** `POST .../express/create` (минимальные данные: программа, банк, check_object, object_type, даты, сумма, ДР, пол) → **полный расчёт** `POST .../calculation/create` → PUT approval/send → POST agreement/create → PUT agreement/set/signed/{isn} → POST payment/link → GET print/agreement/{isn}. Ответы: `call_id`, `result.data`, `status`. Стенд: `represtapi.absolutins.ru/ords/rest/api/`. | ✅ **Да.** Минималка → расчёт (премия) → дособор данных → полный расчёт → оформление по циклу. |
 | **СОГАЗ** | **П.3.1, 3.5–3.6:** 001 Ввод данных → «Показать цены» → **предварительный расчёт** `POST /MarketMortgageEstimation/1` → ответ: policyPremium, estimationId, deadline. Дальше 005 Выбор СК, ввод доп. данных → «Оформить полис» → **окончательный расчёт** `POST /MarketMortgageCreate/1` (в него передаётся estimationId + insuredPersons, insuredObjects, creditData). Тест: `https://api-test.sogaz.ru/mortgage/v2/`. | ✅ **Да.** Минималка → расчёт (цены) → дособор → окончательный расчёт/оформление. |
-| **Альфа** | Один эндпоинт расчёта: `POST /mortgage/partner/alfa/calc`. В спеке **нет** разделения на «предварительный» и «полный» расчёт: в calc описан полный набор обязательных полей (+ по questionary). Дальше идёт только сохранение `alfa/contract` (те же данные + доп. поля). | ❌ **В спеке не так.** В документе не написано «сначала минимальные данные → calc → потом дособор». Написано: calc принимает все обязательные поля сразу. |
+| **Альфа** | **П.0, 1.0, 1.12 (спека v22 PDF):** POST oauth/token (password) → GET bank/allowed → GET questionary/restriction по bankId → POST alfa/calc (все обязательные поля + по п.8) → POST alfa/contract → GET contract/{upid}/status (contractId, contractNumber) → payment-methods → printForm/printFormApp по contractId+upid. Один расчёт: calc; ответ: upid, calcId, canBeIssued, underwriterMessage. Стенд: `b2b-test2.alfastrah.ru/msrv_dev`. | ❌ **В спеке нет «минималка → дособор».** Calc принимает полный набор обязательных полей (и по questionary п.8) сразу; далее contract → status → оплата → ПФ. |
 
 **Итог:** Опердир и вы говорите об одном и том же **продуктовом флоу** (минимальные данные на первом экране → получаем расчёт/цены → потом добиваем данные). По спекам этот флоу **явно описан у Абсолют и СОГАЗ**. У **Альфы** в спеке такого двухшагового сценария нет: там один запрос calc с полным набором обязательных полей. То есть для Альфы либо (1) на первом шаге не вызываем Alfa calc, а показываем превью/мокап до выбора СК и экрана 3, либо (2) бэкенд/партнёрский контур Альфы по факту умеет «минимальный calc» (в доке не отражено), либо (3) на экран 1 для Альфы добавляем недостающие поля (адреса КД и объекта, дата КД, по questionary для банка). Разговор с опердиром — про один процесс (минималка → расчёт → дособор); в спеках он зафиксирован для Абсолют и СОГАЗ, для Альфы — нет.
 

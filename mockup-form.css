@@ -741,16 +741,17 @@ input[type="file"] {
   display: flex;
   min-height: calc(100vh - 52px);
   overflow: hidden;
+  max-width: 100%;
 }
 .app-with-console .layout {
   flex: 1;
   min-width: 0;
-  max-width: none;
+  max-width: 960px;
   margin: 0;
 }
 .connector-console {
-  width: 420px;
-  min-width: 320px;
+  width: 380px;
+  min-width: 300px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -800,12 +801,12 @@ input[type="file"] {
 .connector-log .log-put { color: #d2a8ff; }
 .connector-log .log-url { color: #a5d6ff; }
 .connector-log .log-field { color: #ffa657; }
-.connector-log .log-spec { color: #8b949e; }
+.connector-log .log-spec { color: #8b949e; display: block; margin-top: 2px; }
 .connector-log .log-sep { color: #484f58; margin: 6px 0; border-top: 1px solid #30363d; padding-top: 6px; }
 
 /* Адаптив */
 @media (max-width: 1200px) {
-  .connector-console { width: 340px; }
+  .connector-console { width: 320px; }
 }
 @media (max-width: 640px) {
   .form-row { grid-template-columns: 1fr; }
