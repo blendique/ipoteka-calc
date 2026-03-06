@@ -156,6 +156,7 @@
                   <span class="step2-offer-value" id="step2_premium_alfa">12 100</span>
                   <span class="step2-offer-currency">₽</span>
                 </div>
+                <p class="step2-offer-kv" id="step2_kv_alfa">КВ агента: <strong id="step2_kv_val_alfa">0</strong> ₽</p>
                 <p class="step2-offer-detail" id="step2_detail_alfa">Жизнь + Имущество</p>
                 <p class="step2-offer-unavail" id="step2_unavail_alfa" style="display:none;"></p>
                 <button type="button" class="btn btn-primary btn-block btn-choose-sk step2-offer-btn" data-sk="alfa">Выбрать</button>
@@ -170,6 +171,7 @@
                   <span class="step2-offer-value" id="step2_premium_absolut">12 450</span>
                   <span class="step2-offer-currency">₽</span>
                 </div>
+                <p class="step2-offer-kv" id="step2_kv_absolut">КВ агента: <strong id="step2_kv_val_absolut">0</strong> ₽</p>
                 <p class="step2-offer-detail" id="step2_detail_absolut">Жизнь + Имущество</p>
                 <p class="step2-offer-unavail" id="step2_unavail_absolut" style="display:none;"></p>
                 <button type="button" class="btn btn-primary btn-block btn-choose-sk step2-offer-btn" data-sk="absolut">Выбрать</button>
@@ -184,6 +186,7 @@
                   <span class="step2-offer-value" id="step2_premium_sogaz">11 900</span>
                   <span class="step2-offer-currency">₽</span>
                 </div>
+                <p class="step2-offer-kv" id="step2_kv_sogaz">КВ агента: <strong id="step2_kv_val_sogaz">0</strong> ₽</p>
                 <p class="step2-offer-detail" id="step2_detail_sogaz">Жизнь + Имущество</p>
                 <p class="step2-offer-unavail" id="step2_unavail_sogaz" style="display:none;"></p>
                 <button type="button" class="btn btn-primary btn-block btn-choose-sk step2-offer-btn" data-sk="sogaz">Выбрать</button>
@@ -1735,6 +1738,8 @@
           ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'creditValue: ' + sumLog + ', bankName, beginDate, address{state,city}, dateCreditDoc, buildingType: ' + typeUi + ', gender: ' + genderUi + ', dateOfBirth, insurer (+ по п.8)');
           connectorState.alfa.upid = 'MOCK-UPID-' + Math.floor(Math.random() * 1e9);
           ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: [], calcId: 104042, upid: connectorState.alfa.upid, kv: 0.2 });
+          var premAbsLog = Math.round(sumLog * 0.0025);
+          var premSogazLog = Math.round(sumLog * 0.0024);
           ConnectorDebug.log('Абсолют: авторизация — Authorization: Basic base64(ClientID:ClientSecret), body: grant_type=client_credentials');
           ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/oauth/token', 'grant_type=client_credentials');
           ConnectorDebug.logResponse('200 OK', { access_token: 'MOCKMOCKMOCK', token_type: 'bearer', expires_in: 3600 });
@@ -1744,7 +1749,7 @@
           ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-2', result: { data: { credit_banks: [] } }, status: { code: 'success', message: null } });
           ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/express/create', 'credit/sum: ' + sumLog + ', bank, check_object, object_type, date_begin, date_credit_doc, dateOfBirth: ' + dobUi + ', gender. Bearer');
           connectorState.absolut.expressId = 'MOCK-ABS-EXP-' + Math.floor(Math.random() * 1e9);
-          ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-3', result: { data: { premium: Math.round(sumLog * 0.0025), calculationId: connectorState.absolut.expressId } }, status: { code: 'success', message: null } });
+          ConnectorDebug.logResponse('200 OK', { call_id: 'MOCK-CALL-3', result: { data: { premium: premAbsLog, kv: 0.15, calculationId: connectorState.absolut.expressId } }, status: { code: 'success', message: null } });
           ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/auth', 'grant_type=client_credentials, client_id, client_secret');
           ConnectorDebug.logResponse('200 OK', { access_token: 'MOCKMOCKMOCK', token_type: 'bearer' });
           ConnectorDebug.log('СОГАЗ: маппинг UI→API: gender ' + genderUi + '→' + mapSogazGender(genderUi) + ', type ' + typeUi + '→' + mapSogazType(typeUi));
@@ -1760,7 +1765,7 @@
               type: mapSogazType(typeUi)
             }
           });
-          ConnectorDebug.logResponse('200 OK', { data: { estimationId: connectorState.sogaz.estimationId, deadline: '2025-06-28T15:22:45.667', policyPremium: Math.round(sumLog * 0.0024), sumInsured: sumLog, insuredRisks: { Property: [{ sumInsured: Math.round(sumLog * 0.8), premium: Math.round(sumLog * 0.0005) }], Life: [{ sumInsured: sumLog, premium: Math.round(sumLog * 0.0019) }] }, hasStopped: false, message: null } });
+          ConnectorDebug.logResponse('200 OK', { data: { estimationId: connectorState.sogaz.estimationId, deadline: '2025-06-28T15:22:45.667', policyPremium: premSogazLog, kv: 0.1, sumInsured: sumLog, insuredRisks: { Property: [{ sumInsured: Math.round(sumLog * 0.8), premium: Math.round(sumLog * 0.0005) }], Life: [{ sumInsured: sumLog, premium: Math.round(sumLog * 0.0019) }] }, hasStopped: false, message: null } });
           ConnectorDebug.logSep();
 
           var result = validateStep1();
@@ -1770,9 +1775,18 @@
           var sum = parseInt(creditVal, 10) || 5000000;
           var lifePrem = Math.round(sum * 0.00164);
           var propPrem = Math.round(sum * 0.00085);
-          document.getElementById('step2_premium_alfa').textContent = (lifePrem + propPrem).toLocaleString('ru-RU');
-          document.getElementById('step2_premium_absolut').textContent = (Math.round(sum * 0.0025)).toLocaleString('ru-RU');
-          document.getElementById('step2_premium_sogaz').textContent = (Math.round(sum * 0.0024)).toLocaleString('ru-RU');
+          var premAlfa = lifePrem + propPrem;
+          var premAbs = Math.round(sum * 0.0025);
+          var premSogaz = Math.round(sum * 0.0024);
+          var kvRatioAlfa = 0.2;
+          var kvRatioAbsolut = 0.15;
+          var kvRatioSogaz = 0.1;
+          document.getElementById('step2_premium_alfa').textContent = premAlfa.toLocaleString('ru-RU');
+          document.getElementById('step2_premium_absolut').textContent = premAbs.toLocaleString('ru-RU');
+          document.getElementById('step2_premium_sogaz').textContent = premSogaz.toLocaleString('ru-RU');
+          document.getElementById('step2_kv_val_alfa').textContent = Math.round(premAlfa * kvRatioAlfa).toLocaleString('ru-RU');
+          document.getElementById('step2_kv_val_absolut').textContent = Math.round(premAbs * kvRatioAbsolut).toLocaleString('ru-RU');
+          document.getElementById('step2_kv_val_sogaz').textContent = Math.round(premSogaz * kvRatioSogaz).toLocaleString('ru-RU');
           var deadline = new Date();
           deadline.setDate(deadline.getDate() + 7);
           document.getElementById('step2_calcDeadline').textContent = deadline.toLocaleDateString('ru-RU');

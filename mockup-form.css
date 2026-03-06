@@ -606,6 +606,11 @@ input[readonly] {
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
 }
+.step2-offer-kv {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 6px 0;
+}
 .step2-offer-detail {
   font-size: 0.8rem;
   color: var(--color-text-secondary);
