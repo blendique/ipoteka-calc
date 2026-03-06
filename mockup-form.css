@@ -759,11 +759,11 @@ input[type="file"] {
   flex: 0 0 380px;
   width: 380px;
   min-width: 300px;
-  max-height: calc(100vh - 52px);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  align-self: stretch;
   background: #0d1117;
   border-left: 1px solid #30363d;
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;

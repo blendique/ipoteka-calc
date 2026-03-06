@@ -1310,15 +1310,15 @@
         el.addEventListener('focus', logField);
         el.addEventListener('change', logField);
       });
-      /* Триггеры кастомных селектов (step1_buildingType, step1_bank, step1_riskCode) — фокус на обёртке */
-      ['step1_buildingType', 'step1_bank', 'step1_riskCode'].forEach(function(selectId) {
+      /* Триггеры кастомных селектов — экран 1 и экран 3 (фокус на обёртке) */
+      ['step1_buildingType', 'step1_bank', 'step1_riskCode', 'bank', 'buildingType', 'riskCode'].forEach(function(selectId) {
         var wrap = document.querySelector('.custom-select-wrap[data-select-id="' + selectId + '"] .custom-select-trigger');
         var info = FIELD_SPEC_MAP[selectId];
         if (wrap && info) {
           wrap.addEventListener('focus', function() { ConnectorDebug.logField(info.label, { alfa: info.alfa, absolut: info.absolut, sogaz: info.sogaz }); });
         }
       });
-      ConnectorDebug.log('Коннектор: фокус/выбор поля → имена в спеках Альфа / Абсолют / СОГАЗ. Кнопки → запросы/ответы по спецификации.');
+      ConnectorDebug.log('Коннектор: фокус/выбор поля (экран 1 и экран 3) → имена в спеках Альфа / Абсолют / СОГАЗ. Кнопки → запросы/ответы по спецификации.');
       ConnectorDebug.logSep();
       ConnectorDebug.log('Схема (как в спеках):');
       ConnectorDebug.log('• Альфа: POST /oauth/token (password) → GET bank/allowed → GET questionary/restriction → POST alfa/calc → POST alfa/contract → GET contract/{upid}/status → payment → printForm (п.0, 1.12 спека v22)');
@@ -1802,6 +1802,7 @@
           selectedSk = this.getAttribute('data-sk') || '';
           ConnectorDebug.logSep();
           ConnectorDebug.log('▶ Выбор СК: ' + selectedSk + ' → переход на экран 3 (полная форма). Дальше: «Расчёт» → «Оформить полис».');
+          ConnectorDebug.log('На экране 3: фокус/изменение полей формы → в лог выводятся названия для Альфа / Абсолют / СОГАЗ.');
           if (selectedSk === 'alfa') {
             ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/questionary/bank/{bankId}', '(при необходимости по выбранному банку) (TEST)');
             var bankVal = (document.getElementById('bank') && document.getElementById('bank').value) || (document.getElementById('step1_bank') && document.getElementById('step1_bank').value) || 'sber';
