@@ -736,20 +736,22 @@ input[type="file"] {
   color: #fff;
 }
 
-/* Правая панель — лог коннектора (дебаг) */
+/* Правая панель — лог коннектора (дебаг); весь блок по центру */
 .app-with-console {
   display: flex;
+  justify-content: center;
   min-height: calc(100vh - 52px);
   overflow: hidden;
   max-width: 100%;
 }
 .app-with-console .layout {
-  flex: 1;
+  flex: 0 1 960px;
   min-width: 0;
   max-width: 960px;
   margin: 0;
 }
 .connector-console {
+  flex: 0 0 380px;
   width: 380px;
   min-width: 300px;
   flex-shrink: 0;
