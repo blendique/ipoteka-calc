@@ -736,9 +736,81 @@ input[type="file"] {
   color: #fff;
 }
 
+/* Правая панель — лог коннектора (дебаг) */
+.app-with-console {
+  display: flex;
+  min-height: calc(100vh - 52px);
+  overflow: hidden;
+}
+.app-with-console .layout {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+}
+.connector-console {
+  width: 420px;
+  min-width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0d1117;
+  border-left: 1px solid #30363d;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #e6edf3;
+}
+.connector-console-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+}
+.connector-console-title {
+  font-weight: 600;
+  color: #8b949e;
+}
+.connector-console-clear {
+  padding: 4px 10px;
+  font-size: 11px;
+  background: #21262d;
+  color: #8b949e;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.connector-console-clear:hover {
+  background: #30363d;
+  color: #e6edf3;
+}
+.connector-log {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.connector-log .log-time { color: #6e7681; font-size: 11px; }
+.connector-log .log-msg { margin: 2px 0 8px 0; }
+.connector-log .log-get { color: #7ee787; }
+.connector-log .log-post { color: #79c0ff; }
+.connector-log .log-put { color: #d2a8ff; }
+.connector-log .log-url { color: #a5d6ff; }
+.connector-log .log-field { color: #ffa657; }
+.connector-log .log-spec { color: #8b949e; }
+.connector-log .log-sep { color: #484f58; margin: 6px 0; border-top: 1px solid #30363d; padding-top: 6px; }
+
 /* Адаптив */
+@media (max-width: 1200px) {
+  .connector-console { width: 340px; }
+}
 @media (max-width: 640px) {
   .form-row { grid-template-columns: 1fr; }
   .form-row.three { grid-template-columns: 1fr; }
   .layout { padding: 16px; }
+  .app-with-console { flex-direction: column; }
+  .connector-console { width: 100%; min-width: 0; max-height: 40vh; border-left: none; border-top: 1px solid #30363d; }
 }

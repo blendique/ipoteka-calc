@@ -14,7 +14,8 @@
 | **Созаёмщики** | Не более 1 (coInsurers массив) | Поддерживаются (кол-во уточнять по API) | Поддерживаются (coborrowers массив) |
 | **Тип рынка** | FIRST (первичный), SECOND (вторичный) — всегда передавать SECOND | 1=Вторичное, 2=Новостройка | Не передаётся отдельно |
 | **Формат дат** | YYYY-MM-DD | YYYY-MM-DD | YYYY-MM-DD |
-| **Авторизация** | OAuth 2.0 (password grant) | OAuth 2.0 (client_credentials) | Bearer token |
+| **Авторизация** | OAuth 2.0 (password grant) | OAuth 2.0 (client_credentials) | OAuth 2.0 (client_credentials) → Bearer |
+| **Тестовый URL** | b2b-test2.alfastrah.ru/msrv_dev | represtapi.absolutins.ru/ords/rest/api/ | api-test.sogaz.ru/mortgage/v2/ |
 | **Промокод** | promoCode (скидка к тарифу) | Нет данных | promotion |
 | **Земельный участок** | Нет | check_object=654411 (ЗУ отдельный объект) | objectType=houseWithPlot → отдельный plot |
 
@@ -314,19 +315,50 @@
 
 ## 3. СОГАЗ (SOGAZ)
 
+> **Источник:** API СОГАЗ — Ипотека для агрегаторов, PHP v2 TEST (docx). В API v2 используется `estimationId` (в ответе предварительного расчёта), в выжимке ранее — `calculationId`; при интеграции ориентироваться на актуальную спеку.
+
+### 3.0 Базовые URL и авторизация (тестовый стенд)
+
+| Переменная | URL (TEST) |
+|------------|------------|
+| **auth** | `https://api-test.sogaz.ru/mortgage/v2/auth` |
+| **base_url** | `https://api-test.sogaz.ru/mortgage/v2/api/` |
+
+**Авторизация:** OAuth 2.0 (client_credentials)
+
+- Метод: `POST`, Content-Type: `application/x-www-form-urlencoded`
+- Параметры: `grant_type=client_credentials`, `client_id`, `client_secret`
+- Токен используется в заголовке `Authorization: Bearer <token>` для всех запросов к API
+
+**Эндпоинты (полные URL для теста):**
+
+| # | Назначение | Метод | URL (TEST) |
+|---|------------|-------|------------|
+| 1 | Авторизация | POST | `https://api-test.sogaz.ru/mortgage/v2/auth` |
+| 2 | Предварительный расчёт | POST | `https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageEstimation/1` |
+| 3 | Окончательный расчёт / оформление | POST | `https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageCreate/1` |
+| 4 | Информация о договоре | POST | `https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageInformation/1` |
+| 5 | Акцептация оплаты | POST | `https://api-test.sogaz.ru/mortgage/v2/api/ContractReceivePayment/1` |
+| 6 | Вложения (документы) | GET | `https://api-test.sogaz.ru/mortgage/v2/api/attachment/{attachmentId}` |
+
+**Ответ предварительного расчёта (MarketMortgageEstimation):** `estimationId`, `deadline`, `policyPremium`, `sumInsured`, `insuredRisks` (Property, Life), `hasStopped`, `message`.
+
+**Ответ оформления (MarketMortgageCreate):** `contractNumber`, `hasStopped`, `message`. При ошибке — `errors` (массив с `code`, `message`).
+
 ### 3.1 Алгоритм
 
 ```
 001 → Ввод данных → «Показать цены»
-002 → POST /MarketMortagageEstimation → предварительный расчёт
-003 → Ответ: премия, страховая сумма, calculationId
+002 → POST /MarketMortgageEstimation/1 → предварительный расчёт
+003 → Ответ: policyPremium, sumInsured, estimationId, deadline, insuredRisks
 005 → Выбор СК, ввод доп. данных → «Оформить полис»
-006 → POST /MarketMortgageCreate → окончательный расчёт
-007 → Ответ: номер договора
+006 → POST /MarketMortgageCreate/1 → окончательный расчёт (estimationId из шага 003)
+007 → Ответ: contractNumber
+008 → POST /MarketMortgageInformation/1 → информация о договоре (по contractNumber)
 012 → Отображение, кнопка «Оплатить»
 014 → Оплата через эквайринг
-017 → POST /ContractReceivePayment → акцептация
-022 → Оригиналы ПФ
+017 → POST /ContractReceivePayment/1 → акцептация оплаты
+022 → GET /attachment/{attachmentId} → оригиналы ПФ
 ```
 
 ### 3.2 Типы рисков (`riskCode`)
@@ -356,53 +388,39 @@
 | `vtb` | ВТБ |
 | `rshb` | Россельхозбанк |
 
-### 3.5 Предварительный расчёт — `POST /MarketMortagageEstimation`
+### 3.5 Предварительный расчёт — `POST /MarketMortgageEstimation/1`
+
+Формат запроса (v2 TEST): обёртка `{ "data": { ... } }`.
 
 | Поле | Тип | Обязательно | Описание |
 |------|-----|-------------|----------|
-| riskCode | string | + | combo / life / property |
-| objectType | string | + | flat / house / houseWithPlot / room / apartments |
-| bank | string | + | sber / vtb / rshb |
-| loanBalance | number | + | Остаток долга |
-| beginDate | date | + | Дата начала полиса |
-| endDate | date | + | Дата окончания (редактируемая, может быть < 1 года) |
-| dateOfBirth | date | + | Дата рождения |
-| gender | string | + | M / F |
-| rate | number | — | Ставка (%) |
-| cancellationRate | number | — | Ставка при отказе (%) |
-| buildingYear | number | условно | Год постройки |
-| address | string | + | «Регион, город, дом» |
-| marketPrice | number | условно | Для house/plot |
-| cadastralNumber | string | условно | Для house/plot |
-| woodenWalls | boolean | — | Деревянные стены |
-| woodenFloors | boolean | — | Деревянные перекрытия |
-| height | number | при life/combo | Рост (см) |
-| weight | number | при life/combo | Вес (кг) |
-| share | number | — | Доля (%) |
+| data.agent.guidAgent | string (GUID) | + | Идентификатор агента |
+| data.agent.userId | string | + | ID пользователя |
+| data.bank | string | + | `sber` / `vtb` / `rshb` |
+| data.riskCode | string | + | `life` / `property` / `combo` |
+| data.loanBalance | number | + | Остаток долга |
+| data.gender | string | + | `Male` / `Female` |
+| data.dateOfBirth | string | + | Дата рождения, `YYYY-MM-DD` |
+| data.type | string | + | Тип объекта: `flat` / `house` / `houseWithPlot` (и др. по справочнику) |
+| data.wallWoodMaterial | boolean | условно | Деревянные стены (по типу объекта) |
 
-### 3.6 Окончательный расчёт — `POST /MarketMortgageCreate`
+### 3.6 Окончательный расчёт — `POST /MarketMortgageCreate/1`
 
-Все поля из предварительного + :
+Формат запроса (v2 TEST): обёртка `{ "data": { ... } }`.
+
+Ключевые блоки (укрупнённо, v2 TEST):
 
 | Поле | Тип | Обязательно | Описание |
 |------|-----|-------------|----------|
-| calculationId | string | + | ID из предварительного расчёта |
-| lastName, firstName, middleName | string | + | ФИО |
-| email | string | + | Для отправки ПФ |
-| phone | string | + | Телефон |
-| passportSeries | string | + | 4 цифры |
-| passportNumber | string | + | 6 цифр |
-| passportIssueDate | date | + | Дата выдачи |
-| passportIssuedBy | string | + | Кем выдан |
-| departmentCode | string | + | Формат XXX-XXX |
-| issueAddress | string | + | «Регион + город» |
-| numberCreditDoc | string | + | Номер КД |
-| dateCreditDoc | date | + | Дата подписания КД |
-| creditEndDate | date | — | Дата окончания КД |
-| addressReg | string | — | Адрес регистрации |
-| promotion | string | — | Промокод |
-| coborrowers | array | — | Массив созаёмщиков |
-| plotAddress, plotCadastralNumber, plotMarketPrice | — | при houseWithPlot | Данные ЗУ |
+| data.agent | object | + | `{ guidAgent, userId }` |
+| data.promotion | object | — | Скидка/акция: `{ name, value }` |
+| data.estimationId | string (GUID) | + | ID из предварительного расчёта |
+| data.bank | string | + | `sber` / `vtb` / `rshb` |
+| data.startDate / data.endDate | string | + | Даты полиса, `YYYY-MM-DD` |
+| data.insuredObjects[] | array | + | Объекты: `{ objectType, attributes{ buildingYear, address, cadastralNumber, marketPrice, wallWoodMaterial, floorWoodMaterial } }` |
+| data.insuredPersons[] | array | + | Застрахованные: ФИО, ДР, пол, паспорт, адрес, телефон, email (+ рост/вес при life/combo) |
+| data.riskCode | string | + | `life` / `property` / `combo` |
+| data.creditData | object | + | КД: `{ number, startDate, endDate, loanBalance, loanRate, cancellationRate, issueAddress }` |
 
 ### 3.7 Созаёмщики — СОГАЗ
 
@@ -435,6 +453,29 @@
 | Active | Активен |
 | WithDrawn | Отозвано |
 | Cancelled | Отменён |
+
+### 3.11 Информация о договоре — `POST /MarketMortgageInformation/1`
+
+Запрос: `{ "data": { "contractNumber": "SGZKIS-..." } }`.
+
+Ответ: `contractNumber`, `stateCode`, `policyPremium`, `sumInsured`, `insuredRisks` (Property, Life). Используется для отображения статуса и деталей договора перед оплатой.
+
+### 3.12 Акцептация оплаты — `POST /ContractReceivePayment/1`
+
+Вызывается после успешной оплаты через эквайринг. Ответ: обновление статуса на `Paid`.
+
+### 3.13 Вложения (документы) — `GET /attachment/{attachmentId}`
+
+Получение оригиналов печатных форм по `attachmentId` из ответа договора.
+
+### 3.14 Блок `agent` (v2 API)
+
+Во всех запросах к API передаётся блок `agent`:
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| guidAgent | string (GUID) | Идентификатор агента |
+| userId | string | ID пользователя |
 
 ---
 
@@ -556,6 +597,81 @@
 | Давление | — | pressureUp, pressureDown | — |
 | Хронические заболевания | illness (boolean) | chronic_illness | — |
 | Адрес фактического проживания | — | + (code 2247) | — |
+
+---
+
+## 5a. Флоу и экран 1: когда вызывается Alfa calc
+
+### Кто прав
+
+**Аналитик прав в том, что для вызова `POST /mortgage/partner/alfa/calc` по спецификации нужны поля со скриншота.**  
+Вопрос не «кто прав», а **в какой момент продукт реально вызывает этот запрос**: при нажатии «Получить расчёт» (экран 1) или позже (после выбора СК и заполнения экрана 3).
+
+### Обязательные поля для Alfa calc (из спеки и questionary)
+
+**Всегда обязательные для calc (без учёта п.8):**
+
+| Поле | В экране 1 | Примечание |
+|------|------------|------------|
+| beginDate | ✅ step1_beginDate | Дата начала полиса |
+| agent.managerId, agent.agentContractId | ❌ | Берутся с бэкенда/конфига партнёра |
+| mortgageAgreement.bankName | ✅ step1_bank | Банк из справочника |
+| mortgageAgreement.creditValue | ✅ step1_creditValue | Остаток долга |
+| mortgageAgreement.address.state | ❌ | Регион заключения КД |
+| mortgageAgreement.address.city | ❌ | Город заключения КД |
+| mortgageAgreement.dateCreditDoc | ❌ | Дата подписания КД (для Сбер на расчёте необяз.) |
+| insuranceObject.buildingType | ✅ step1_buildingType | FLAT/ROOM/APARTMENTS (если не имущество — всё равно передавать FLAT) |
+| insuranceObject.saleType | — | Всегда SECOND, можно не спрашивать |
+| insuranceObject.address.state | ❌ | Регион объекта |
+| insuranceObject.address.city | ❌ | Город объекта (в спеке address целиком) |
+| insurer.gender | ✅ step1_gender | M/F |
+| insurer.dateOfBirth | ✅ step1_dateOfBirth | Дата рождения |
+
+**Доп. обязательные по банку (п.8 — `GET /mortgage/dictionary/questionary/bank/{bankId}`):**  
+Для Сбербанка прод возвращает в questionary (массив calc):
+
+| Поле | В экране 1 | Описание |
+|------|------------|----------|
+| life.illness | ❌ | Наличие хронических заболеваний |
+| life.professionId | ❌ | Идентификатор профессии |
+| life.sportId | ❌ | Идентификатор спорта |
+| property.year | ❌ | Год постройки |
+
+То есть для **реального** вызова Alfa calc при переходе с первого этапа на второй (как считает аналитик) на экране 1 **не хватает**:
+
+- Регион и город заключения КД (mortgageAgreement.address)
+- Дата подписания КД (dateCreditDoc) — для не-Сбер обязательна на расчёте
+- Регион и город объекта (insuranceObject.address)
+- Для Сбер: хронические заболевания, профессия, спорт, год постройки (если прод questionary так отдаёт)
+
+**Лишнего на экране 1 для Alfa calc нет:** вид имущества, банк, остаток, дата начала, ДР, пол, тип рисков, ставка — всё используется в calc или в маппинге (тип рисков на бэке режет в life/property/title).
+
+### Как может быть устроен флоу
+
+1. **Вариант А: calc вызывается по кнопке «Получить расчёт»**  
+   Тогда переход с первого этапа на второй = реальный вызов `alfa/calc` (и аналогов для Абсолют/СОГАЗ).  
+   В этом случае экрана 1 **недостаточно**: нужно добавить регион/город КД, дату КД (для не-Сбер), регион/город объекта и по questionary для выбранного банка (для Сбер — illness, professionId, sportId, property.year) либо запрашивать questionary и показывать только нужные поля.
+
+2. **Вариант Б: calc вызывается после выбора СК и заполнения полной формы**  
+   Экран 1 используется только для фильтрации СК и, при желании, «превью» цен без реального calc; реальный вызов `alfa/calc` — после перехода на экран 3 и сбора всех обязательных полей (в т.ч. адреса КД, объекта, даты КД и полей из questionary).  
+   Тогда экран 1 может оставаться минимальным (как сейчас), а недостающие для calc поля собираются на экране 3.
+
+### Рекомендация
+
+- **Согласовать с аналитиком и бэкендом:** вызов `POST /mortgage/partner/alfa/calc` происходит при «Получить расчёт» (тогда расширяем экран 1) или при «Расчёт»/оформлении после выбора СК (тогда оставляем экран 1 минимальным и проверяем, что на экране 3 есть все поля для calc).
+- Если решат, что calc — при переходе с первого на второй этап: на экран 1 добавить минимум: **регион и город заключения КД**, **дата подписания КД**, **регион и город объекта**; для Сбер — **год постройки**, **хронические заболевания**, **профессия**, **спорт** (или подставлять дефолты/брать из questionary и не показывать лишнего).
+
+### Опердир: «минималка → расчёт → дособор» — по спекам так или нет?
+
+**По спекам так и задумано — но только у двух из трёх СК.**
+
+| СК | Что в спеке | Совпадает с флоу опердира? |
+|----|-------------|----------------------------|
+| **Абсолют** | **П.2.6–2.7:** сначала **предварительный расчёт** `POST /mortgage/multiyear/calculation/express/create` на **минимальных данных** (программа, банк, тип объекта, тип рынка, дата начала, дата КД, сумма кредита, дата рождения, пол), потом **полный расчёт** `POST /mortgage/multiyear/calculation/create` с андеррайтингом и доп. полями. П.2.11: шаги 3→4 — express → полный расчёт. | ✅ **Да.** Минималка → расчёт (премия) → дособор данных → полный расчёт. |
+| **СОГАЗ** | **П.3.1, 3.5–3.6:** 001 Ввод данных → «Показать цены» → **предварительный расчёт** `POST /MarketMortgageEstimation/1` → ответ: policyPremium, estimationId, deadline. Дальше 005 Выбор СК, ввод доп. данных → «Оформить полис» → **окончательный расчёт** `POST /MarketMortgageCreate/1` (в него передаётся estimationId + insuredPersons, insuredObjects, creditData). Тест: `https://api-test.sogaz.ru/mortgage/v2/`. | ✅ **Да.** Минималка → расчёт (цены) → дособор → окончательный расчёт/оформление. |
+| **Альфа** | Один эндпоинт расчёта: `POST /mortgage/partner/alfa/calc`. В спеке **нет** разделения на «предварительный» и «полный» расчёт: в calc описан полный набор обязательных полей (+ по questionary). Дальше идёт только сохранение `alfa/contract` (те же данные + доп. поля). | ❌ **В спеке не так.** В документе не написано «сначала минимальные данные → calc → потом дособор». Написано: calc принимает все обязательные поля сразу. |
+
+**Итог:** Опердир и вы говорите об одном и том же **продуктовом флоу** (минимальные данные на первом экране → получаем расчёт/цены → потом добиваем данные). По спекам этот флоу **явно описан у Абсолют и СОГАЗ**. У **Альфы** в спеке такого двухшагового сценария нет: там один запрос calc с полным набором обязательных полей. То есть для Альфы либо (1) на первом шаге не вызываем Alfa calc, а показываем превью/мокап до выбора СК и экрана 3, либо (2) бэкенд/партнёрский контур Альфы по факту умеет «минимальный calc» (в доке не отражено), либо (3) на экран 1 для Альфы добавляем недостающие поля (адреса КД и объекта, дата КД, по questionary для банка). Разговор с опердиром — про один процесс (минималка → расчёт → дособор); в спеках он зафиксирован для Абсолют и СОГАЗ, для Альфы — нет.
 
 ---
 

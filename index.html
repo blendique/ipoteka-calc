@@ -12,6 +12,7 @@
   <header class="app-header">
     <span class="logo">UREMONT.Страхование</span>
   </header>
+  <div class="app-with-console">
   <main class="layout">
     <h1 class="page-title">Ипотека</h1>
 
@@ -1191,8 +1192,152 @@
     <!-- /step3Screen -->
   </main>
 
+  <aside class="connector-console" aria-label="Лог запросов коннектора">
+    <div class="connector-console-header">
+      <span class="connector-console-title">Коннектор (дебаг)</span>
+      <button type="button" class="connector-console-clear" id="connectorLogClear" title="Очистить">Очистить</button>
+    </div>
+    <div class="connector-log" id="connectorLog"></div>
+  </aside>
+  </div>
+  <!-- /app-with-console -->
+
   <script>
     (function() {
+      /* ——— Коннектор: лог запросов и полей по спекам (дебаг) ——— */
+      var ConnectorDebug = (function() {
+        var logEl = document.getElementById('connectorLog');
+        var clearBtn = document.getElementById('connectorLogClear');
+        function timeStr() { var d = new Date(); return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0') + ':' + d.getSeconds().toString().padStart(2,'0') + '.' + (d.getMilliseconds()/10|0); }
+        function append(html) {
+          if (!logEl) return;
+          var wrap = document.createElement('div');
+          wrap.className = 'log-msg';
+          wrap.innerHTML = html;
+          logEl.appendChild(wrap);
+          logEl.scrollTop = logEl.scrollHeight;
+        }
+        return {
+          clear: function() { if (logEl) logEl.innerHTML = ''; },
+          log: function(text) { append('<span class="log-time">' + timeStr() + '</span> ' + (text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')); },
+          logRequest: function(method, url, body) {
+            var cls = method === 'GET' ? 'log-get' : (method === 'POST' ? 'log-post' : 'log-put');
+            var bodyStr = body ? (typeof body === 'string' ? body : JSON.stringify(body)) : '';
+            var bodyShort = bodyStr.length > 200 ? bodyStr.slice(0, 200) + '…' : bodyStr;
+            append('<span class="log-time">' + timeStr() + '</span> <span class="' + cls + '">' + method + '</span> <span class="log-url">' + (url || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>' + (bodyStr ? '<br><span class="log-spec">' + bodyShort.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>' : ''));
+          },
+          logResponse: function(status, body) {
+            var statusText = (status || '200 OK').toString();
+            var bodyStr = body ? (typeof body === 'string' ? body : JSON.stringify(body, null, 2)) : '';
+            var bodyShort = bodyStr.length > 700 ? bodyStr.slice(0, 700) + '\n…' : bodyStr;
+            append('<span class="log-time">' + timeStr() + '</span> <span class="log-spec">← ' + statusText.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>' + (bodyStr ? '<br><span class="log-spec">' + bodyShort.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>' : ''));
+          },
+          logField: function(label, specNames) {
+            var parts = ['<span class="log-time">' + timeStr() + '</span> <span class="log-field">Поле: ' + (label || '').replace(/</g, '&lt;') + '</span><br>'];
+            if (specNames.alfa) parts.push('<span class="log-spec">Альфа: ' + specNames.alfa.replace(/</g, '&lt;') + '</span> ');
+            if (specNames.absolut) parts.push('<span class="log-spec">Абсолют: ' + specNames.absolut.replace(/</g, '&lt;') + '</span> ');
+            if (specNames.sogaz) parts.push('<span class="log-spec">СОГАЗ: ' + specNames.sogaz.replace(/</g, '&lt;') + '</span>');
+            append(parts.join(''));
+          },
+          logSep: function() { append('<div class="log-sep">———</div>'); }
+        };
+      })();
+
+      function mockQuestionaryForBank(bankCode) {
+        var base = ['mortgageAgreement.rate', 'mortgageAgreement.termInMonth', 'insurer.share'];
+        if ((bankCode || '') === 'sber') {
+          return base.concat(['insurer.lifeRisk.illness', 'insurer.lifeRisk.professionId', 'insurer.lifeRisk.sportId', 'insuranceObject.propertyRisk.year']);
+        }
+        return base;
+      }
+      var connectorState = {
+        alfa: { upid: null },
+        absolut: { expressId: null, fullId: null, isn: null },
+        sogaz: { estimationId: null, contractNumber: null, attachmentIds: [] }
+      };
+      function mapSogazGender(v) { return v === 'M' ? 'Male' : (v === 'F' ? 'Female' : (v || 'Male')); }
+      function mapSogazType(v) {
+        var m = { FLAT: 'flat', ROOM: 'room', APARTMENTS: 'apartments', house: 'house', houseWithPlot: 'houseWithPlot', plot: 'plot' };
+        return m[v] || v || 'flat';
+      }
+      var FIELD_SPEC_MAP = {
+        step1_buildingType: { label: 'На что оформлена ипотека', alfa: 'insuranceObject.buildingType', absolut: 'check_object (ISN)', sogaz: 'type (flat/house/houseWithPlot/room/apartments)' },
+        step1_bank: { label: 'Банк', alfa: 'mortgageAgreement.bankName', absolut: 'bank', sogaz: 'bank' },
+        step1_creditValue: { label: 'Остаток долга', alfa: 'mortgageAgreement.creditValue', absolut: 'credit.sum', sogaz: 'loanBalance' },
+        step1_beginDate: { label: 'Дата начала полиса', alfa: 'beginDate', absolut: 'date_begin', sogaz: 'startDate (в MarketMortgageCreate)' },
+        step1_dateOfBirth: { label: 'Дата рождения', alfa: 'insurer.dateOfBirth', absolut: 'borrower.birth_date', sogaz: 'dateOfBirth' },
+        step1_gender: { label: 'Пол', alfa: 'insurer.gender', absolut: 'borrower.gender', sogaz: 'gender (Male/Female)' },
+        step1_riskCode: { label: 'Тип рисков', alfa: 'lifeRisk/propertyRisk/titleRisk', absolut: 'риски программы', sogaz: 'riskCode' },
+        step1_rate: { label: 'Ставка %', alfa: 'mortgageAgreement.rate', absolut: '—', sogaz: 'creditData.loanRate (в MarketMortgageCreate)' },
+        bank: { label: 'Банк', alfa: 'mortgageAgreement.bankName', absolut: 'bank', sogaz: 'bank' },
+        buildingType: { label: 'Вид имущества', alfa: 'insuranceObject.buildingType', absolut: 'check_object', sogaz: 'insuredObjects[].objectType' },
+        riskCode: { label: 'Тип рисков', alfa: 'lifeRisk/propertyRisk/titleRisk', absolut: 'риски программы', sogaz: 'riskCode' },
+        creditValue: { label: 'Остаток долга', alfa: 'mortgageAgreement.creditValue', absolut: 'credit.sum', sogaz: 'loanBalance' },
+        beginDate: { label: 'Дата начала полиса', alfa: 'beginDate', absolut: 'date_begin', sogaz: 'startDate' },
+        endDate: { label: 'Дата окончания полиса', alfa: '—', absolut: '—', sogaz: 'endDate' },
+        dateCreditDoc: { label: 'Дата КД', alfa: 'mortgageAgreement.dateCreditDoc', absolut: 'agreement.date', sogaz: 'creditData.startDate' },
+        objectAddress: { label: 'Адрес объекта', alfa: 'insuranceObject.address', absolut: 'адрес объекта', sogaz: 'insuredObjects[].attributes.address' },
+        dateOfBirth: { label: 'Дата рождения', alfa: 'insurer.dateOfBirth', absolut: 'borrower.birth_date', sogaz: 'insuredPersons[].dateOfBirth' },
+        gender: { label: 'Пол', alfa: 'insurer.gender', absolut: 'borrower.gender', sogaz: 'insuredPersons[].gender (Male/Female)' },
+        rate: { label: 'Ставка %', alfa: 'mortgageAgreement.rate', absolut: '—', sogaz: 'creditData.loanRate' },
+        cancellationRate: { label: 'Ставка при отказе %', alfa: '—', absolut: '—', sogaz: 'creditData.cancellationRate' },
+        creditEndDate: { label: 'Дата окончания КД', alfa: '—', absolut: '—', sogaz: 'creditData.endDate' },
+        numberCreditDoc: { label: 'Номер КД', alfa: 'mortgageAgreement.numberCreditDoc', absolut: '—', sogaz: 'creditData.number' },
+        issueAddress: { label: 'Место выдачи КД', alfa: '—', absolut: '—', sogaz: 'creditData.issueAddress' },
+        passportSeriesNumber: { label: 'Паспорт: серия и номер', alfa: 'insurer.personDocument.seria + number', absolut: 'паспортные поля', sogaz: 'insuredPersons[].passport.series + number' },
+        passportIssueDate: { label: 'Паспорт: дата выдачи', alfa: 'insurer.personDocument.dateOfIssue', absolut: 'паспортные поля', sogaz: 'insuredPersons[].passport.issueDate' },
+        passportIssuedBy: { label: 'Паспорт: кем выдан', alfa: 'insurer.personDocument.issuedBy', absolut: 'паспортные поля', sogaz: 'insuredPersons[].passport.issuer' },
+        departmentCode: { label: 'Паспорт: код подразделения', alfa: 'insurer.personDocument.issuedByUnitCode', absolut: 'паспортные поля', sogaz: 'insuredPersons[].passport.departmentCode' },
+        phone: { label: 'Телефон', alfa: 'insurer.phone', absolut: '—', sogaz: 'insuredPersons[].phone' },
+        email: { label: 'Email', alfa: 'insurer.email', absolut: '—', sogaz: 'insuredPersons[].email' },
+        buildingYear: { label: 'Год постройки', alfa: 'insuranceObject.propertyRisk.year', absolut: '—', sogaz: 'insuredObjects[].attributes.buildingYear' },
+        profession: { label: 'Профессия', alfa: 'insurer.lifeRisk.professionId', absolut: 'profession_isn', sogaz: '—' },
+        sport: { label: 'Вид спорта', alfa: 'insurer.lifeRisk.sportId', absolut: '—', sogaz: '—' },
+        chronicIllness: { label: 'Хронические заболевания', alfa: 'insurer.lifeRisk.illness', absolut: 'chronic_illness', sogaz: '—' },
+        promoCode: { label: 'Промокод', alfa: 'promoCode', absolut: '—', sogaz: 'promotion' }
+      };
+      if (document.getElementById('connectorLogClear')) {
+        document.getElementById('connectorLogClear').onclick = function() { ConnectorDebug.clear(); };
+      }
+      Object.keys(FIELD_SPEC_MAP).forEach(function(fieldId) {
+        var el = document.getElementById(fieldId);
+        var info = FIELD_SPEC_MAP[fieldId];
+        if (!el || !info) return;
+        function logField() { ConnectorDebug.logField(info.label, { alfa: info.alfa, absolut: info.absolut, sogaz: info.sogaz }); }
+        el.addEventListener('focus', logField);
+        el.addEventListener('change', logField);
+      });
+      /* Триггеры кастомных селектов (step1_buildingType, step1_bank, step1_riskCode) — фокус на обёртке */
+      ['step1_buildingType', 'step1_bank', 'step1_riskCode'].forEach(function(selectId) {
+        var wrap = document.querySelector('.custom-select-wrap[data-select-id="' + selectId + '"] .custom-select-trigger');
+        var info = FIELD_SPEC_MAP[selectId];
+        if (wrap && info) {
+          wrap.addEventListener('focus', function() { ConnectorDebug.logField(info.label, { alfa: info.alfa, absolut: info.absolut, sogaz: info.sogaz }); });
+        }
+      });
+      ConnectorDebug.log('Коннектор: фокус/выбор поля → имена в спеках Альфа / Абсолют / СОГАЗ. Кнопки → запросы/ответы по спецификации.');
+      ConnectorDebug.logSep();
+      ConnectorDebug.log('Схема (как в спеках):');
+      ConnectorDebug.log('• Альфа: token → (dict/questionary/restriction) → POST /mortgage/partner/alfa/calc → POST /mortgage/partner/alfa/contract');
+      ConnectorDebug.log('• Абсолют: token → dict → POST /mortgage/multiyear/calculation/express/create → POST /mortgage/multiyear/calculation/create → PUT /mortgage/multiyear/approval/send → agreement/create → payment');
+      ConnectorDebug.log('• СОГАЗ: POST /auth → POST /MarketMortgageEstimation/1 → (estimationId) → POST /MarketMortgageCreate/1 → POST /ContractReceivePayment/1');
+      ConnectorDebug.logSep();
+
+      var step1BankEl = document.getElementById('step1_bank');
+      if (step1BankEl) {
+        step1BankEl.addEventListener('change', function() {
+          var bankVal = step1BankEl.value || 'sber';
+          var q = mockQuestionaryForBank(bankVal);
+          ConnectorDebug.logSep();
+          ConnectorDebug.log('▶ Выбран банк: ' + bankVal + ' → получение полей для дозаполнения (questionary)');
+          ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/questionary/bank/' + bankVal);
+          ConnectorDebug.logResponse('200 OK', { bankId: bankVal, calc: q, save: q });
+          ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/restriction/bank/' + bankVal);
+          ConnectorDebug.logResponse('200 OK', { minInsuredAge: 18, maxInsuredAge: 70, minInsuranceTerm: 12, maxInsuranceTerm: 360, maxSharePerInsured: 100, totalMaxShare: 100 });
+          ConnectorDebug.logSep();
+        });
+      }
+
       /* ——— Базовые валидации ввода ——— */
       (function initValidations() {
         function onInputAllow(el, filterFn) {
@@ -1569,6 +1714,50 @@
 
       if (document.getElementById('btnStep1Calc')) {
         document.getElementById('btnStep1Calc').onclick = function() {
+          /* Лог коннектора: предварительный расчёт по спекам */
+          var bankVal = (document.getElementById('step1_bank') && document.getElementById('step1_bank').value) || 'sber';
+          var creditValLog = (document.getElementById('step1_creditValue') || document.getElementById('creditValue')).value.replace(/\s/g, '');
+          var sumLog = parseInt(creditValLog, 10) || 5000000;
+          var genderUi = (document.getElementById('step1_gender') && document.getElementById('step1_gender').value) || 'M';
+          var dobUi = (document.getElementById('step1_dateOfBirth') && document.getElementById('step1_dateOfBirth').value) || '01.01.1990';
+          var riskUi = (document.getElementById('step1_riskCode') && document.getElementById('step1_riskCode').value) || 'combo';
+          var typeUi = (document.getElementById('step1_buildingType') && document.getElementById('step1_buildingType').value) || 'FLAT';
+          ConnectorDebug.logSep();
+          ConnectorDebug.log('▶ Получить расчёт (предварительный)');
+          ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/oauth/token', 'username=***&password=***&grant_type=password (токен: MOCKMOCKMOCK)');
+          ConnectorDebug.logResponse('200 OK', { access_token: 'MOCKMOCKMOCK', token_type: 'bearer', expires_in: 900 });
+          ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/bank/allowed');
+          ConnectorDebug.logResponse('200 OK', [{ id: 1, code: bankVal, bankName: 'MOCK BANK', islifeRiskAvailable: true, isPropertyRiskAvailable: true, isTitleRiskAvailable: bankVal !== 'sber' }]);
+          ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/questionary/bank/' + bankVal);
+          ConnectorDebug.logResponse('200 OK', { bankId: bankVal, calc: mockQuestionaryForBank(bankVal), save: mockQuestionaryForBank(bankVal) });
+          ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/restriction/bank/' + bankVal);
+          ConnectorDebug.logResponse('200 OK', { minInsuredAge: 18, maxInsuredAge: 70, minInsuranceTerm: 12, maxInsuranceTerm: 360, maxSharePerInsured: 100, totalMaxShare: 100 });
+          ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'beginDate, agent, mortgageAgreement, insuranceObject, insurer (+ по п.8)');
+          connectorState.alfa.upid = 'MOCK-UPID-' + Math.floor(Math.random() * 1e9);
+          ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: '', upid: connectorState.alfa.upid, kv: 0.2 });
+          ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/oauth/token', 'client_credentials (токен: MOCKMOCKMOCK)');
+          ConnectorDebug.logResponse('200 OK', { access_token: 'MOCKMOCKMOCK', token_type: 'bearer', expires_in: 3600 });
+          ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/express/create', 'программа, банк, тип объекта, тип рынка, дата начала, дата КД, сумма кредита, дата рождения, пол');
+          connectorState.absolut.expressId = 'MOCK-ABS-EXP-' + Math.floor(Math.random() * 1e9);
+          ConnectorDebug.logResponse('200 OK', { premium: Math.round(sumLog * 0.0025), calculationId: connectorState.absolut.expressId });
+          ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/auth', 'grant_type=client_credentials, client_id, client_secret');
+          ConnectorDebug.logResponse('200 OK', { access_token: 'MOCKMOCKMOCK', token_type: 'bearer' });
+          ConnectorDebug.log('СОГАЗ: маппинг UI→API: gender ' + genderUi + '→' + mapSogazGender(genderUi) + ', type ' + typeUi + '→' + mapSogazType(typeUi));
+          connectorState.sogaz.estimationId = 'MOCK-SGZ-EST-' + Math.floor(Math.random() * 1e9);
+          ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageEstimation/1', {
+            data: {
+              agent: { guidAgent: '8e52b431-d0a3-4017-a536-2c3a07b4d758', userId: 'b8243275-8dfe-4cd7-8fd5-6de34ee9791b' },
+              bank: bankVal,
+              riskCode: riskUi,
+              loanBalance: sumLog,
+              gender: mapSogazGender(genderUi),
+              dateOfBirth: 'YYYY-MM-DD (из ' + dobUi + ')',
+              type: mapSogazType(typeUi)
+            }
+          });
+          ConnectorDebug.logResponse('200 OK', { data: { estimationId: connectorState.sogaz.estimationId, deadline: '2025-06-28T15:22:45.667', policyPremium: Math.round(sumLog * 0.0024), sumInsured: sumLog, insuredRisks: { Property: [{ sumInsured: Math.round(sumLog * 0.8), premium: Math.round(sumLog * 0.0005) }], Life: [{ sumInsured: sumLog, premium: Math.round(sumLog * 0.0019) }] }, hasStopped: false, message: null } });
+          ConnectorDebug.logSep();
+
           var result = validateStep1();
           if (result.conflicts.length > 0) return;
           copyStep1ToForm();
@@ -1593,6 +1782,14 @@
       document.querySelectorAll('.btn-choose-sk').forEach(function(btn) {
         btn.onclick = function() {
           selectedSk = this.getAttribute('data-sk') || '';
+          ConnectorDebug.logSep();
+          ConnectorDebug.log('▶ Выбор СК: ' + selectedSk + ' → переход на экран 3 (полная форма). Дальше: «Расчёт» → «Оформить полис».');
+          if (selectedSk === 'alfa') {
+            ConnectorDebug.logRequest('GET', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/dictionary/questionary/bank/{bankId}', '(при необходимости по выбранному банку) (TEST)');
+            var bankVal = (document.getElementById('bank') && document.getElementById('bank').value) || (document.getElementById('step1_bank') && document.getElementById('step1_bank').value) || 'sber';
+            ConnectorDebug.logResponse('200 OK', { bankId: bankVal, calc: mockQuestionaryForBank(bankVal), save: mockQuestionaryForBank(bankVal) });
+          }
+          ConnectorDebug.logSep();
           showStep(3);
         };
       });
@@ -1907,6 +2104,27 @@
       }
 
       document.getElementById('btnCalc').onclick = function() {
+        if (typeof ConnectorDebug !== 'undefined') {
+          ConnectorDebug.logSep();
+          ConnectorDebug.log('▶ Расчёт (экран 3), СК: ' + (selectedSk || '—'));
+          var creditValLog = (document.getElementById('creditValue') && document.getElementById('creditValue').value || '').replace(/\s/g, '');
+          var sumLog = parseInt(creditValLog, 10) || 5000000;
+          if (selectedSk === 'alfa') {
+            ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/calc', 'полный payload + по questionary (TEST)');
+            if (!connectorState.alfa.upid) connectorState.alfa.upid = 'MOCK-UPID-' + Math.floor(Math.random() * 1e9);
+            ConnectorDebug.logResponse('200 OK', { lifePremium: Math.round(sumLog * 0.00164), propertyPremium: Math.round(sumLog * 0.00085), titlePremium: 0, canBeIssued: true, underwriterMessage: '', upid: connectorState.alfa.upid, kv: 0.2 });
+          } else if (selectedSk === 'absolut') {
+            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/calculation/create', 'полный расчёт с андеррайтингом');
+            connectorState.absolut.fullId = 'MOCK-ABS-FULL-' + Math.floor(Math.random() * 1e9);
+            ConnectorDebug.logResponse('200 OK', { ready_to_agreement: true, calculationId: connectorState.absolut.fullId });
+          } else if (selectedSk === 'sogaz') {
+            ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageCreate/1', 'estimationId + insuredPersons, insuredObjects, creditData. Bearer MOCKMOCKMOCK');
+            if (!connectorState.sogaz.estimationId) connectorState.sogaz.estimationId = 'MOCK-SGZ-EST-' + Math.floor(Math.random() * 1e9);
+            connectorState.sogaz.contractNumber = 'SGZKIS-' + Math.floor(1000000000 + Math.random() * 9000000000) + 'FT/CM';
+            ConnectorDebug.logResponse('200 OK', { data: { contractNumber: connectorState.sogaz.contractNumber, hasStopped: false, message: null } });
+          }
+          ConnectorDebug.logSep();
+        }
         var creditVal = document.getElementById('creditValue').value.replace(/\s/g, '');
         var sum = parseInt(creditVal, 10) || 5000000;
         var lifePrem = Math.round(sum * 0.00164);
@@ -1925,16 +2143,56 @@
 
       document.getElementById('btnGoToContract').onclick = function() {
         hideAllResultCards();
-        document.getElementById('contractNumber').textContent = 'SGZKIS-' + Math.floor(1000000000 + Math.random() * 9000000000) + 'FT/CM';
+        if (selectedSk === 'sogaz' && connectorState.sogaz.contractNumber) document.getElementById('contractNumber').textContent = connectorState.sogaz.contractNumber;
+        else if (selectedSk === 'alfa' && connectorState.alfa.contractNumber) document.getElementById('contractNumber').textContent = connectorState.alfa.contractNumber;
+        else if (selectedSk === 'absolut' && connectorState.absolut.isn) document.getElementById('contractNumber').textContent = connectorState.absolut.isn;
+        else document.getElementById('contractNumber').textContent = 'SGZKIS-' + Math.floor(1000000000 + Math.random() * 9000000000) + 'FT/CM';
         document.getElementById('contractPremium').textContent = document.getElementById('calcTotalPremium').textContent;
         contractCard.style.display = 'block';
       };
 
       document.getElementById('btnSave').onclick = function() {
+        if (typeof ConnectorDebug !== 'undefined') {
+          ConnectorDebug.logSep();
+          ConnectorDebug.log('▶ Оформить полис, СК: ' + (selectedSk || '—'));
+          if (selectedSk === 'alfa') {
+            ConnectorDebug.logRequest('POST', 'https://b2b-test2.alfastrah.ru/msrv_dev/mortgage/partner/alfa/contract', 'как calc + доп. поля (ФИО, паспорт, контакты) (TEST)');
+            connectorState.alfa.contractNumber = 'MOCK-ALFA-' + Math.floor(1000000000 + Math.random() * 9000000000);
+            ConnectorDebug.logResponse('200 OK', { contractNumber: connectorState.alfa.contractNumber, upid: connectorState.alfa.upid || ('MOCK-UPID-' + Math.floor(Math.random() * 1e9)) });
+          } else if (selectedSk === 'absolut') {
+            ConnectorDebug.logRequest('PUT', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/approval/send', 'подтверждение');
+            ConnectorDebug.logResponse('200 OK', { approved: true });
+            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/mortgage/multiyear/agreement/create', 'создание договора');
+            connectorState.absolut.isn = 'MOCK-ABS-ISN-' + Math.floor(Math.random() * 1e9);
+            ConnectorDebug.logResponse('200 OK', { isn: connectorState.absolut.isn });
+            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/payment/link/agreement', 'ссылка на оплату по договору');
+            ConnectorDebug.logResponse('200 OK', { paymentUrl: 'https://pay.example/redirect/' + connectorState.absolut.isn });
+            ConnectorDebug.logRequest('GET', 'https://represtapi.absolutins.ru/ords/rest/api/print/agreement/' + connectorState.absolut.isn, 'печать договора');
+            ConnectorDebug.logResponse('200 OK', { documentUrl: 'https://docs.example/agreement/' + connectorState.absolut.isn + '.pdf' });
+          } else if (selectedSk === 'sogaz') {
+            ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageCreate/1', 'estimationId + insuredPersons, insuredObjects, creditData. Bearer MOCKMOCKMOCK');
+            connectorState.sogaz.contractNumber = 'SGZKIS-' + Math.floor(1000000000 + Math.random() * 9000000000) + 'FT/CM';
+            ConnectorDebug.logResponse('200 OK', { data: { contractNumber: connectorState.sogaz.contractNumber, hasStopped: false, message: null } });
+            ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageInformation/1', { data: { contractNumber: connectorState.sogaz.contractNumber } });
+            connectorState.sogaz.attachmentIds = ['MOCK-ATT-1-' + Math.floor(Math.random() * 1e9), 'MOCK-ATT-2-' + Math.floor(Math.random() * 1e9)];
+            ConnectorDebug.logResponse('200 OK', { data: { contractNumber: connectorState.sogaz.contractNumber, stateCode: 'PaymentWaiting', policyPremium: Number((document.getElementById('calcTotalPremium') && (document.getElementById('calcTotalPremium').textContent || '')).toString().replace(/\s/g,'')) || 0, sumInsured: Number((document.getElementById('creditValue') && (document.getElementById('creditValue').value || '')).toString().replace(/\s/g,'')) || 0, insuredRisks: { Property: [], Life: [] }, attachments: connectorState.sogaz.attachmentIds.map(function(id, idx) { return { attachmentId: id, name: 'Документ ' + (idx + 1) + '.pdf' }; }) } });
+          }
+          ConnectorDebug.logSep();
+        }
         document.getElementById('btnGoToContract').click();
       };
 
       document.getElementById('btnGoToPayment').onclick = function() {
+        if (typeof ConnectorDebug !== 'undefined') {
+          ConnectorDebug.logSep();
+          ConnectorDebug.log('▶ Переход к оплате (эквайринг), СК: ' + (selectedSk || '—'));
+          if (selectedSk === 'sogaz') {
+            ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/api/MarketMortgageInformation/1', { data: { contractNumber: connectorState.sogaz.contractNumber || (document.getElementById('contractNumber') && document.getElementById('contractNumber').textContent) } });
+            ConnectorDebug.logResponse('200 OK', { data: { stateCode: 'PaymentWaiting' } });
+          }
+          ConnectorDebug.log('Оплата как процесс: вне API (эквайринг). После успешной оплаты → акцептация (ContractReceivePayment).');
+          ConnectorDebug.logSep();
+        }
         hideAllResultCards();
         document.getElementById('paymentAmount').textContent = document.getElementById('contractPremium').textContent;
         document.getElementById('paymentContractNum').textContent = document.getElementById('contractNumber').textContent;
@@ -1942,6 +2200,24 @@
       };
 
       document.getElementById('btnConfirmPayment').onclick = function() {
+        if (typeof ConnectorDebug !== 'undefined') {
+          ConnectorDebug.logSep();
+          ConnectorDebug.log('▶ Оплата: подтверждение/акцептация, СК: ' + (selectedSk || '—'));
+          if (selectedSk === 'absolut') {
+            ConnectorDebug.logRequest('POST', 'https://represtapi.absolutins.ru/ords/rest/api/payment/link/agreement', 'оплата через ссылку (создание/получение ссылки уже было выше)');
+            ConnectorDebug.logResponse('200 OK', { status: 'PaymentWaiting → Paid', paymentId: 'MOCK-PAY-' + Math.floor(Math.random() * 1e9) });
+          } else if (selectedSk === 'sogaz') {
+            ConnectorDebug.logRequest('POST', 'https://api-test.sogaz.ru/mortgage/v2/api/ContractReceivePayment/1', 'акцептация оплаты. Bearer MOCKMOCKMOCK');
+            ConnectorDebug.logResponse('200 OK', { stateCode: 'Paid' });
+            (connectorState.sogaz.attachmentIds || []).forEach(function(attId) {
+              ConnectorDebug.logRequest('GET', 'https://api-test.sogaz.ru/mortgage/v2/api/attachment/' + attId, 'скачивание печатной формы');
+              ConnectorDebug.logResponse('200 OK', { attachmentId: attId, contentType: 'application/pdf', filename: 'policy.pdf', bytes: '...MOCK...' });
+            });
+          } else if (selectedSk === 'alfa') {
+            ConnectorDebug.log('Оплата Альфа: в текущей выжимке спецификации не описана (логируем только бизнес-этап).');
+          }
+          ConnectorDebug.logSep();
+        }
         hideAllResultCards();
         document.getElementById('successContractNum').textContent = document.getElementById('contractNumber').textContent;
         document.getElementById('successAmount').textContent = document.getElementById('contractPremium').textContent;
